@@ -6,7 +6,10 @@ export default function Home() {
     <>
       <nav className="nav">
         <div className="container">
-          <div className="nav-logo">tompo<span>.ai</span></div>
+          <a href="/" className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+            <img src="/logo.svg" alt="Tompo AI" style={{ width: '36px', height: '36px', borderRadius: '8px' }} />
+            tompo<span>.ai</span>
+          </a>
           <ul className="nav-links">
             <li><a href="#services">Services</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
