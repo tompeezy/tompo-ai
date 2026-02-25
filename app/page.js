@@ -11,6 +11,7 @@ export default function Home() {
             <li><a href="#services">Services</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
             <li><a href="#results">Results</a></li>
+            <li><a href="#shop">Shop</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
@@ -170,6 +171,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Shop */}
+      <section className="shop" id="shop">
+        <div className="container">
+          <div className="section-label">Shop</div>
+          <h2 className="section-title">AI Tools You Can Use Today</h2>
+          <p className="section-sub">
+            Grab our digital products and start using AI in your business immediately.
+          </p>
+          <div className="shop-grid">
+            <div className="product-card">
+              <div className="product-badge">🚀 Digital Product</div>
+              <div className="product-header">
+                <h3>The Small Business AI Starter Kit</h3>
+                <div className="product-price">$19</div>
+              </div>
+              <p className="product-desc">
+                56 ready-to-use ChatGPT prompts for marketing, sales, customer 
+                service, and operations — plus a quick-start guide and weekly planner.
+              </p>
+              <ul className="product-features">
+                <li>56 ChatGPT Prompts</li>
+                <li>Marketing Quick-Start Guide</li>
+                <li>Weekly AI Planner</li>
+                <li>Works with Free ChatGPT</li>
+              </ul>
+              <a href="https://tompoai.gumroad.com/l/ai-starter-kit" className="btn btn-primary product-cta" target="_blank" rel="noopener noreferrer">
+                Get It Now — $19
+              </a>
+              <a href="https://www.etsy.com/shop/TompoAI" className="product-alt-link" target="_blank" rel="noopener noreferrer">
+                Also available on Etsy →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="cta" id="contact">
         <div className="container">
@@ -179,7 +216,7 @@ export default function Home() {
               Book a free 15-minute call. We'll tell you exactly what we can 
               automate and how much time you'll save. No pressure, no BS.
             </p>
-            <a href="mailto:hello@tompo.ai" className="btn btn-primary">
+            <a href="mailto:gettompoai@gmail.com" className="btn btn-primary">
               📧 Get In Touch
             </a>
           </div>
@@ -189,7 +226,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>© 2026 Tompo AI — Salisbury, NC · Rowan County</p>
+          <p>© 2026 Tompo AI — Salisbury, NC · Rowan County · tompoai.shop</p>
         </div>
       </footer>
     </>
