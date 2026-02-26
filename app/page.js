@@ -9,9 +9,9 @@ export default function Home() {
           </div>
           <ul className="nav-links">
             <li><a href="#services">Services</a></li>
+            <li><a href="#products">Products</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
             <li><a href="#results">Results</a></li>
-            <li><a href="#shop">Shop</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
@@ -22,21 +22,96 @@ export default function Home() {
         <div className="container">
           <div className="hero-badge">🤖 AI Automation for Small Business</div>
           <h1>
-            Stop Doing Work<br />
-            <span className="highlight">A Machine Can Do</span>
+            Automate Your Business.<br />
+            <span className="highlight">Get 20 Hours Back Every Week.</span>
           </h1>
           <p>
-            We build AI-powered chatbots, automations, and smart systems 
-            that save your business 10-20 hours a week. Serving Salisbury, NC 
-            and Rowan County.
+            We build AI chatbots, automations, and smart systems for small 
+            businesses in Salisbury, NC and beyond. Stop doing work a machine can do.
           </p>
           <div className="hero-buttons">
             <a href="#contact" className="btn btn-primary">
-              Get a Free Consultation →
+              Book Your Free Consultation →
             </a>
-            <a href="#services" className="btn btn-secondary">
-              See What We Build
+            <a href="#products" className="btn btn-secondary">
+              Shop AI Tools — From $12
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof */}
+      <section className="social-proof">
+        <div className="container">
+          <div className="proof-bar">
+            <div className="proof-item">
+              <span className="proof-number">100+</span>
+              <span className="proof-label">Small Businesses Using Our AI Tools</span>
+            </div>
+            <div className="proof-divider"></div>
+            <div className="proof-item">
+              <span className="proof-number">10-20 hrs</span>
+              <span className="proof-label">Saved Per Week on Average</span>
+            </div>
+            <div className="proof-divider"></div>
+            <div className="proof-item">
+              <span className="proof-number">24/7</span>
+              <span className="proof-label">Your AI Never Sleeps</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Products */}
+      <section className="shop" id="products">
+        <div className="container">
+          <div className="section-label">Shop</div>
+          <h2 className="section-title">AI Tools You Can Use Today</h2>
+          <p className="section-sub">
+            Start using AI in your business right now. No tech skills needed.
+          </p>
+          <div className="shop-grid">
+            <div className="product-card">
+              <div className="product-badge">🚀 Best Seller</div>
+              <div className="product-header">
+                <h3>The Small Business AI Starter Kit</h3>
+                <div className="product-price">$19</div>
+              </div>
+              <p className="product-desc">
+                56 ready-to-use ChatGPT prompts for marketing, sales, customer 
+                service, and operations — plus a quick-start guide and weekly planner.
+              </p>
+              <ul className="product-features">
+                <li>56 ChatGPT Prompts</li>
+                <li>Marketing Quick-Start Guide</li>
+                <li>Weekly AI Planner</li>
+                <li>Works with Free ChatGPT</li>
+              </ul>
+              <a href="https://tompoai.gumroad.com/l/ai-starter-kit" className="btn btn-primary product-cta" target="_blank" rel="noopener noreferrer">
+                Get It Now — $19
+              </a>
+            </div>
+            <div className="product-card featured">
+              <div className="product-badge">🔥 New Release</div>
+              <div className="product-header">
+                <h3>The AI Business Automation Playbook</h3>
+                <div className="product-price">$12</div>
+              </div>
+              <p className="product-desc">
+                Your step-by-step guide to automating your small business. 
+                10 copy-paste workflows, tool recommendations, and a 30-day plan 
+                to save 10+ hours every week.
+              </p>
+              <ul className="product-features">
+                <li>10 Ready-to-Use Workflows</li>
+                <li>30-Day Automation Plan</li>
+                <li>Free & Cheap Tool Guide</li>
+                <li>No Tech Skills Required</li>
+              </ul>
+              <a href="https://tompoai.gumroad.com/l/ai-automation-playbook" className="btn btn-primary product-cta" target="_blank" rel="noopener noreferrer">
+                Get It Now — $12
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -171,42 +246,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Shop */}
-      <section className="shop" id="shop">
-        <div className="container">
-          <div className="section-label">Shop</div>
-          <h2 className="section-title">AI Tools You Can Use Today</h2>
-          <p className="section-sub">
-            Grab our digital products and start using AI in your business immediately.
-          </p>
-          <div className="shop-grid">
-            <div className="product-card">
-              <div className="product-badge">🚀 Digital Product</div>
-              <div className="product-header">
-                <h3>The Small Business AI Starter Kit</h3>
-                <div className="product-price">$19</div>
-              </div>
-              <p className="product-desc">
-                56 ready-to-use ChatGPT prompts for marketing, sales, customer 
-                service, and operations — plus a quick-start guide and weekly planner.
-              </p>
-              <ul className="product-features">
-                <li>56 ChatGPT Prompts</li>
-                <li>Marketing Quick-Start Guide</li>
-                <li>Weekly AI Planner</li>
-                <li>Works with Free ChatGPT</li>
-              </ul>
-              <a href="https://tompoai.gumroad.com/l/ai-starter-kit" className="btn btn-primary product-cta" target="_blank" rel="noopener noreferrer">
-                Get It Now — $19
-              </a>
-              <a href="https://tompoai.gumroad.com/l/ai-starter-kit" className="product-alt-link" target="_blank" rel="noopener noreferrer">
-                Instant Digital Download →
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="cta" id="contact">
         <div className="container">
@@ -226,10 +265,29 @@ export default function Home() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>© 2026 Tompo AI — Salisbury, NC · Rowan County · tompoai.shop</p>
+          <div className="footer-grid">
+            <div className="footer-brand">
+              <div className="nav-logo">tompo<span>.ai</span></div>
+              <p>AI automation for small businesses. Salisbury, NC &amp; beyond.</p>
+            </div>
+            <div className="footer-links">
+              <h4>Products</h4>
+              <a href="https://tompoai.gumroad.com/l/ai-starter-kit" target="_blank" rel="noopener noreferrer">AI Starter Kit — $19</a>
+              <a href="https://tompoai.gumroad.com/l/ai-automation-playbook" target="_blank" rel="noopener noreferrer">Automation Playbook — $12</a>
+              <a href="https://tompoai.gumroad.com" target="_blank" rel="noopener noreferrer">Gumroad Store</a>
+            </div>
+            <div className="footer-links">
+              <h4>Connect</h4>
+              <a href="https://pinterest.com/gettompoai" target="_blank" rel="noopener noreferrer">Pinterest</a>
+              <a href="https://facebook.com/gettompoai" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="mailto:gettompoai@gmail.com">gettompoai@gmail.com</a>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <p>© 2026 Tompo AI — Salisbury, NC · Rowan County · tompoai.shop</p>
+          </div>
         </div>
       </footer>
     </>
   )
 }
-
