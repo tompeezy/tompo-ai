@@ -199,8 +199,8 @@ export default function Home() {
               <a href="https://tompoai.gumroad.com/l/ai-starter-kit" className="btn btn-primary product-cta" target="_blank" rel="noopener noreferrer">
                 Get It Now — $19
               </a>
-              <a href="https://www.etsy.com/shop/TompoAI" className="product-alt-link" target="_blank" rel="noopener noreferrer">
-                Also available on Etsy →
+              <a href="https://tompoai.gumroad.com/l/ai-starter-kit" className="product-alt-link" target="_blank" rel="noopener noreferrer">
+                Instant Digital Download →
               </a>
             </div>
           </div>
