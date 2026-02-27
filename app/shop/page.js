@@ -37,6 +37,23 @@ export default function Shop() {
       ],
       href: 'https://tompoai.gumroad.com/l/ai-automation-playbook',
       cta: 'Get the Playbook — $12',
+      featured: false,
+    },
+    {
+      badge: '✨ Just Dropped',
+      title: 'Social Media Content Calendar + Canva Templates Kit',
+      price: '$27',
+      description: '30 days of done-for-you social media content — captions, hashtags, posting schedule, and 15 Canva template blueprints. Just customize, post, and grow.',
+      features: [
+        '30-Day Content Calendar',
+        '50 Ready-to-Post Captions',
+        '15 Canva Template Blueprints',
+        'Hashtag Strategy Guide',
+        'Best Times to Post Cheat Sheet',
+        'Content Repurposing Playbook',
+      ],
+      href: 'https://tompoai.gumroad.com/l/hworgb',
+      cta: 'Get the Content Kit — $27',
       featured: true,
     },
   ]
@@ -103,21 +120,21 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Coming Soon */}
+      {/* Bundle CTA Banner */}
       <section className="coming-soon">
         <div className="container">
           <div className="coming-soon-card">
-            <div className="coming-soon-badge">🔜 Coming Soon</div>
-            <h3>Social Media Content Calendar + Canva Templates</h3>
-            <div className="product-price">$27</div>
+            <div className="coming-soon-badge">💰 Best Value</div>
+            <h3>Get All 3 Products — Save $8</h3>
+            <div className="product-price">$50 <span style={{fontSize: '0.5em', textDecoration: 'line-through', opacity: 0.6}}>$58</span></div>
             <p>
-              30 days of done-for-you social media content with matching Canva 
-              templates. Just customize, post, and grow. Perfect for busy business 
-              owners who want to stay consistent without the stress.
+              Grab the AI Starter Kit + Automation Playbook + Content Calendar Kit 
+              together. Everything you need to automate your marketing, save time, 
+              and grow your business — for less than a nice dinner.
             </p>
             <div className="coming-soon-notify">
-              <a href="mailto:gettompoai@gmail.com?subject=Notify me about the Content Calendar" className="btn btn-secondary">
-                📧 Notify Me When It Drops
+              <a href="mailto:gettompoai@gmail.com?subject=I want the bundle deal" className="btn btn-secondary">
+                📧 Get the Bundle Deal
               </a>
             </div>
           </div>
@@ -152,12 +169,14 @@ export default function Shop() {
               <h4>Products</h4>
               <a href="https://tompoai.gumroad.com/l/ai-starter-kit" target="_blank" rel="noopener noreferrer">AI Starter Kit — $19</a>
               <a href="https://tompoai.gumroad.com/l/ai-automation-playbook" target="_blank" rel="noopener noreferrer">Automation Playbook — $12</a>
+              <a href="https://tompoai.gumroad.com/l/hworgb" target="_blank" rel="noopener noreferrer">Content Calendar Kit — $27</a>
               <a href="https://tompoai.gumroad.com" target="_blank" rel="noopener noreferrer">Gumroad Store</a>
             </div>
             <div className="footer-links">
               <h4>Connect</h4>
-              <a href="https://pinterest.com/gettompoai" target="_blank" rel="noopener noreferrer">Pinterest</a>
+              <a href="https://instagram.com/tompo.ai" target="_blank" rel="noopener noreferrer">Instagram</a>
               <a href="https://facebook.com/gettompoai" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="https://pinterest.com/gettompoai" target="_blank" rel="noopener noreferrer">Pinterest</a>
               <a href="mailto:gettompoai@gmail.com">gettompoai@gmail.com</a>
             </div>
           </div>
