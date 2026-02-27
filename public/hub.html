@@ -365,6 +365,20 @@
     </div>
   </div>
 
+  <!-- Running Services -->
+  <div class="card full-width" id="services-card">
+    <div class="card-header">
+      <h2>🖥️ Running Services</h2>
+      <span class="badge" id="svc-badge" style="display:none;">CHECKING</span>
+    </div>
+    <div id="services-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+      <div class="link-row" style="justify-content: flex-start; gap: 12px;">
+        <span style="color: #666;">⏳</span>
+        <span style="color: #666; font-size: 13px;">Checking local services...</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Quick Actions -->
   <div class="card full-width">
     <div class="card-header">
@@ -402,7 +416,7 @@
         <div class="section-title">🔜 Next Up</div>
         <ul class="checklist">
           <li><span class="pending">○</span> More Pinterest pins (volume = traffic)</li>
-          <li><span class="pending">○</span> Product #2: AI Business Automation Playbook ($12)</li>
+          <li><span class="check">✓</span> Product #2: AI Business Automation Playbook ($12)</li>
           <li><span class="pending">○</span> Product #3: Social Media Calendar + Templates ($27)</li>
           <li><span class="pending">○</span> Claim website on Pinterest (rich pins)</li>
           <li><span class="pending">○</span> Facebook Graph API (automated posting)</li>
@@ -416,6 +430,51 @@
 </div>
 
 <script>
+// --- Services Monitor ---
+const SVC_URL = 'http://localhost:8080/api/services';
+const MANUAL_SERVICES = [
+  { id: 'openclaw', name: 'OpenClaw (Cool 😎)', process: null, alwaysShow: true },
+];
+
+async function fetchServices() {
+  const grid = document.getElementById('services-grid');
+  const badge = document.getElementById('svc-badge');
+  try {
+    const r = await fetch(SVC_URL, { signal: AbortSignal.timeout(3000) });
+    const svcs = await r.json();
+    // Add manual services (always show as online if page loaded via relay)
+    const all = [...svcs, ...MANUAL_SERVICES.map(s => ({ ...s, running: true, bat: '' }))];
+    badge.textContent = all.filter(s => s.running).length + '/' + all.length + ' UP';
+    badge.style.display = 'inline-block';
+    badge.className = 'badge ' + (all.every(s => s.running) ? 'live' : 'dead');
+    grid.innerHTML = all.map(s => `
+      <div class="link-row" style="justify-content: flex-start; gap: 12px;">
+        <span style="font-size: 18px; line-height: 1; text-shadow: 0 0 6px ${s.running ? '#4ade80' : '#f87171'};">${s.running ? '🟢' : '🔴'}</span>
+        <div>
+          <div style="color: #fff; font-size: 14px; font-weight: 600;">${s.name}</div>
+          <div style="color: ${s.running ? '#4ade80' : '#f87171'}; font-size: 12px;">${s.running ? 'Running' : 'Stopped'}</div>
+          ${s.bat ? `<div style="color: #444; font-size: 11px; font-family: monospace;">${s.bat}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    badge.textContent = 'OFFLINE';
+    badge.style.display = 'inline-block';
+    badge.className = 'badge dead';
+    grid.innerHTML = `
+      <div class="link-row" style="justify-content: flex-start; gap: 12px;">
+        <span style="font-size: 18px;">🔴</span>
+        <div>
+          <div style="color: #f87171; font-size: 14px;">Trading Bot Dashboard offline</div>
+          <div style="color: #666; font-size: 12px;">Start with TompoBot.bat on desktop</div>
+        </div>
+      </div>
+    `;
+  }
+}
+fetchServices();
+setInterval(fetchServices, 15000);
+
 function updateClock() {
   const now = new Date();
   const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/New_York' };
