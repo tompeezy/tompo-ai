@@ -278,8 +278,10 @@ export default function Home() {
             </div>
             <div className="footer-links">
               <h4>Connect</h4>
-              <a href="https://pinterest.com/gettompoai" target="_blank" rel="noopener noreferrer">Pinterest</a>
+              <a href="https://instagram.com/tompo.ai" target="_blank" rel="noopener noreferrer">Instagram</a>
               <a href="https://facebook.com/gettompoai" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="https://tiktok.com/@teeemhigh" target="_blank" rel="noopener noreferrer">TikTok (Golf)</a>
+              <a href="https://pinterest.com/gettompoai" target="_blank" rel="noopener noreferrer">Pinterest</a>
               <a href="mailto:gettompoai@gmail.com">gettompoai@gmail.com</a>
             </div>
           </div>
