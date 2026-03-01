@@ -5,6 +5,7 @@ export default function Home() {
       <nav className="nav">
         <div className="container">
           <div className="nav-logo">
+            <img src="/logo.svg" alt="Tompo AI" style={{ height: '40px', marginRight: '12px' }} />
             tompo<span>.ai</span>
           </div>
           <ul className="nav-links">
