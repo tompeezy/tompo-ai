@@ -110,7 +110,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="share-grid">
 <button class="share-btn" onclick="copyRpt()"><span class="si">📋</span>Copy Report</button>
 <button class="share-btn" onclick="emailRpt()"><span class="si">✉️</span>Email</button>
-<button class="share-btn" onclick="window.location.href='estimator.html'"><span class="si">💰</span>Estimator</button>
+<button class="share-btn" onclick="goEstimator()"><span class="si">💰</span>Estimator</button>
 <button class="share-btn" onclick="show('s-form');prog(0)"><span class="si">🔄</span>New Scan</button>
 </div>
 <div style="height:30px"></div>
@@ -167,6 +167,12 @@ document.getElementById('sensor-list').innerHTML=items.map(it=>{const s=SENSORS[
 document.getElementById('res-total').textContent='$'+total.toLocaleString();
 S._items=items;S._total=total;S._sqft=sqft;S._pkg=pkg;
 show('s-results');prog(100);}
+function goEstimator(){
+const map={door:'door-sensor',motion:'motion-sensor',fall:'fall-sensor',water:'water-sensor',smoke:'smoke-detector',temp:'temp-sensor',plug:'smart-plug',panic:'panic-button'};
+const prefill={};
+S._items.forEach(function(it){const k=map[it.type];if(k)prefill[k]=it.qty;});
+localStorage.setItem('gn_prefill',JSON.stringify(prefill));
+window.location.href='estimator.html';}
 function buildReport(){
 const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 let t='GET NOTIFIED LLC - HOUSE SCAN REPORT\nDate: '+date+'\n';
