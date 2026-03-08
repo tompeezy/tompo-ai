@@ -1,319 +1,461 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="theme-color" content="#1a2744"/>
-<title>Get Notified – Live Quote Estimator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Get Notified LLC – Quote Estimator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#1a2744;--gold:#f59e0b;--white:#fff;--gray:#64748b;--green:#10b981;--bg:#0f1729}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;max-width:480px;margin:0 auto}
-.hdr{background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,158,11,.15)}
-.hdr h1{font-size:1.05rem;font-weight:800}.hdr h1 span{color:var(--gold)}
-.hdr .sub{font-size:.68rem;color:#475569;margin-top:1px}
-.hdr-right{font-size:.9rem;font-weight:800;color:var(--gold)}
-.content{padding:20px}
-.slabel{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.6px;text-transform:uppercase;margin:20px 0 10px}
-.base-card{background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;border:1px solid rgba(245,158,11,.2)}
-.base-card .bc-icon{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0}
-.base-card .bc-info{flex:1}
-.base-card .bc-name{font-size:.85rem;font-weight:700}
-.base-card .bc-desc{font-size:.7rem;color:#475569;margin-top:2px}
-.base-card .bc-price{font-size:.88rem;font-weight:800;color:var(--gold);flex-shrink:0}
-.base-card .bc-tag{font-size:.62rem;background:rgba(245,158,11,.12);color:var(--gold);border-radius:6px;padding:2px 8px;font-weight:700;margin-top:4px;display:inline-block}
-.bundle-section{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06)}
-.bs-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.bs-icon{font-size:1.4rem}
-.bs-title{font-size:.88rem;font-weight:800}
-.bs-sub{font-size:.7rem;color:#475569;margin-top:2px}
-.bundle-opts{display:flex;flex-direction:column;gap:8px}
-.bundle-opt{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;border:1.5px solid rgba(255,255,255,.08);cursor:pointer;transition:.2s}
-.bundle-opt.on{border-color:var(--gold);background:rgba(245,158,11,.08)}
-.bundle-opt.on .bo-check{color:var(--gold)}
-.bo-left{display:flex;align-items:center;gap:10px}
-.bo-check{font-size:1rem;color:#334155;width:20px}
-.bo-name{font-size:.82rem;font-weight:700}
-.bo-save{font-size:.65rem;background:rgba(16,185,129,.12);color:var(--green);border-radius:6px;padding:2px 7px;font-weight:700;margin-left:6px}
-.bo-price{font-size:.88rem;font-weight:800;color:var(--gold)}
-.sensor-card{background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.06)}
-.sc-icon{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0}
-.sc-info{flex:1}
-.sc-name{font-size:.85rem;font-weight:700}
-.sc-brand{font-size:.68rem;color:var(--gold);margin-top:1px}
-.sc-desc{font-size:.7rem;color:#475569;margin-top:2px}
-.sc-qty{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.sc-qty button{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:var(--white);font-size:1rem;cursor:pointer}
-.sc-qty span{min-width:20px;text-align:center;font-weight:800}
-.sc-sub{font-size:.75rem;color:var(--green);font-weight:700;min-width:40px;text-align:right;flex-shrink:0}
-.ex-card{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:10px;border:1px solid rgba(245,158,11,.15)}
-.ex-card h3{font-size:.88rem;font-weight:700;margin-bottom:3px}
-.ex-card p{font-size:.72rem;color:#475569;margin-bottom:12px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:7px 13px;border-radius:20px;border:1.5px solid rgba(255,255,255,.1);background:transparent;color:#94a3b8;font-size:.75rem;cursor:pointer;transition:.2s}
-.chip.credit-on{border-color:var(--gold);color:var(--gold);background:rgba(245,158,11,.08)}
-.chip.free-on{border-color:var(--green);color:var(--green);background:rgba(16,185,129,.08)}
-.credit-lines{margin-top:8px;border-top:1px solid rgba(255,255,255,.05);padding-top:6px}
-.credit-line{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:.78rem;color:#94a3b8}
-.free-badge{font-size:.65rem;background:rgba(16,185,129,.12);color:var(--green);border-radius:6px;padding:3px 8px;font-weight:700}
-.pkg-box{background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2px solid var(--gold);border-radius:14px;padding:18px;text-align:center;margin:14px 0}
-.pkg-label{font-size:.68rem;color:var(--gold);font-weight:700;letter-spacing:.5px;margin-bottom:6px}
-.pkg-name{font-size:1.15rem;font-weight:800;margin-bottom:4px}
-.pkg-price{font-size:1.6rem;font-weight:800;color:var(--gold)}
-.pkg-sub{font-size:.72rem;color:#475569;margin-top:6px}
-.total-box{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,.06)}
-.trow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.85rem}
-.trow .tl{color:#94a3b8}.trow .tv{font-weight:700}
-.trow.big .tl{font-size:.95rem;color:var(--white);font-weight:700}
-.trow.big .tv{font-size:1.2rem;color:var(--gold)}
-.trow.green .tv{color:var(--green)}
-.trow.dep .tl{color:var(--white);font-weight:700}
-.trow.dep .tv{color:var(--gold);font-weight:800}
-.divider{height:1px;background:rgba(255,255,255,.08);margin:8px 0}
-.deposit-box{background:rgba(245,158,11,.08);border:2px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:16px;text-align:center}
-.deposit-box .d-title{font-size:.9rem;font-weight:800;color:var(--gold);margin-bottom:4px}
-.deposit-box .d-amount{font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:6px}
-.deposit-box .d-sub{font-size:.72rem;color:#94a3b8;line-height:1.6}
-.invoice-btn{width:100%;padding:16px;border-radius:12px;border:none;background:var(--gold);color:var(--navy);font-size:1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
-.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
-.share-btn .si{font-size:1.4rem}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
-.toast.show{opacity:1}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a2744;min-height:100vh}
+:root{--navy:#1a2744;--gold:#f59e0b;--gold-light:#fef3c7;--white:#fff;--gray:#64748b;--green:#10b981;--red:#ef4444}
+header{background:var(--navy);color:var(--white);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+header h1{font-size:1.4rem;font-weight:700}
+header h1 span{color:var(--gold)}
+header p{font-size:.8rem;color:#94a3b8;margin-top:2px}
+.view-toggle{display:flex;gap:8px}
+.view-toggle button{padding:6px 14px;border-radius:20px;border:1.5px solid var(--gold);background:transparent;color:var(--gold);font-size:.8rem;font-weight:600;cursor:pointer;transition:.2s}
+.view-toggle button.active{background:var(--gold);color:var(--navy)}
+.main{display:grid;grid-template-columns:1fr 380px;gap:20px;padding:20px;max-width:1300px;margin:0 auto}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+.card{background:var(--white);border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:18px}
+.card h2{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.info-field{display:flex;flex-direction:column;gap:4px}
+.info-field label{font-size:.75rem;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.4px}
+.info-field input,.info-field select{padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;color:var(--navy);outline:none;transition:.2s;font-family:inherit;background:white}
+.info-field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
+.invoice-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.invoice-badge{background:var(--navy);color:var(--gold);padding:4px 10px;border-radius:6px;font-size:.75rem;font-weight:700;letter-spacing:.5px;white-space:nowrap}
+.regen-btn{background:none;border:1.5px solid #e2e8f0;border-radius:6px;padding:4px 9px;font-size:.75rem;cursor:pointer;color:var(--gray);transition:.2s}
+.regen-btn:hover{border-color:var(--gold);color:var(--navy)}
+.hub-toggle{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;margin-bottom:14px;cursor:pointer}
+.hub-toggle input{width:18px;height:18px;accent-color:var(--green);cursor:pointer}
+.hub-toggle label{font-size:.85rem;font-weight:600;color:#166534;cursor:pointer}
+.hub-toggle span{font-size:.75rem;color:#4ade80;margin-left:4px}
+.packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}
+.pkg{border:2px solid #e2e8f0;border-radius:10px;padding:14px;cursor:pointer;transition:.2s;text-align:center}
+.pkg:hover{border-color:var(--gold);background:var(--gold-light)}
+.pkg.selected{border-color:var(--gold);background:var(--gold-light)}
+.pkg .pkg-name{font-weight:700;font-size:.88rem;color:var(--navy)}
+.pkg .pkg-price{font-size:1.1rem;font-weight:800;color:var(--gold);margin:4px 0}
+.pkg .pkg-desc{font-size:.72rem;color:var(--gray);line-height:1.4}
+.pkg .pkg-includes{font-size:.7rem;color:var(--gray);margin-top:6px;text-align:left;list-style:none}
+.pkg .pkg-includes li{margin-top:3px}
+.pkg .pkg-includes li:before{content:"✓ ";color:var(--green);font-weight:700}
+.sensor-table{width:100%;border-collapse:collapse}
+.sensor-table th{text-align:left;font-size:.75rem;color:var(--gray);font-weight:600;padding:6px 8px;border-bottom:1px solid #e2e8f0}
+.sensor-table td{padding:8px;border-bottom:1px solid #f1f5f9;font-size:.85rem;vertical-align:middle}
+.sensor-table tr:last-child td{border-bottom:none}
+.sensor-table tr:hover td{background:#f8fafc}
+.qty-ctrl{display:flex;align-items:center;gap:6px}
+.qty-ctrl button{width:26px;height:26px;border-radius:50%;border:1.5px solid #e2e8f0;background:var(--white);font-size:1rem;cursor:pointer;font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;transition:.15s}
+.qty-ctrl button:hover{border-color:var(--gold);background:var(--gold-light)}
+.qty-ctrl span{min-width:22px;text-align:center;font-weight:700;font-size:.9rem}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.65rem;font-weight:700;margin-left:4px}
+.badge-star{background:#fef3c7;color:#92400e}
+.badge-repeater{background:#dcfce7;color:#166534}
+.badge-power{background:#dbeafe;color:#1e40af}
+.badge-hub{background:#f3e8ff;color:#6b21a8}
+.cost-col{color:var(--red);font-size:.75rem;font-weight:600}
+.profit-col{color:var(--green);font-size:.75rem;font-weight:600}
+.addon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.addon-item{border:2px solid #e2e8f0;border-radius:8px;padding:12px;cursor:pointer;transition:.2s;display:flex;gap:10px;align-items:flex-start}
+.addon-item:hover{border-color:var(--gold)}
+.addon-item.selected{border-color:var(--gold);background:var(--gold-light)}
+.addon-item input{margin-top:3px;accent-color:var(--gold)}
+.addon-item .addon-name{font-weight:700;font-size:.85rem;color:var(--navy)}
+.addon-item .addon-price{font-size:.85rem;color:var(--gold);font-weight:700}
+.addon-item .addon-desc{font-size:.72rem;color:var(--gray);margin-top:3px}
+.monitor-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}
+.monitor-opt{border:2px solid #e2e8f0;border-radius:8px;padding:14px;cursor:pointer;transition:.2s;text-align:center}
+.monitor-opt:hover{border-color:var(--gold)}
+.monitor-opt.selected{border-color:var(--gold);background:var(--gold-light)}
+.monitor-opt .mon-name{font-weight:700;font-size:.9rem;margin-top:6px}
+.monitor-opt .mon-price{font-size:1rem;font-weight:800;color:var(--gold)}
+.monitor-opt .mon-desc{font-size:.72rem;color:var(--gray);margin-top:4px}
+.payment-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}
+.pay-opt{border:2px solid #e2e8f0;border-radius:8px;padding:14px;cursor:pointer;transition:.2s;text-align:center}
+.pay-opt:hover{border-color:var(--gold)}
+.pay-opt.selected{border-color:var(--gold);background:var(--gold-light)}
+.pay-opt .po-name{font-weight:700;font-size:.88rem;color:var(--navy)}
+.pay-opt .po-amount{font-size:1rem;font-weight:800;color:var(--gold);margin:4px 0}
+.pay-opt .po-desc{font-size:.7rem;color:var(--gray);margin-top:3px}
+.pay-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.existing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.existing-item{border:2px solid #e2e8f0;border-radius:8px;padding:12px;cursor:pointer;transition:.2s;display:flex;gap:10px;align-items:flex-start}
+.existing-item:hover{border-color:var(--green)}
+.existing-item.selected{border-color:var(--green);background:#f0fdf4}
+.existing-item input{margin-top:2px;accent-color:var(--green);flex-shrink:0;width:16px;height:16px}
+.existing-item .ex-name{font-weight:700;font-size:.84rem;color:var(--navy)}
+.existing-item .ex-tag{font-size:.74rem;font-weight:700;margin-top:3px}
+.existing-item .ex-tag.save{color:var(--green)}
+.existing-item .ex-tag.free{color:#3b82f6}
+.existing-item .ex-note{font-size:.7rem;color:var(--gray);margin-top:2px;line-height:1.3}
+.existing-credit-banner{background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-top:12px;display:none;font-size:.82rem;color:#166534;font-weight:600}
+.existing-credit-banner.visible{display:block}
+.deposit-notice{background:#fffbeb;border:2px solid var(--gold);border-radius:8px;padding:12px 16px;margin-top:12px;font-size:.82rem;color:#92400e;font-weight:600;text-align:center}
+.quote-panel{position:sticky;top:20px}
+.quote-card{background:var(--navy);color:var(--white);border-radius:12px;padding:22px;box-shadow:0 4px 20px rgba(26,39,68,.3)}
+.quote-card h2{color:var(--gold);font-size:1rem;margin-bottom:4px;letter-spacing:.5px}
+.quote-meta{font-size:.72rem;color:#64748b;margin-bottom:6px;font-family:monospace}
+.quote-expiry{display:inline-block;background:rgba(239,68,68,.15);color:#fca5a5;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:4px;margin-bottom:12px}
+.quote-customer{background:rgba(255,255,255,.05);border-radius:6px;padding:8px 10px;margin-bottom:14px;font-size:.78rem;color:#cbd5e1;line-height:1.6;display:none}
+.quote-customer.visible{display:block}
+.quote-line{display:flex;justify-content:space-between;align-items:flex-start;font-size:.83rem;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08);gap:8px}
+.quote-line:last-of-type{border-bottom:none}
+.quote-line .ql-name{color:#94a3b8;flex:1}
+.quote-line .ql-price{font-weight:600;white-space:nowrap}
+.quote-line .ql-price.free{color:#34d399}
+.quote-line .ql-price.credit{color:#34d399}
+hr.quote-divider{border:none;border-top:1px solid rgba(255,255,255,.15);margin:12px 0}
+.quote-total-row{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.quote-total-row .label{font-size:.85rem;color:#cbd5e1}
+.quote-total-row .amount{font-size:1rem;font-weight:700}
+.quote-total-row.big .label{font-size:.95rem;color:var(--white)}
+.quote-total-row.big .amount{font-size:1.4rem;color:var(--gold)}
+.quote-total-row.deposit-row .label{color:#fcd34d;font-weight:700}
+.quote-total-row.deposit-row .amount{color:#fcd34d;font-weight:800}
+.plan-box{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 12px;margin-top:10px;display:none}
+.plan-box.visible{display:block}
+.plan-box .pb-title{font-size:.72rem;color:#fcd34d;font-weight:700;margin-bottom:6px}
+.plan-box .pb-row{display:flex;justify-content:space-between;font-size:.82rem;padding:2px 0;color:#e2e8f0}
+.savings-box{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);border-radius:8px;padding:10px 12px;margin-top:10px}
+.savings-box .sb-title{font-size:.75rem;color:#6ee7b7;font-weight:600;margin-bottom:4px}
+.savings-box .sb-amount{font-size:1.1rem;font-weight:800;color:#34d399}
+.savings-box .sb-note{font-size:.68rem;color:#94a3b8;margin-top:3px}
+.owner-box{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 12px;margin-top:10px}
+.owner-box .ob-row{display:flex;justify-content:space-between;font-size:.8rem;padding:3px 0}
+.owner-box .ob-label{color:#fcd34d}
+.owner-box .ob-val.profit{color:#34d399}
+.owner-box .ob-val.cost{color:#f87171}
+.btn-row{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.print-btn{width:100%;padding:11px;border-radius:8px;border:none;background:var(--gold);color:var(--navy);font-weight:800;font-size:.88rem;cursor:pointer;transition:.2s}
+.print-btn:hover{background:#e48e00}
+.email-btn{width:100%;padding:11px;border-radius:8px;border:1.5px solid var(--gold);background:transparent;color:var(--gold);font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;display:block;text-align:center;transition:.2s}
+.email-btn:hover{background:rgba(245,158,11,.1)}
+.clear-btn{width:100%;padding:8px;border-radius:8px;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:#94a3b8;font-size:.8rem;cursor:pointer;transition:.2s}
+.clear-btn:hover{border-color:rgba(255,255,255,.4);color:var(--white)}
+.note{font-size:.75rem;color:var(--gray);margin-top:8px;padding:8px 10px;background:#f8fafc;border-radius:6px;border-left:3px solid var(--gold)}
+.owner-only{display:none}
+body.owner-view .owner-only{display:block}
+body.owner-view .cost-col{display:table-cell}
+body.owner-view .profit-col{display:table-cell}
+body:not(.owner-view) .cost-col{display:none}
+body:not(.owner-view) .profit-col{display:none}
+@media print{
+body{background:white}
+.view-toggle,.btn-row{display:none!important}
+.main{grid-template-columns:1fr}
+.quote-panel{position:static}
+.quote-card{background:var(--navy)!important;print-color-adjust:exact;-webkit-print-color-adjust:exact;color:white!important}
+.card{box-shadow:none;border:1px solid #e2e8f0}
+.cost-col,.profit-col,.owner-box{display:none!important}
+.left-col .card:not(:first-child){display:none}
+}
 </style>
 </head>
 <body>
-<div class="hdr">
-<div><h1>Get <span>Notified</span> LLC</h1><div class="sub">Live Quote Estimator</div></div>
-<div class="hdr-right" id="hdr-total">$0</div>
-</div>
-<div class="content">
-
-<div class="slabel">⚙️ Base Install Kit (Every Install)</div>
-<div class="base-card">
-<div class="bc-icon">🖥️</div>
-<div class="bc-info">
-<div class="bc-name">Smart Home Hub</div>
-<div class="bc-brand" style="font-size:.68rem;color:var(--gold)">Raspberry Pi 5 + Zigbee Dongle + SD Card</div>
-<div class="bc-desc">Local server — your data stays in your home</div>
-<span class="bc-tag">Always Included</span>
-</div>
-<div class="bc-price">$175</div>
-</div>
-<div class="base-card">
-<div class="bc-icon">🔋</div>
-<div class="bc-info">
-<div class="bc-name">Mini UPS Battery Backup</div>
-<div class="bc-brand" style="font-size:.68rem;color:var(--gold)">Geekwee UPS for Raspberry Pi</div>
-<div class="bc-desc">System stays on during power outages</div>
-<span class="bc-tag">Always Included</span>
-</div>
-<div class="bc-price">$75</div>
-</div>
-<div class="base-card">
-<div class="bc-icon">🔌</div>
-<div class="bc-info">
-<div class="bc-name">Smart Plugs 2-Pack (Mesh)</div>
-<div class="bc-brand" style="font-size:.68rem;color:var(--gold)">SONOFF Zigbee Smart Plug</div>
-<div class="bc-desc">Extends Zigbee signal throughout home</div>
-<span class="bc-tag">Always Included</span>
-</div>
-<div class="bc-price">$70</div>
-</div>
-
-<div class="slabel">⭐ Presence & Fall Sensors</div>
-<div class="bundle-section">
-<div class="bs-header">
-<span class="bs-icon">⭐</span>
+<header>
 <div>
-<div class="bs-title">Aqara FP1E Presence & Fall Sensor</div>
-<div class="bs-sub">Bedrooms, bathrooms, living areas — detects presence even sitting still</div>
+<h1>Get <span>Notified</span> LLC</h1>
+<p>Safety Without Surveillance · Quote Estimator</p>
+</div>
+<div class="view-toggle">
+<button id="btn-customer" class="active" onclick="setView('customer')">Customer View</button>
+<button id="btn-owner" onclick="setView('owner')">Owner View 🔒</button>
+</div>
+</header>
+
+<div class="main">
+<div class="left-col">
+
+<div class="card">
+<h2>🧾 Customer Info</h2>
+<div style="margin-bottom:14px">
+<div class="info-field" style="margin-bottom:10px">
+<label>Invoice Number</label>
+<div class="invoice-row">
+<span class="invoice-badge" id="invoice-display">GN-—</span>
+<input type="text" id="invoice-input" style="flex:1;max-width:210px" placeholder="GN-20260307-001" oninput="syncInvoice()"/>
+<button class="regen-btn" onclick="regenInvoice()">🔄 New #</button>
 </div>
 </div>
-<div class="bundle-opts" id="presence-opts"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:420px">
+<div class="info-field"><label>Quote Date</label><input type="date" id="quote-date" oninput="updateQuote()"/></div>
+<div class="info-field"><label>Expires (90 Days)</label><input type="text" id="expiry-display" readonly style="background:#fef2f2;color:#b91c1c;font-weight:700;cursor:default"/></div>
+</div>
+</div>
+<div class="info-grid">
+<div class="info-field"><label>Customer Name</label><input type="text" id="cust-name" placeholder="Jane Smith" oninput="updateQuote()"/></div>
+<div class="info-field"><label>Phone</label><input type="tel" id="cust-phone" placeholder="(704) 555-0100" oninput="updateQuote()"/></div>
+<div class="info-field"><label>Email</label><input type="email" id="cust-email" placeholder="jane@email.com" oninput="updateQuote()"/></div>
+<div class="info-field"><label>Address</label><input type="text" id="cust-address" placeholder="123 Main St, Salisbury NC" oninput="updateQuote()"/></div>
+</div>
 </div>
 
-<div class="slabel">🆘 Panic Buttons</div>
-<div class="bundle-section">
-<div class="bs-header">
-<span class="bs-icon">🆘</span>
-<div>
-<div class="bs-title">Panic Button — Replaces Life Alert</div>
-<div class="bs-sub">One press → entire family notified. No monthly fee. Ever.</div>
-</div>
-</div>
-<div class="bundle-opts" id="panic-opts"></div>
+<div class="card">
+<h2>🏠 Existing Smart Home? <span style="font-size:.75rem;font-weight:400;color:var(--gray);margin-left:6px">(optional — check what they already have)</span></h2>
+<p class="note" style="margin-bottom:14px">✅ We work <strong>with</strong> what's already in the home — not against it. Check existing devices below and we'll skip redundant hardware &amp; integrate the rest <strong>free</strong>.</p>
+<div class="existing-grid" id="existing-grid"></div>
+<div class="existing-credit-banner" id="existing-credit-banner">💰 Existing device credits applied — see quote panel for savings!</div>
 </div>
 
-<div class="slabel">Additional Sensors</div>
-<div id="sensor-cards"></div>
-
-<div class="slabel">🏠 Existing Smart Home?</div>
-<div class="ex-card">
-<h3>Select devices already in the home</h3>
-<p>Credits applied automatically — integrations shown free</p>
-<div class="chips" id="ex-chips"></div>
-<div class="credit-lines" id="credit-lines"></div>
+<div class="card">
+<h2>📦 Step 1: Choose a Package</h2>
+<div class="packages">
+<div class="pkg" id="pkg-essentials" onclick="selectPackage('essentials')">
+<div class="pkg-name">Safe Nights Essentials</div>
+<div class="pkg-price">$1,499</div>
+<div class="pkg-desc">Perfect starter</div>
+<ul class="pkg-includes">
+<li>Hub Computer + Dongle</li>
+<li>2× Smart Plugs</li>
+<li>3× Door Sensors</li>
+<li>1× Motion Sensor</li>
+<li>Installation &amp; Setup</li>
+</ul>
+</div>
+<div class="pkg" id="pkg-complete" onclick="selectPackage('complete')">
+<div class="pkg-name">Complete Home Safety</div>
+<div class="pkg-price">$2,999</div>
+<div class="pkg-desc">Full + fall detection</div>
+<ul class="pkg-includes">
+<li>Everything in Essentials</li>
+<li>1× Fall Sensor</li>
+<li>2× More Door Sensors</li>
+<li>1× Water Sensor</li>
+<li>1× Backup Power</li>
+</ul>
+</div>
+<div class="pkg" id="pkg-total" onclick="selectPackage('total')">
+<div class="pkg-name">Total Peace of Mind</div>
+<div class="pkg-price">$3,999</div>
+<div class="pkg-desc">Maximum protection</div>
+<ul class="pkg-includes">
+<li>Everything in Complete</li>
+<li>2× Fall Sensors</li>
+<li>2× Water Sensors</li>
+<li>2× Temp Sensors</li>
+<li>1× Smoke Detector</li>
+</ul>
+</div>
+<div class="pkg" id="pkg-custom" onclick="selectPackage('custom')">
+<div class="pkg-name">Custom Build</div>
+<div class="pkg-price">$—</div>
+<div class="pkg-desc">Pick what you need</div>
+<ul class="pkg-includes">
+<li>Choose sensors below</li>
+<li>Priced per item</li>
+<li>Install included</li>
+</ul>
+</div>
+</div>
 </div>
 
-<div class="pkg-box">
-<div class="pkg-label">📦 RECOMMENDED PACKAGE</div>
-<div class="pkg-name" id="pkg-name">Safe Nights Essentials</div>
-<div class="pkg-price" id="pkg-price">$1,499</div>
-<div class="pkg-sub" id="pkg-sub">Based on sensor selection</div>
+<div class="card">
+<h2>📡 Step 2: Sensors &amp; Devices</h2>
+<div class="hub-toggle" onclick="toggleHub()">
+<input type="checkbox" id="hub-check" onchange="toggleHub()"/>
+<label for="hub-check">✅ Customer already has a Get Notified hub — skip hub charge</label>
+<span id="hub-savings"></span>
+</div>
+<p class="note">⚡ 2 Smart Plugs always included — extend Zigbee mesh range through walls.</p>
+<br/>
+<table class="sensor-table">
+<thead>
+<tr>
+<th>Device</th>
+<th style="width:110px">Qty</th>
+<th style="width:70px">Each</th>
+<th style="width:70px">Subtotal</th>
+<th class="cost-col" style="width:70px">My Cost</th>
+<th class="profit-col" style="width:70px">Profit</th>
+</tr>
+</thead>
+<tbody id="sensor-rows"></tbody>
+</table>
 </div>
 
-<div class="total-box">
-<div class="trow"><span class="tl">Base Install Kit</span><span class="tv">$320</span></div>
-<div class="trow"><span class="tl">Sensors & Bundles</span><span class="tv" id="t-sensors">$0</span></div>
-<div class="trow green" id="t-credit-row" style="display:none"><span class="tl">Device Credits</span><span class="tv" id="t-credit">-$0</span></div>
-<div class="divider"></div>
-<div class="trow big"><span class="tl">Estimated Total</span><span class="tv" id="t-total">$320</span></div>
-<div class="divider"></div>
-<div class="trow dep"><span class="tl">⚡ 50% Deposit Due</span><span class="tv" id="t-deposit">$160</span></div>
-<div class="trow"><span class="tl">Balance Due at Install</span><span class="tv" id="t-balance">$160</span></div>
+<div class="card">
+<h2>⚙️ Step 3: Service Add-Ons</h2>
+<div class="addon-grid" id="addon-grid"></div>
 </div>
 
-<div class="deposit-box">
-<div class="d-title">⚠️ 50% Deposit Required to Schedule</div>
-<div class="d-amount" id="d-amount">$160</div>
-<div class="d-sub">Hardware ordered upon receipt of deposit.<br/>Balance due day of install.<br/>Deposit non-refundable once equipment is ordered.</div>
+<div class="card">
+<h2>📲 Step 4: Monthly Monitoring</h2>
+<div class="monitor-options" id="monitor-options"></div>
 </div>
 
-<button class="invoice-btn" onclick="goInvoice()">📄 Create Invoice</button>
-<div class="slabel">Export</div>
-<div class="share-grid">
-<button class="share-btn" onclick="copyQ()"><span class="si">📋</span>Copy Quote</button>
-<button class="share-btn" onclick="emailQ()"><span class="si">✉️</span>Email</button>
-<button class="share-btn" onclick="window.location.href='scanner.html'"><span class="si">🏠</span>Scanner</button>
-<button class="share-btn" onclick="resetAll()"><span class="si">🔄</span>Reset</button>
+<div class="card">
+<h2>💳 Step 5: Payment Plan</h2>
+<p class="note">⚠️ All quotes expire in <strong>90 days</strong>. Hardware prices fluctuate with tariffs and supply chain.</p>
+<br/>
+<div class="payment-opts" id="payment-opts"></div>
+<div class="deposit-notice">⚡ <strong>50% Deposit Required to Schedule Install</strong><br/>Hardware ordered upon receipt. Balance due day of install. Deposit non-refundable once equipment is ordered.</div>
+<div class="pay-links" id="pay-links-section" style="display:none">
+<div class="info-field"><label>PayPal.me Link</label><input type="text" id="paypal-link" placeholder="paypal.me/yourname" oninput="updateQuote()"/></div>
+<div class="info-field"><label>Stripe Payment Link</label><input type="text" id="stripe-link" placeholder="buy.stripe.com/..." oninput="updateQuote()"/></div>
 </div>
-<a href="index.html" style="display:block;text-align:center;margin-bottom:24px;font-size:.78rem;color:#334155;text-decoration:none">Back to Tools</a>
 </div>
-<div class="toast" id="toast"></div>
+
+</div>
+
+<div class="quote-panel">
+<div class="quote-card">
+<h2>📋 QUOTE</h2>
+<div class="quote-meta" id="panel-invoice">Invoice: —</div>
+<div class="quote-expiry" id="panel-expiry">⏳ Expires: —</div>
+<div class="quote-customer" id="panel-customer"></div>
+<div id="quote-lines"></div>
+<hr class="quote-divider"/>
+<div class="quote-total-row"><span class="label">One-Time Total</span><span class="amount" id="total-onetime">$0</span></div>
+<div class="quote-total-row"><span class="label">Monthly Monitoring</span><span class="amount" id="total-monthly">$0/mo</span></div>
+<div class="quote-total-row big"><span class="label">Due Today</span><span class="amount" id="total-due">$0</span></div>
+<div class="quote-total-row deposit-row"><span class="label">⚡ 50% Deposit</span><span class="amount" id="total-deposit">$0</span></div>
+<div class="plan-box" id="plan-box">
+<div class="pb-title">📅 PAYMENT PLAN BREAKDOWN</div>
+<div id="plan-rows"></div>
+</div>
+<div class="savings-box">
+<div class="sb-title">💡 EST. ENERGY SAVINGS</div>
+<div class="sb-amount" id="savings-amount">$0/yr</div>
+<div class="sb-note" id="savings-note">Select a package to see payback estimate</div>
+</div>
+<div class="owner-box owner-only">
+<div class="ob-row"><span class="ob-label">Hardware Cost</span><span class="ob-val cost" id="owner-cost">$0</span></div>
+<div class="ob-row"><span class="ob-label">Revenue</span><span class="ob-val" id="owner-revenue">$0</span></div>
+<div class="ob-row"><span class="ob-label">Gross Profit</span><span class="ob-val profit" id="owner-profit">$0</span></div>
+<div class="ob-row"><span class="ob-label">Margin</span><span class="ob-val profit" id="owner-margin">—</span></div>
+</div>
+<div class="btn-row">
+<button class="print-btn" onclick="printQuote()">🖨️ Print / Save as PDF</button>
+<a class="email-btn" id="email-link" href="#">✉️ Email This Quote</a>
+<button class="clear-btn" onclick="clearAll()">↺ Start Over</button>
+</div>
+</div>
+</div>
+</div>
+
 <script>
-const BASE=320;
-const PRESENCE_BUNDLES=[
-{qty:1,price:149,save:0,label:'1 Sensor'},
-{qty:3,price:399,save:48,label:'3-Pack'},
-{qty:5,price:599,save:146,label:'5-Pack'},
-{qty:7,price:849,save:194,label:'7-Pack'}
-];
-const PANIC_BUNDLES=[
-{qty:0,price:0,save:0,label:'None'},
-{qty:1,price:55,save:0,label:'1 Button'},
-{qty:2,price:99,save:11,label:'2-Pack'},
-{qty:4,price:179,save:41,label:'4-Pack'}
-];
+const PI_PRICE=175,PI_COST=125;
 const SENSORS=[
-{id:'door-sensor',name:'Door/Window Sensor',brand:'Aqara Door Sensor P2',icon:'🚪',price:45,desc:'Front door, back door, garage, medicine cabinet'},
-{id:'motion-sensor',name:'Motion Sensor',brand:'Aqara Motion Sensor P1',icon:'👁️',price:45,desc:'Hallways, garage, secondary rooms'},
-{id:'vibration-sensor',name:'Vibration Sensor',brand:'Aqara Vibration Sensor',icon:'📳',price:55,desc:'Under mattress, fridge door, medicine cabinet'},
-{id:'water-sensor',name:'Water Leak Sensor',brand:'Aqara Water Leak Sensor',icon:'💧',price:45,desc:'Under sinks, washer, basement floor'},
-{id:'smoke-detector',name:'Smoke Detector',brand:'Zigbee Smoke Detector',icon:'🔥',price:75,desc:'Kitchen & per floor coverage'},
-{id:'temp-sensor',name:'Temp & Humidity Sensor',brand:'SONOFF SNZB-02D',icon:'🌡️',price:40,desc:'Climate monitoring per floor'},
-{id:'smart-lock',name:'Smart Lock',brand:'Zigbee Smart Lock',icon:'🔒',price:349,desc:'Wandering prevention — timed entry control'}
+{id:'pi',name:'Raspberry Pi 5 – Hub Computer (Kit)',badge:'hub',note:'Complete kit: board, case, SD card, power supply — runs all automations locally',price:175,cost:125},
+{id:'ups',name:'Mini UPS – Backup Power',badge:'power',note:'Keeps system running 4-6 hrs during power outage',price:75,cost:35},
+{id:'plug',name:'SONOFF S31 Lite Zigbee Smart Plug',badge:'repeater',note:'Extends wireless range — 2 always included',price:35,cost:12},
+{id:'aqara-dw',name:'Aqara Door/Window Sensor P2',badge:'',note:'Doors, windows, cabinets',price:45,cost:14},
+{id:'snzb-dw',name:'SONOFF SNZB-04P Door/Window Sensor',badge:'',note:'Budget-friendly door sensor',price:45,cost:10},
+{id:'aqara-mo',name:'Aqara Motion Sensor P1',badge:'',note:'Room motion, pet-immune',price:45,cost:20},
+{id:'snzb-mo',name:'SONOFF SNZB-03P Motion Sensor',badge:'',note:'Hallways, entry points',price:45,cost:12},
+{id:'fp1e',name:'Aqara FP1E Presence & Fall Sensor',badge:'star',note:'Detects falls, sitting, presence — demo hero',price:149,cost:45},
+{id:'water',name:'Aqara Water Leak Sensor',badge:'',note:'Under sinks, water heater, washer',price:45,cost:16},
+{id:'temp',name:'Aqara Temp & Humidity Sensor',badge:'',note:'Room condition monitoring',price:40,cost:15},
+{id:'snzb-temp',name:'SONOFF SNZB-02D Temp/Humidity',badge:'',note:'Budget temp monitoring',price:40,cost:12},
+{id:'vibration',name:'Aqara Vibration Sensor',badge:'',note:'Bed occupancy, medicine cabinet, drawers',price:55,cost:18},
+{id:'smoke',name:'HEIMAN Zigbee Smoke Detector',badge:'',note:'Fire & smoke phone alerts',price:75,cost:25},
+{id:'panic',name:'Aqara Mini Switch (Panic Button)',badge:'',note:'One press = alert to entire family',price:55,cost:15},
+{id:'lock',name:'Zigbee Smart Lock (Schlage/Yale)',badge:'',note:'Timed lock/unlock, wandering prevention',price:349,cost:150},
+{id:'bulb',name:'Sengled Zigbee Smart Bulb',badge:'repeater',note:'Smart lighting + extends mesh range',price:20,cost:8},
 ];
-const EXISTING=[
-{id:'ring',label:'Ring Doorbell',credit:45,type:'credit'},
-{id:'smart-plugs',label:'Smart Plugs',credit:35,type:'credit'},
-{id:'nest',label:'Nest Thermostat',credit:40,type:'credit'},
-{id:'echo',label:'Amazon Echo',credit:0,type:'free',badge:'Integrates Free'},
-{id:'google',label:'Google Home',credit:0,type:'free',badge:'Integrates Free'},
-{id:'smartthings',label:'SmartThings',credit:0,type:'free',badge:'Integrates Free'}
+const EXISTING_DEVICES=[
+{id:'echo',name:'Amazon Echo / Alexa',icon:'🔊',credit:0,reduceSensor:null,reduceQty:0,note:'Voice commands + routines integrated free',integrationLabel:'Alexa Voice Control'},
+{id:'google',name:'Google Home / Nest Hub',icon:'🏠',credit:0,reduceSensor:null,reduceQty:0,note:'Smart display + device sync integration',integrationLabel:'Google Home Integration'},
+{id:'nest-therm',name:'Nest Thermostat',icon:'🌡️',credit:40,reduceSensor:'temp',reduceQty:1,note:'Climate data syncs to dashboard — skip 1 temp sensor',integrationLabel:'Nest Climate Sync'},
+{id:'ring',name:'Ring Doorbell / Cameras',icon:'🔔',credit:45,reduceSensor:'aqara-dw',reduceQty:1,note:'Doorbell alerts route to same dashboard — skip 1 door sensor',integrationLabel:'Ring Doorbell Alerts'},
+{id:'smart-plugs',name:'Smart Plugs (any brand)',icon:'🔌',credit:35,reduceSensor:'plug',reduceQty:2,note:'Your plugs extend Zigbee mesh — skip ours',integrationLabel:'Existing Plugs Integrated'},
+{id:'smart-bulbs',name:'Smart Bulbs / Hue Lights',icon:'💡',credit:20,reduceSensor:'bulb',reduceQty:3,note:'Existing lights sync automatically — skip new bulbs',integrationLabel:'Smart Lighting Synced'},
+{id:'smartthings',name:'Samsung SmartThings',icon:'📱',credit:0,reduceSensor:null,reduceQty:0,note:'Full device library bridges over seamlessly',integrationLabel:'SmartThings Bridge'},
 ];
-const PKGS=[{name:'Safe Nights Essentials',price:1499,min:0},{name:'Complete Home Safety',price:2999,min:600},{name:'Total Peace of Mind',price:3999,min:1200}];
-
-let selectedPresence=PRESENCE_BUNDLES[1];
-let selectedPanic=PANIC_BUNDLES[2];
-let counts={};SENSORS.forEach(s=>counts[s.id]=0);
-let existing=new Set();
-
-document.getElementById('presence-opts').innerHTML=PRESENCE_BUNDLES.map((b,i)=>`<div class="bundle-opt${b===selectedPresence?' on':''}" onclick="selectPresence(${i})"><div class="bo-left"><span class="bo-check">${b===selectedPresence?'✅':'○'}</span><span class="bo-name">${b.label}${b.save>0?`<span class="bo-save">Save $${b.save}</span>`:''}</span></div><span class="bo-price">$${b.price}</span></div>`).join('');
-
-document.getElementById('panic-opts').innerHTML=PANIC_BUNDLES.map((b,i)=>`<div class="bundle-opt${b===selectedPanic?' on':''}" onclick="selectPanic(${i})"><div class="bo-left"><span class="bo-check">${b===selectedPanic?'✅':'○'}</span><span class="bo-name">${b.label}${b.save>0?`<span class="bo-save">Save $${b.save}</span>`:''}</span></div><span class="bo-price">${b.price>0?'$'+b.price:'—'}</span></div>`).join('');
-
-document.getElementById('sensor-cards').innerHTML=SENSORS.map(s=>`<div class="sensor-card"><div class="sc-icon">${s.icon}</div><div class="sc-info"><div class="sc-name">${s.name}</div><div class="sc-brand">${s.brand}</div><div class="sc-desc">${s.desc}</div></div><div class="sc-qty"><button onclick="adj('${s.id}',-1)">−</button><span id="qty-${s.id}">0</span><button onclick="adj('${s.id}',1)">+</button></div><div class="sc-sub" id="sub-${s.id}"></div></div>`).join('');
-
-document.getElementById('ex-chips').innerHTML=EXISTING.map(d=>`<button class="chip" id="chip-${d.id}" onclick="toggleEx('${d.id}')">${d.label}</button>`).join('');
-
-function selectPresence(i){
-selectedPresence=PRESENCE_BUNDLES[i];
-document.querySelectorAll('#presence-opts .bundle-opt').forEach((el,j)=>{el.classList.toggle('on',j===i);el.querySelector('.bo-check').textContent=j===i?'✅':'○';});
-recalc();}
-
-function selectPanic(i){
-selectedPanic=PANIC_BUNDLES[i];
-document.querySelectorAll('#panic-opts .bundle-opt').forEach((el,j)=>{el.classList.toggle('on',j===i);el.querySelector('.bo-check').textContent=j===i?'✅':'○';});
-recalc();}
-
-function adj(id,d){counts[id]=Math.max(0,counts[id]+d);recalc();}
-function toggleEx(id){existing.has(id)?existing.delete(id):existing.add(id);recalc();}
-
-function recalc(){
-let sensorTotal=selectedPresence.price+selectedPanic.price;
-let qty=selectedPresence.qty+selectedPanic.qty;
-SENSORS.forEach(s=>{const q=counts[s.id];document.getElementById('qty-'+s.id).textContent=q;const st=s.price*q;sensorTotal+=st;qty+=q;document.getElementById('sub-'+s.id).textContent=q>0?'$'+st:'';});
-let credit=0;const cl=[];const fl=[];
-EXISTING.forEach(d=>{const chip=document.getElementById('chip-'+d.id);if(existing.has(d.id)){chip.classList.add(d.type==='credit'?'credit-on':'free-on');if(d.type==='credit'&&d.credit>0){credit+=d.credit;cl.push(d);}else if(d.type==='free')fl.push(d);}else chip.classList.remove('credit-on','free-on');});
-document.getElementById('credit-lines').innerHTML=[...cl.map(c=>`<div class="credit-line"><span>${c.label}</span><span style="color:var(--green);font-weight:700">-$${c.credit}</span></div>`),...fl.map(f=>`<div class="credit-line"><span>${f.label}</span><span class="free-badge">${f.badge}</span></div>`)].join('');
-const total=Math.max(0,BASE+sensorTotal-credit);
-const deposit=Math.round(total*0.5);
-document.getElementById('t-sensors').textContent='$'+sensorTotal;
-document.getElementById('t-total').textContent='$'+total.toLocaleString();
-document.getElementById('hdr-total').textContent='$'+total.toLocaleString();
-document.getElementById('t-deposit').textContent='$'+deposit.toLocaleString();
-document.getElementById('t-balance').textContent='$'+(total-deposit).toLocaleString();
-document.getElementById('d-amount').textContent='$'+deposit.toLocaleString();
-if(credit>0){document.getElementById('t-credit').textContent='-$'+credit;document.getElementById('t-credit-row').style.display='flex';}else document.getElementById('t-credit-row').style.display='none';
-let pkg=PKGS[0];PKGS.forEach(p=>{if(total>=p.min)pkg=p;});
-document.getElementById('pkg-name').textContent=pkg.name;
-document.getElementById('pkg-price').textContent='$'+pkg.price.toLocaleString();
-document.getElementById('pkg-sub').textContent=qty+' sensors selected';}
-
-function resetAll(){
-selectedPresence=PRESENCE_BUNDLES[1];selectedPanic=PANIC_BUNDLES[2];
-selectPresence(1);selectPanic(2);
-SENSORS.forEach(s=>counts[s.id]=0);existing.clear();recalc();}
-
-function goInvoice(){
-const items=[
-{name:'Smart Home Hub (Pi 5 + Zigbee + SD)',qty:1,price:175,total:175},
-{name:'Mini UPS Battery Backup',qty:1,price:75,total:75},
-{name:'Smart Plugs 2-Pack (Mesh)',qty:1,price:70,total:70}
+const ADDONS=[
+{id:'wellness',name:'Wellness Monitoring',price:175,cost:10,desc:'Fridge sensor tracks eating patterns — alerts if no activity 12+ hrs'},
+{id:'meds',name:'Medication Management',price:250,cost:20,desc:'Cabinet sensor + timed reminders — alarm stops when opened'},
+{id:'water-pkg',name:'Water Protection Package',price:149,cost:32,desc:'2× water sensors + alerts — sinks, water heater, washer'},
+{id:'energy',name:'Energy Optimization Setup',price:99,cost:5,desc:'Auto-off rules, schedules, nighttime dim — cuts electric bill'},
 ];
-if(selectedPresence.qty>0)items.push({name:'Presence & Fall Sensor '+selectedPresence.label,qty:selectedPresence.qty,price:Math.round(selectedPresence.price/selectedPresence.qty),total:selectedPresence.price});
-if(selectedPanic.qty>0)items.push({name:'Panic Button '+selectedPanic.label,qty:selectedPanic.qty,price:Math.round(selectedPanic.price/selectedPanic.qty),total:selectedPanic.price});
-SENSORS.forEach(s=>{if(counts[s.id]>0)items.push({name:s.name,qty:counts[s.id],price:s.price,total:s.price*counts[s.id]});});
-let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});
-const sensorTotal=items.reduce((s,i)=>s+i.total,0)-BASE;
-const total=Math.max(0,BASE+sensorTotal-credit);
-localStorage.setItem('gn_invoice',JSON.stringify({items,total,credit,deposit:Math.round(total*0.5),balance:Math.round(total*0.5)}));
-window.location.href='invoice.html';}
-
-function buildQ(){
-const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-let t='GET NOTIFIED LLC — QUOTE\nDate: '+date+'\n\nBASE INSTALL KIT: $320\n - Smart Home Hub (Pi 5 + Zigbee)\n - Mini UPS Battery Backup\n - Smart Plugs 2-Pack\n\nSENSORS:\n';
-if(selectedPresence.qty>0)t+=' - Presence & Fall Sensor '+selectedPresence.label+' — $'+selectedPresence.price+'\n';
-if(selectedPanic.qty>0)t+=' - Panic Button '+selectedPanic.label+' — $'+selectedPanic.price+'\n';
-SENSORS.forEach(s=>{if(counts[s.id]>0)t+=' - '+counts[s.id]+'x '+s.name+' — $'+s.price*counts[s.id]+'\n';});
-let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});
-const sensorTotal=selectedPresence.price+selectedPanic.price+SENSORS.reduce((s,x)=>s+x.price*counts[x.id],0);
-const total=Math.max(0,BASE+sensorTotal-credit);
-if(credit>0)t+='\nDevice Credits: -$'+credit;
-t+='\nEstimated Total: $'+total.toLocaleString();
-t+='\n\n⚡ 50% Deposit Required: $'+Math.round(total*0.5).toLocaleString();
-t+='\nBalance Due at Install: $'+Math.round(total*0.5).toLocaleString();
-t+='\n\n⚠️ Deposit non-refundable once equipment is ordered.';
-t+='\n\nThomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
-return t;}
-
-function copyQ(){navigator.clipboard.writeText(buildQ()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
-function emailQ(){window.location.href='mailto:?subject='+encodeURIComponent('Get Notified LLC — Quote')+'&body='+encodeURIComponent(buildQ());}
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);}
-recalc();
+const MONITORING=[
+{id:'none',name:'No Monitoring',price:0,desc:'Self-managed via Home Assistant app'},
+{id:'guardian',name:'Guardian Watch',price:35,desc:'Daily reports + urgent alerts to family'},
+{id:'premium',name:'Premium Guardian',price:75,desc:'24/7 monitoring + family portal + priority support'},
+];
+const PAYMENT_PLANS=[
+{id:'full',name:'Pay in Full',fee:0,months:1,desc:'One-time payment, best value'},
+{id:'plan3',name:'3-Month Plan',fee:0.05,months:3,desc:'Split into 3 equal payments'},
+{id:'plan6',name:'6-Month Plan',fee:0.10,months:6,desc:'Split into 6 easy payments'},
+];
+const PACKAGES={
+essentials:{price:1499,cost:215,sensors:{pi:1,plug:2,'aqara-dw':3,'snzb-mo':1},savingsLow:240,savingsHigh:300},
+complete:{price:2999,cost:310,sensors:{pi:1,ups:1,plug:2,'aqara-dw':5,'snzb-mo':1,fp1e:1,water:1},savingsLow:300,savingsHigh:420},
+total:{price:3999,cost:425,sensors:{pi:1,ups:1,plug:2,'aqara-dw':5,'snzb-mo':1,fp1e:2,water:2,temp:2,smoke:1},savingsLow:360,savingsHigh:480},
+custom:{price:0,cost:0,sensors:{pi:1,plug:2},savingsLow:0,savingsHigh:0},
+};
+let state={package:null,quantities:{pi:1,plug:2},addons:{},monitoring:'none',payment:'full',ownerView:false,hasHub:false,existingDevices:{}};
+function genInvoice(){const d=new Date().toISOString().slice(0,10).replace(/-/g,'');return'GN-'+d+'-'+String(Math.floor(Math.random()*900)+100);}
+function regenInvoice(){const n=genInvoice();document.getElementById('invoice-input').value=n;document.getElementById('invoice-display').textContent=n;updateQuote();}
+function syncInvoice(){document.getElementById('invoice-display').textContent=document.getElementById('invoice-input').value||'—';updateQuote();}
+function calcExpiry(ds){if(!ds)return'—';const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()+90);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function toggleHub(){const cb=document.getElementById('hub-check');state.hasHub=cb.checked;document.getElementById('hub-savings').textContent=state.hasHub?'(saving $'+PI_PRICE+')':'';if(state.package)selectPackage(state.package);else updateQuote();}
+function renderExistingDevices(){
+document.getElementById('existing-grid').innerHTML=EXISTING_DEVICES.map(d=>`<div class="existing-item ${state.existingDevices[d.id]?'selected':''}" onclick="toggleExisting('${d.id}')"><input type="checkbox" ${state.existingDevices[d.id]?'checked':''} onclick="event.stopPropagation();toggleExisting('${d.id}')"/><div><div class="ex-name">${d.icon} ${d.name}</div><div class="ex-tag ${d.credit>0?'save':'free'}">${d.credit>0?'💰 Saves $'+d.credit+' on hardware':'✅ Integrates Free'}</div><div class="ex-note">${d.note}</div></div></div>`).join('');
+const totalCredit=EXISTING_DEVICES.filter(d=>state.existingDevices[d.id]&&d.credit>0).reduce((s,d)=>s+d.credit,0);
+const banner=document.getElementById('existing-credit-banner');
+if(totalCredit>0){banner.textContent='💰 $'+totalCredit+' in existing device credits applied — see quote panel for savings!';banner.classList.add('visible');}
+else banner.classList.remove('visible');}
+function toggleExisting(id){state.existingDevices[id]=!state.existingDevices[id];renderExistingDevices();updateQuote();}
+function init(){document.getElementById('quote-date').value=new Date().toISOString().slice(0,10);regenInvoice();renderSensors();renderAddons();renderMonitoring();renderPaymentPlans();renderExistingDevices();updateQuote();}
+function renderSensors(){
+document.getElementById('sensor-rows').innerHTML=SENSORS.map(s=>`<tr><td>${s.name}${s.badge==='hub'?'<span class="badge badge-hub">🖥️ Hub</span>':''}${s.badge==='star'?'<span class="badge badge-star">⭐ Fall Detection</span>':''}${s.badge==='repeater'?'<span class="badge badge-repeater">📶 Range</span>':''}${s.badge==='power'?'<span class="badge badge-power">🔋 Backup</span>':''}<br/><small style="color:#94a3b8">${s.note}</small></td><td><div class="qty-ctrl"><button onclick="changeQty('${s.id}',-1)">−</button><span id="qty-${s.id}">${state.quantities[s.id]||0}</span><button onclick="changeQty('${s.id}',1)">+</button></div></td><td id="price-${s.id}">$${s.price}</td><td id="sub-${s.id}">$0</td><td class="cost-col">$${s.cost}</td><td class="profit-col" id="profit-${s.id}">$0</td></tr>`).join('');}
+function renderAddons(){document.getElementById('addon-grid').innerHTML=ADDONS.map(a=>`<div class="addon-item ${state.addons[a.id]?'selected':''}" onclick="toggleAddon('${a.id}')"><input type="checkbox" ${state.addons[a.id]?'checked':''} onclick="event.stopPropagation();toggleAddon('${a.id}')"/><div><div class="addon-name">${a.name}</div><div class="addon-price">+$${a.price}</div><div class="addon-desc">${a.desc}</div></div></div>`).join('');}
+function renderMonitoring(){document.getElementById('monitor-options').innerHTML=MONITORING.map(m=>`<div class="monitor-opt ${state.monitoring===m.id?'selected':''}" onclick="selectMonitoring('${m.id}')"><input type="radio" name="mon" ${state.monitoring===m.id?'checked':''}/><div class="mon-name">${m.name}</div><div class="mon-price">${m.price?'$'+m.price+'/mo':'Free'}</div><div class="mon-desc">${m.desc}</div></div>`).join('');}
+function renderPaymentPlans(){document.getElementById('payment-opts').innerHTML=PAYMENT_PLANS.map(p=>`<div class="pay-opt ${state.payment===p.id?'selected':''}" onclick="selectPayment('${p.id}')"><div class="po-name">${p.name}</div><div class="po-amount" id="po-amount-${p.id}">—</div><div class="po-desc">${p.desc}${p.fee>0?' (+'+Math.round(p.fee*100)+'% fee)':''}</div></div>`).join('');document.getElementById('pay-links-section').style.display=state.payment!=='full'?'grid':'none';}
+function selectPackage(id){state.package=id;state.quantities={...PACKAGES[id].sensors};if(state.hasHub)state.quantities.pi=0;document.querySelectorAll('.pkg').forEach(el=>el.classList.remove('selected'));document.getElementById('pkg-'+id).classList.add('selected');SENSORS.forEach(s=>{const el=document.getElementById('qty-'+s.id);if(el)el.textContent=state.quantities[s.id]||0;});updateQuote();}
+function changeQty(id,delta){if(id==='pi'&&state.hasHub)return;state.quantities[id]=Math.max(0,(state.quantities[id]||0)+delta);document.getElementById('qty-'+id).textContent=state.quantities[id];updateQuote();}
+function toggleAddon(id){state.addons[id]=!state.addons[id];renderAddons();updateQuote();}
+function selectMonitoring(id){state.monitoring=id;renderMonitoring();updateQuote();}
+function selectPayment(id){state.payment=id;renderPaymentPlans();updateQuote();}
+function setView(v){state.ownerView=v==='owner';document.body.classList.toggle('owner-view',state.ownerView);document.getElementById('btn-customer').classList.toggle('active',!state.ownerView);document.getElementById('btn-owner').classList.toggle('active',state.ownerView);}
+function clearAll(){state={package:null,quantities:{pi:1,plug:2},addons:{},monitoring:'none',payment:'full',ownerView:state.ownerView,hasHub:false,existingDevices:{}};document.getElementById('hub-check').checked=false;document.getElementById('hub-savings').textContent='';document.querySelectorAll('.pkg,.pay-opt,.monitor-opt').forEach(el=>el.classList.remove('selected'));SENSORS.forEach(s=>{const el=document.getElementById('qty-'+s.id);if(el)el.textContent=state.quantities[s.id]||0;});renderAddons();renderMonitoring();renderPaymentPlans();renderExistingDevices();updateQuote();}
+function updateQuote(){
+const sensorReductions={};const integrationLines=[];let existingCredit=0;
+EXISTING_DEVICES.forEach(d=>{if(state.existingDevices[d.id]){if(d.reduceSensor)sensorReductions[d.reduceSensor]=(sensorReductions[d.reduceSensor]||0)+d.reduceQty;if(d.credit>0){existingCredit+=d.credit;integrationLines.push({name:'💰 '+d.name+' Credit',price:'-$'+d.credit,credit:true});}else{integrationLines.push({name:'✅ '+d.integrationLabel,price:'FREE',free:true});}}});
+if(state.hasHub)sensorReductions.pi=(sensorReductions.pi||0)+999;
+let oneTime=0,monthly=0,hwCost=20;const lines=[];
+if(state.package&&state.package!=='custom'){const pkg=PACKAGES[state.package];const names={essentials:'Safe Nights Essentials',complete:'Complete Home Safety',total:'Total Peace of Mind'};const adjPrice=state.hasHub?pkg.price-PI_PRICE:pkg.price;oneTime+=adjPrice;hwCost+=pkg.cost-(state.hasHub?PI_COST:0);lines.push({name:names[state.package]+' Package',price:'$'+adjPrice.toLocaleString()});if(state.hasHub)lines.push({name:'Hub Already Owned — Discount',price:'-$'+PI_PRICE,free:true});}
+SENSORS.forEach(s=>{const baseQty=state.quantities[s.id]||0;const reduction=sensorReductions[s.id]||0;const qty=Math.max(0,baseQty-reduction);const sub=qty*s.price,cost=qty*s.cost;const subEl=document.getElementById('sub-'+s.id);const profEl=document.getElementById('profit-'+s.id);if(subEl)subEl.textContent=sub>0?'$'+sub:'$0';if(profEl)profEl.textContent=sub>0?'$'+(sub-cost):'$0';if(state.package==='custom'&&sub>0){oneTime+=sub;hwCost+=cost;lines.push({name:qty+'× '+s.name,price:'$'+sub});}else if(state.package&&state.package!=='custom'&&sub>0){const basePkgQty=(PACKAGES[state.package].sensors||{})[s.id]||0;const extra=baseQty-basePkgQty;if(extra>0){const effExtra=Math.max(0,extra-(sensorReductions[s.id]||0));if(effExtra>0){const ep=effExtra*s.price,ec=effExtra*s.cost;oneTime+=ep;hwCost+=ec;lines.push({name:effExtra+'× '+s.name+' (add-on)',price:'$'+ep});}}}});
+if(state.package==='custom'){const piQty=state.hasHub?0:1;if(piQty>0){oneTime+=PI_PRICE;hwCost+=PI_COST;lines.unshift({name:'Raspberry Pi 5 Kit – Hub Computer',price:'$'+PI_PRICE});}else lines.unshift({name:'Hub Computer — Already Owned',price:'$0 ✓',free:true});const i=75;oneTime+=i;lines.unshift({name:'Installation & Setup',price:'$'+i});}
+ADDONS.forEach(a=>{if(state.addons[a.id]){oneTime+=a.price;hwCost+=a.cost;lines.push({name:a.name,price:'+$'+a.price});}});
+if(existingCredit>0){oneTime=Math.max(0,oneTime-existingCredit);integrationLines.forEach(l=>lines.push(l));}else if(integrationLines.length>0){integrationLines.forEach(l=>lines.push(l));}
+const mon=MONITORING.find(m=>m.id===state.monitoring);if(mon&&mon.price>0){monthly=mon.price;lines.push({name:mon.name+' (monthly)',price:'$'+mon.price+'/mo'});}
+PAYMENT_PLANS.forEach(p=>{const total=oneTime*(1+p.fee);const per=p.months>1?Math.ceil(total/p.months):total;const el=document.getElementById('po-amount-'+p.id);if(el)el.textContent=p.months>1?'$'+per+'/mo':'$'+Math.round(total).toLocaleString();});
+const plan=PAYMENT_PLANS.find(p=>p.id===state.payment);
+const planBox=document.getElementById('plan-box');
+if(plan&&plan.months>1&&oneTime>0){planBox.classList.add('visible');const total=Math.round(oneTime*(1+plan.fee));const per=Math.ceil(total/plan.months);let rows='';for(let i=1;i<=plan.months;i++)rows+=`<div class="pb-row"><span>Payment ${i} of ${plan.months}</span><span>$${per}</span></div>`;if(plan.fee>0)rows+=`<div class="pb-row" style="color:#fcd34d;margin-top:4px"><span>Finance fee</span><span>$${Math.round(oneTime*plan.fee)}</span></div>`;document.getElementById('plan-rows').innerHTML=rows;}else planBox.classList.remove('visible');
+const linesEl=document.getElementById('quote-lines');linesEl.innerHTML=lines.length?lines.map(l=>`<div class="quote-line"><span class="ql-name">${l.name}</span><span class="ql-price ${l.free?'free':''} ${l.credit?'credit':''}">${l.price}</span></div>`).join(''):'<div style="color:#64748b;font-size:.82rem;text-align:center;padding:10px 0">Select a package to begin...</div>';
+const dueToday=plan&&plan.months>1?Math.ceil(oneTime*(1+plan.fee)/plan.months):oneTime;
+const deposit=Math.round(oneTime*0.5);
+document.getElementById('total-onetime').textContent='$'+oneTime.toLocaleString();
+document.getElementById('total-monthly').textContent=monthly?'$'+monthly+'/mo':'$0/mo';
+document.getElementById('total-due').textContent='$'+dueToday.toLocaleString()+(plan&&plan.months>1?' (1st of '+plan.months+')':'');
+document.getElementById('total-deposit').textContent='$'+deposit.toLocaleString();
+const dt=document.getElementById('quote-date').value;document.getElementById('expiry-display').value=calcExpiry(dt);document.getElementById('panel-expiry').textContent='⏳ Expires: '+calcExpiry(dt);
+let savLow=0,savHigh=0;if(state.package&&state.package!=='custom'){savLow=PACKAGES[state.package].savingsLow;savHigh=PACKAGES[state.package].savingsHigh;}else if(state.package==='custom'&&oneTime>100){savLow=180;savHigh=360;}if(state.addons['energy']){savLow+=60;savHigh+=120;}
+if(savLow>0){document.getElementById('savings-amount').textContent='$'+savLow+' – $'+savHigh+'/yr';const payback=oneTime>0?(oneTime/((savLow+savHigh)/2)).toFixed(1):0;document.getElementById('savings-note').textContent=payback>0?`Pays for itself in ~${payback} yrs through energy savings`:'';}else{document.getElementById('savings-amount').textContent='$0/yr';document.getElementById('savings-note').textContent='Select a package to see payback estimate';}
+const profit=oneTime-hwCost,margin=oneTime>0?Math.round((profit/oneTime)*100):0;document.getElementById('owner-cost').textContent='$'+hwCost.toLocaleString();document.getElementById('owner-revenue').textContent='$'+oneTime.toLocaleString();document.getElementById('owner-profit').textContent='$'+profit.toLocaleString();document.getElementById('owner-margin').textContent=margin+'%';
+const name=document.getElementById('cust-name').value;const addr=document.getElementById('cust-address').value;const phone=document.getElementById('cust-phone').value;const email=document.getElementById('cust-email').value;const custInfo=[name,addr,phone,email].filter(Boolean);const custPanel=document.getElementById('panel-customer');custPanel.innerHTML=custInfo.join('<br/>');custPanel.classList.toggle('visible',custInfo.length>0);
+const inv=document.getElementById('invoice-input').value||'—';document.getElementById('panel-invoice').textContent='Invoice: '+inv+(dt?' · '+dt:'');
+const integrationSummary=integrationLines.length>0?'\nEXISTING DEVICES:\n'+integrationLines.map(l=>` • ${l.name}: ${l.price}`).join('\n'):'';
+buildEmailLink(inv,dt,calcExpiry(dt),name,addr,phone,email,lines,oneTime,monthly,dueToday,deposit,plan,savLow,savHigh,integrationSummary);}
+function buildEmailLink(inv,dt,expiry,name,addr,phone,email,lines,oneTime,monthly,dueToday,deposit,plan,savLow,savHigh,integrationSummary){
+const to=email||'';const subject=encodeURIComponent('Get Notified LLC – Your Safety Quote ('+inv+')');
+const linesText=lines.filter(l=>!l.free&&!l.credit).map(l=>` • ${l.name}: ${l.price}`).join('\n');
+const savText=savLow>0?`\nEstimated Annual Energy Savings: $${savLow}–$${savHigh}/yr`:'';
+const paypal=document.getElementById('paypal-link').value;const stripe=document.getElementById('stripe-link').value;
+let paymentText='\nPAYMENT:\n';if(plan&&plan.months>1){paymentText+=` Plan: ${plan.name}\n Payment: $${dueToday} today\n`;}else{paymentText+=` Total: $${oneTime.toLocaleString()}\n`;}
+paymentText+=` ⚡ 50% Deposit Due to Schedule: $${deposit.toLocaleString()}\n ⚠️ Deposit non-refundable once equipment is ordered.\n`;
+if(paypal)paymentText+=` PayPal: ${paypal}\n`;if(stripe)paymentText+=` Stripe: ${stripe}\n`;
+const body=encodeURIComponent(`Hi ${name||'there'},\n\nThank you for your interest in Get Notified LLC — Safety Without Surveillance.\n\nInvoice: ${inv}\nDate: ${dt}\n⚠️ Expires: ${expiry}\n${addr?'Address: '+addr+'\n':''}\n────────────────────────────────\nQUOTE\n────────────────────────────────\n${linesText}\n────────────────────────────────\nOne-Time Total: $${oneTime.toLocaleString()}\nMonthly Monitoring: ${monthly?'$'+monthly+'/mo':'None'}${savText}\n${integrationSummary}\n${paymentText}\n────────────────────────────────\nWHY GET NOTIFIED LLC?\n✓ Works WITH Alexa, Google Home, Nest & Ring\n✓ No cameras or microphones — total privacy\n✓ Your data stays in YOUR home\n✓ Works without internet\n✓ System stays ON during power outages\n✓ Alerts sent directly to your family's phones\n✓ Replaces Life Alert — no monthly fee ever\n\nThomas Whitlock – Get Notified LLC\n📞 704-239-7532 · ✉️ gettompoai@gmail.com\n`);
+document.getElementById('email-link').href='mailto:'+to+'?subject='+subject+'&body='+body;}
+function printQuote(){window.print();}
+init();
 </script>
 </body>
 </html>
