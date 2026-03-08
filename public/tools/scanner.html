@@ -51,20 +51,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .pkg-name{font-size:1.15rem;font-weight:800;margin-bottom:4px}
 .pkg-price{font-size:1.6rem;font-weight:800;color:var(--gold)}
 .pkg-sub{font-size:.72rem;color:#475569;margin-top:6px}
-.srow{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.srow:last-child{border-bottom:none}
-.sr-l{display:flex;gap:10px;align-items:flex-start}
-.sr-qty{background:var(--gold);color:var(--navy);font-weight:800;font-size:.82rem;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.sr-name{font-size:.85rem;font-weight:700}
-.sr-where{font-size:.7rem;color:#475569;margin-top:3px;line-height:1.4}
-.sr-price{font-size:.82rem;color:var(--green);font-weight:700;flex-shrink:0}
+.bundle-card{background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:10px;border:1px solid rgba(245,158,11,.2)}
+.bc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.bc-name{font-size:.88rem;font-weight:800}
+.bc-price{font-size:1rem;font-weight:800;color:var(--gold)}
+.bc-desc{font-size:.72rem;color:#475569;margin-bottom:6px}
+.bc-save{font-size:.68rem;background:rgba(16,185,129,.12);color:var(--green);border-radius:6px;padding:3px 8px;font-weight:700;display:inline-block}
+.item-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem}
+.item-row:last-child{border-bottom:none}
+.ir-name{color:#cbd5e1}.ir-price{color:var(--gold);font-weight:700}
 .total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
 .total-row .tl{color:#94a3b8;font-size:.88rem}
 .total-row .tv{font-size:1.1rem;font-weight:800;color:var(--gold)}
+.divider{height:1px;background:rgba(255,255,255,.06);margin:14px 0}
 .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
 .share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
 .share-btn .si{font-size:1.4rem}
-.divider{height:1px;background:rgba(255,255,255,.06);margin:14px 0}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
@@ -75,7 +77,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
 <div class="screen active" id="s-form">
-<div class="hero"><div class="hero-icon">🏠</div><h2>House <span>Scanner</span></h2><p>Enter home details — we'll build the exact sensor plan with placements and pricing.</p></div>
+<div class="hero"><div class="hero-icon">🏠</div><h2>House <span>Scanner</span></h2><p>Enter home details — we'll build the exact sensor plan with bundles and pricing.</p></div>
 <div class="slabel">House Size</div>
 <div class="card">
 <div class="igroup"><label>SQUARE FOOTAGE</label><input class="inp" id="sqft" type="number" placeholder="e.g. 1800" inputmode="numeric"/></div>
@@ -102,8 +104,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="screen" id="s-results">
 <div class="sum-hero"><div class="sum-icon">✅</div><h2>Sensor Plan Ready</h2><p id="res-sub"></p></div>
 <div class="pkg-box"><div class="pkg-label">📦 RECOMMENDED PACKAGE</div><div class="pkg-name" id="pkg-name"></div><div class="pkg-price" id="pkg-price"></div><div class="pkg-sub" id="pkg-sub"></div></div>
-<div class="slabel">Sensors & Placements</div>
-<div id="sensor-list"></div>
+<div class="slabel">Recommended Bundles & Items</div>
+<div id="bundle-list"></div>
 <div class="divider"></div>
 <div class="total-row"><span class="tl">Estimated Hardware</span><span class="tv" id="res-total">$0</span></div>
 <div class="slabel">Export</div>
@@ -117,11 +119,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const SENSORS={door:{name:'Door/Window Sensor',price:45,icon:'🚪'},motion:{name:'Motion Sensor',price:45,icon:'👁️'},fall:{name:'Presence & Fall Sensor',price:149,icon:'⭐'},water:{name:'Water Leak Sensor',price:45,icon:'💧'},smoke:{name:'Smoke Detector',price:75,icon:'🔥'},temp:{name:'Temp & Humidity Sensor',price:40,icon:'🌡️'},vibration:{name:'Vibration Sensor',price:55,icon:'📳'},plug:{name:'Smart Plug',price:35,icon:'🔌'},panic:{name:'Panic Button',price:55,icon:'🆘'},lock:{name:'Smart Lock',price:349,icon:'🔒'}};
-const ROOMS=[{id:'living',name:'Living Room',icon:'🛋️'},{id:'kitchen',name:'Kitchen',icon:'🍳'},{id:'dining',name:'Dining Room',icon:'🍽️'},{id:'hallway',name:'Hallway',icon:'🏠'},{id:'garage',name:'Garage',icon:'🚗'},{id:'basement',name:'Basement',icon:'🏚️'},{id:'laundry',name:'Laundry Room',icon:'🧺'},{id:'backdoor',name:'Back Door',icon:'🔙'},{id:'porch',name:'Porch/Sunroom',icon:'🌿'},{id:'office',name:'Office/Den',icon:'💼'}];
+const ROOMS=[{id:'living',name:'Living Room',icon:'🛋️'},{id:'kitchen',name:'Kitchen',icon:'🍳'},{id:'dining',name:'Dining Room',icon:'🍽️'},{id:'hallway',name:'Hallway',icon:'🏠'},{id:'garage',name:'Garage',icon:'🚗'},{id:'basement',name:'Basement',icon:'🏚️'},{id:'laundry',name:'Laundry Room',icon:'🧺'},{id:'backdoor',name:'Back Door',icon:'🔙'},{id:'office',name:'Office/Den',icon:'💼'}];
 const EXISTING=[{id:'nest',label:'Nest'},{id:'echo',label:'Echo'},{id:'google',label:'Google Home'},{id:'ring',label:'Ring'},{id:'plugs',label:'Smart Plugs'},{id:'bulbs',label:'Smart Bulbs'}];
 const PKGS=[{name:'Safe Nights Essentials',price:1499,min:0},{name:'Complete Home Safety',price:2999,min:600},{name:'Total Peace of Mind',price:3999,min:1200}];
-let S={stories:1,counts:{bed:2,bath:1},rooms:new Set(['living','kitchen']),existing:new Set(),_items:[],_total:0,_sqft:0,_pkg:null};
+const PRESENCE_BUNDLES=[{qty:3,price:399,save:48},{qty:5,price:599,save:146},{qty:7,price:849,save:194}];
+const PANIC_BUNDLES=[{qty:1,price:55,save:0},{qty:2,price:99,save:11},{qty:4,price:179,save:41}];
+let S={stories:1,counts:{bed:2,bath:1},rooms:new Set(['living','kitchen']),existing:new Set(),_plan:[],_total:0,_sqft:0,_pkg:null};
 document.getElementById('rooms-grid').innerHTML=ROOMS.map(r=>`<div class="chip${S.rooms.has(r.id)?' on':''}" onclick="toggleRoom('${r.id}',this)"><div class="ri">${r.icon}</div><div class="rn">${r.name}</div></div>`).join('');
 document.getElementById('existing-grid').innerHTML=EXISTING.map(e=>`<button class="sel-btn" onclick="toggleEx('${e.id}',this)">${e.label}</button>`).join('');
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
@@ -131,47 +134,41 @@ function setSt(n,btn){S.stories=n;document.getElementById('stories-row').querySe
 function adj(t,d){S.counts[t]=Math.max(0,Math.min(t==='bed'?6:5,S.counts[t]+d));document.getElementById('ct-'+t).textContent=S.counts[t];}
 function toggleRoom(id,el){S.rooms.has(id)?S.rooms.delete(id):S.rooms.add(id);el.classList.toggle('on');}
 function toggleEx(id,el){S.existing.has(id)?S.existing.delete(id):S.existing.add(id);el.classList.toggle('on');}
+function getBestBundle(arr,needed){let best=arr[0];arr.forEach(b=>{if(b.qty>=needed&&b.qty<(best.qty>=needed?best.qty:999))best=b;});if(best.qty<needed)best=arr[arr.length-1];return best;}
 function scan(){
 const sqft=parseInt(document.getElementById('sqft').value)||1500;
 const beds=S.counts.bed,baths=S.counts.bath,stories=S.stories,rooms=S.rooms;
-const raw=[];
-raw.push({type:'door',qty:1,where:'Front door — primary entry monitoring'});
-if(rooms.has('backdoor'))raw.push({type:'door',qty:1,where:'Back door — secondary entry monitoring'});
-if(rooms.has('garage')){raw.push({type:'door',qty:1,where:'Garage door — vehicle entry monitoring'});raw.push({type:'motion',qty:1,where:'Garage — motion detection'});}
-if(beds>0){raw.push({type:'fall',qty:beds,where:`All ${beds} bedroom${beds>1?'s':''} — presence & sleep monitoring`});raw.push({type:'vibration',qty:1,where:'Primary bedroom — under mattress, bed exit detection'});}
-raw.push({type:'panic',qty:1,where:'Primary bedroom — one button direct call to family (replaces Life Alert)'});
-if(baths>0)raw.push({type:'fall',qty:baths,where:`All ${baths} bathroom${baths>1?'s':''} — fall detection (highest risk zone)`});
-if(rooms.has('kitchen')){raw.push({type:'smoke',qty:1,where:'Kitchen — smoke & fire detection'});raw.push({type:'water',qty:1,where:'Kitchen — under sink leak detection'});raw.push({type:'fall',qty:1,where:'Kitchen — presence & wellness monitoring (tracks meals)'});}
-if(rooms.has('living'))raw.push({type:'fall',qty:1,where:'Living room — primary activity zone presence monitoring'});
-if(rooms.has('dining'))raw.push({type:'motion',qty:1,where:'Dining room — mealtime activity tracking'});
-if(rooms.has('hallway'))raw.push({type:'motion',qty:1,where:'Hallway — nighttime navigation monitoring'});
-if(rooms.has('laundry')){raw.push({type:'water',qty:1,where:'Laundry room — washer leak detection'});raw.push({type:'vibration',qty:1,where:'Laundry room — washer cycle monitoring'});}
-if(rooms.has('basement')){raw.push({type:'water',qty:1,where:'Basement — flood & sump pump failure'});raw.push({type:'motion',qty:1,where:'Basement — activity detection'});}
-if(rooms.has('office'))raw.push({type:'fall',qty:1,where:'Office/Den — occupancy & presence monitoring'});
-raw.push({type:'temp',qty:stories,where:`${stories} floor${stories>1?'s':''} — temperature & humidity`});
-const kitchenSmoke=rooms.has('kitchen');
-const extraSmoke=Math.max(0,stories-(kitchenSmoke?1:0));
-if(extraSmoke>0)raw.push({type:'smoke',qty:extraSmoke,where:`Upper floor${extraSmoke>1?'s':''} — smoke detection`});
-if(sqft>2000){const plugs=Math.ceil((sqft-2000)/600)+1;raw.push({type:'plug',qty:plugs,where:'Strategic locations — Zigbee mesh range extension'});}
-const cons={};
-raw.forEach(r=>{if(!cons[r.type]){cons[r.type]={type:r.type,qty:0,wheres:[]};}cons[r.type].qty+=r.qty;cons[r.type].wheres.push(r.where);});
-const items=Object.values(cons);
-let total=0;items.forEach(it=>{const s=SENSORS[it.type];if(s)total+=s.price*it.qty;});
+const plan=[];
+const presenceRooms=beds+baths+(rooms.has('living')?1:0)+(rooms.has('kitchen')?1:0)+(rooms.has('office')?1:0);
+const presenceNeeded=Math.max(3,presenceRooms);
+const presenceBundle=getBestBundle(PRESENCE_BUNDLES,presenceNeeded);
+plan.push({type:'bundle',icon:'⭐',name:'Presence & Fall Sensor '+presenceBundle.qty+'-Pack',desc:'Bedrooms, bathrooms & main living areas — 24/7 presence monitoring, fall detection',price:presenceBundle.price,save:presenceBundle.save,placements:['All bedrooms — sleep & activity monitoring','All bathrooms — highest fall risk zone','Main living areas — daily routine tracking']});
+const panicNeeded=baths>1?4:2;
+const panicBundle=PANIC_BUNDLES.find(b=>b.qty===panicNeeded)||PANIC_BUNDLES[1];
+plan.push({type:'bundle',icon:'🆘',name:'Panic Button '+panicBundle.qty+'-Pack',desc:'One press → entire family notified simultaneously. Replaces Life Alert forever.',price:panicBundle.price,save:panicBundle.save,placements:['Primary bedroom — beside the bed','Main bathroom — by toilet/grab bar',...(panicNeeded>2?['Secondary bathroom','Living room or hallway']:[])]});
+const doors=1+(rooms.has('backdoor')?1:0)+(rooms.has('garage')?1:0);
+if(doors>0)plan.push({type:'item',icon:'🚪',name:'Door/Window Sensors',desc:'Front door, back door, garage — entry monitoring',price:45*doors,qty:doors});
+const waters=(rooms.has('kitchen')?1:0)+(rooms.has('laundry')?1:0)+(rooms.has('basement')?1:0);
+if(waters>0)plan.push({type:'item',icon:'💧',name:'Water Leak Sensors',desc:'Under sinks, washer, basement — leak & flood detection',price:45*waters,qty:waters});
+plan.push({type:'item',icon:'🔥',name:'Smoke Detectors',desc:'Kitchen & per floor coverage',price:75*stories,qty:stories});
+plan.push({type:'item',icon:'🌡️',name:'Temp & Humidity Sensors',desc:'Climate monitoring per floor',price:40*stories,qty:stories});
+if(rooms.has('laundry'))plan.push({type:'item',icon:'📳',name:'Vibration Sensor',desc:'Washer cycle & medicine cabinet monitoring',price:55,qty:1});
+if(sqft>2000){const plugs=Math.ceil((sqft-2000)/600)+1;plan.push({type:'item',icon:'🔌',name:'Smart Plugs (Mesh)',desc:'Zigbee range extension for large home',price:35*plugs,qty:plugs});}
+let total=0;plan.forEach(p=>total+=p.price);
 let pkg=PKGS[0];PKGS.forEach(p=>{if(total>=p.min)pkg=p;});
-const totalSensors=items.reduce((s,it)=>s+it.qty,0);
-document.getElementById('res-sub').textContent=totalSensors+' sensors · '+sqft.toLocaleString()+' sq ft · '+stories+' stor'+(stories===1?'y':'ies');
+document.getElementById('res-sub').textContent=sqft.toLocaleString()+' sq ft · '+stories+' stor'+(stories===1?'y':'ies')+' · '+beds+' bed / '+baths+' bath';
 document.getElementById('pkg-name').textContent=pkg.name;
 document.getElementById('pkg-price').textContent='$'+pkg.price.toLocaleString();
-document.getElementById('pkg-sub').textContent=totalSensors+' sensors · $'+total+' estimated hardware';
-document.getElementById('sensor-list').innerHTML=items.map(it=>{const s=SENSORS[it.type]||{name:it.type,price:0,icon:'📦'};return '<div class="srow"><div class="sr-l"><div class="sr-qty">'+it.qty+'</div><div><div class="sr-name">'+s.icon+' '+s.name+'</div><div class="sr-where">'+it.wheres.join(' · ')+'</div></div></div><div class="sr-price">$'+s.price*it.qty+'</div></div>';}).join('');
+document.getElementById('pkg-sub').textContent='Estimated hardware: $'+total.toLocaleString();
+document.getElementById('bundle-list').innerHTML=plan.map(p=>{
+if(p.type==='bundle'){return`<div class="bundle-card"><div class="bc-top"><span class="bc-name">${p.icon} ${p.name}</span><span class="bc-price">$${p.price}</span></div><div class="bc-desc">${p.desc}</div>${p.save>0?`<span class="bc-save">Save $${p.save}</span>`:''}<div style="margin-top:8px">${p.placements.map(pl=>`<div style="font-size:.7rem;color:#475569;padding:3px 0">📍 ${pl}</div>`).join('')}</div></div>`;}
+return`<div class="item-row"><span class="ir-name">${p.icon} ${p.qty}x ${p.name}<br/><span style="font-size:.68rem;color:#334155">${p.desc}</span></span><span class="ir-price">$${p.price}</span></div>`;}).join('');
 document.getElementById('res-total').textContent='$'+total.toLocaleString();
-S._items=items;S._total=total;S._sqft=sqft;S._pkg=pkg;
+S._plan=plan;S._total=total;S._sqft=sqft;S._pkg=pkg;
 show('s-results');prog(100);}
 function goEstimator(){
-const map={door:'door-sensor',motion:'motion-sensor',fall:'fall-sensor',water:'water-sensor',smoke:'smoke-detector',temp:'temp-sensor',vibration:'vibration-sensor',plug:'smart-plug',panic:'panic-button',lock:'smart-lock'};
-const prefill={};
-S._items.forEach(function(it){const k=map[it.type];if(k)prefill[k]=it.qty;});
-localStorage.setItem('gn_prefill',JSON.stringify(prefill));
+const data={plan:S._plan,total:S._total,pkg:S._pkg};
+localStorage.setItem('gn_prefill',JSON.stringify(data));
 window.location.href='estimator.html';}
 function buildReport(){
 const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
@@ -180,8 +177,8 @@ t+='Square Footage: '+S._sqft.toLocaleString()+' sq ft  |  Stories: '+S.stories+
 t+='Bedrooms: '+S.counts.bed+'  |  Bathrooms: '+S.counts.bath+'\n\n';
 t+='RECOMMENDED PACKAGE: '+(S._pkg?.name||'')+' — $'+(S._pkg?.price?.toLocaleString()||'')+'\n\n';
 t+='SENSOR PLAN:\n';
-S._items.forEach(it=>{const s=SENSORS[it.type]||{name:it.type,price:0};t+=' - '+it.qty+'x '+s.name+' — $'+s.price*it.qty+'\n';it.wheres.forEach(w=>t+='     📍 '+w+'\n');});
-t+='\nTotal Hardware: $'+S._total+'\n\n';
+S._plan.forEach(p=>{t+=' - '+p.name+' — $'+p.price+'\n';if(p.placements)p.placements.forEach(pl=>t+='     📍 '+pl+'\n');});
+t+='\nEstimated Hardware: $'+S._total+'\n\n';
 t+='Thomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
 return t;}
 function copyRpt(){navigator.clipboard.writeText(buildReport()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
