@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#1a2744"/>
-<title>Get Notified – Quote Estimator</title>
+<title>Get Notified – Live Quote Estimator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--navy:#1a2744;--gold:#f59e0b;--white:#fff;--gray:#64748b;--green:#10b981;--bg:#0f1729}
@@ -17,11 +17,33 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .hdr-right{font-size:.9rem;font-weight:800;color:var(--gold)}
 .content{padding:20px}
 .slabel{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.6px;text-transform:uppercase;margin:20px 0 10px}
+.base-card{background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;border:1px solid rgba(245,158,11,.2)}
+.base-card .bc-icon{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0}
+.base-card .bc-info{flex:1}
+.base-card .bc-name{font-size:.85rem;font-weight:700}
+.base-card .bc-desc{font-size:.7rem;color:#475569;margin-top:2px}
+.base-card .bc-price{font-size:.88rem;font-weight:800;color:var(--gold);flex-shrink:0}
+.base-card .bc-tag{font-size:.62rem;background:rgba(245,158,11,.12);color:var(--gold);border-radius:6px;padding:2px 8px;font-weight:700;margin-top:4px;display:inline-block}
+.bundle-section{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06)}
+.bs-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.bs-icon{font-size:1.4rem}
+.bs-title{font-size:.88rem;font-weight:800}
+.bs-sub{font-size:.7rem;color:#475569;margin-top:2px}
+.bundle-opts{display:flex;flex-direction:column;gap:8px}
+.bundle-opt{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;border:1.5px solid rgba(255,255,255,.08);cursor:pointer;transition:.2s}
+.bundle-opt.on{border-color:var(--gold);background:rgba(245,158,11,.08)}
+.bundle-opt.on .bo-check{color:var(--gold)}
+.bo-left{display:flex;align-items:center;gap:10px}
+.bo-check{font-size:1rem;color:#334155;width:20px}
+.bo-name{font-size:.82rem;font-weight:700}
+.bo-save{font-size:.65rem;background:rgba(16,185,129,.12);color:var(--green);border-radius:6px;padding:2px 7px;font-weight:700;margin-left:6px}
+.bo-price{font-size:.88rem;font-weight:800;color:var(--gold)}
 .sensor-card{background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.06)}
 .sc-icon{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0}
 .sc-info{flex:1}
 .sc-name{font-size:.85rem;font-weight:700}
-.sc-price{font-size:.7rem;color:#475569;margin-top:2px}
+.sc-brand{font-size:.68rem;color:var(--gold);margin-top:1px}
+.sc-desc{font-size:.7rem;color:#475569;margin-top:2px}
 .sc-qty{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .sc-qty button{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:var(--white);font-size:1rem;cursor:pointer}
 .sc-qty span{min-width:20px;text-align:center;font-weight:800}
@@ -41,35 +63,93 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .pkg-name{font-size:1.15rem;font-weight:800;margin-bottom:4px}
 .pkg-price{font-size:1.6rem;font-weight:800;color:var(--gold)}
 .pkg-sub{font-size:.72rem;color:#475569;margin-top:6px}
-.total-box{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid rgba(255,255,255,.06)}
+.total-box{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,.06)}
 .trow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.85rem}
 .trow .tl{color:#94a3b8}.trow .tv{font-weight:700}
 .trow.big .tl{font-size:.95rem;color:var(--white);font-weight:700}
 .trow.big .tv{font-size:1.2rem;color:var(--gold)}
 .trow.green .tv{color:var(--green)}
-.trow.deposit .tl{color:var(--white);font-weight:700}
-.trow.deposit .tv{color:var(--gold);font-weight:800}
+.trow.dep .tl{color:var(--white);font-weight:700}
+.trow.dep .tv{color:var(--gold);font-weight:800}
 .divider{height:1px;background:rgba(255,255,255,.08);margin:8px 0}
 .deposit-box{background:rgba(245,158,11,.08);border:2px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:16px;text-align:center}
-.deposit-box .d-title{font-size:1rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+.deposit-box .d-title{font-size:.9rem;font-weight:800;color:var(--gold);margin-bottom:4px}
 .deposit-box .d-amount{font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:6px}
-.deposit-box .d-sub{font-size:.75rem;color:#94a3b8;line-height:1.5}
+.deposit-box .d-sub{font-size:.72rem;color:#94a3b8;line-height:1.6}
+.invoice-btn{width:100%;padding:16px;border-radius:12px;border:none;background:var(--gold);color:var(--navy);font-size:1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
 .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
 .share-btn .si{font-size:1.4rem}
-.invoice-btn{width:100%;padding:16px;border-radius:12px;border:none;background:var(--gold);color:var(--navy);font-size:1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div class="hdr">
-<div><h1>Get <span>Notified</span> LLC</h1><div class="sub">Quote Estimator</div></div>
+<div><h1>Get <span>Notified</span> LLC</h1><div class="sub">Live Quote Estimator</div></div>
 <div class="hdr-right" id="hdr-total">$0</div>
 </div>
 <div class="content">
-<div class="slabel">Sensors</div>
+
+<div class="slabel">⚙️ Base Install Kit (Every Install)</div>
+<div class="base-card">
+<div class="bc-icon">🖥️</div>
+<div class="bc-info">
+<div class="bc-name">Smart Home Hub</div>
+<div class="bc-brand" style="font-size:.68rem;color:var(--gold)">Raspberry Pi 5 + Zigbee Dongle + SD Card</div>
+<div class="bc-desc">Local server — your data stays in your home</div>
+<span class="bc-tag">Always Included</span>
+</div>
+<div class="bc-price">$175</div>
+</div>
+<div class="base-card">
+<div class="bc-icon">🔋</div>
+<div class="bc-info">
+<div class="bc-name">Mini UPS Battery Backup</div>
+<div class="bc-brand" style="font-size:.68rem;color:var(--gold)">Geekwee UPS for Raspberry Pi</div>
+<div class="bc-desc">System stays on during power outages</div>
+<span class="bc-tag">Always Included</span>
+</div>
+<div class="bc-price">$75</div>
+</div>
+<div class="base-card">
+<div class="bc-icon">🔌</div>
+<div class="bc-info">
+<div class="bc-name">Smart Plugs 2-Pack (Mesh)</div>
+<div class="bc-brand" style="font-size:.68rem;color:var(--gold)">SONOFF Zigbee Smart Plug</div>
+<div class="bc-desc">Extends Zigbee signal throughout home</div>
+<span class="bc-tag">Always Included</span>
+</div>
+<div class="bc-price">$70</div>
+</div>
+
+<div class="slabel">⭐ Presence & Fall Sensors</div>
+<div class="bundle-section">
+<div class="bs-header">
+<span class="bs-icon">⭐</span>
+<div>
+<div class="bs-title">Aqara FP1E Presence & Fall Sensor</div>
+<div class="bs-sub">Bedrooms, bathrooms, living areas — detects presence even sitting still</div>
+</div>
+</div>
+<div class="bundle-opts" id="presence-opts"></div>
+</div>
+
+<div class="slabel">🆘 Panic Buttons</div>
+<div class="bundle-section">
+<div class="bs-header">
+<span class="bs-icon">🆘</span>
+<div>
+<div class="bs-title">Panic Button — Replaces Life Alert</div>
+<div class="bs-sub">One press → entire family notified. No monthly fee. Ever.</div>
+</div>
+</div>
+<div class="bundle-opts" id="panic-opts"></div>
+</div>
+
+<div class="slabel">Additional Sensors</div>
 <div id="sensor-cards"></div>
+
 <div class="slabel">🏠 Existing Smart Home?</div>
 <div class="ex-card">
 <h3>Select devices already in the home</h3>
@@ -77,26 +157,31 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="chips" id="ex-chips"></div>
 <div class="credit-lines" id="credit-lines"></div>
 </div>
+
 <div class="pkg-box">
 <div class="pkg-label">📦 RECOMMENDED PACKAGE</div>
 <div class="pkg-name" id="pkg-name">Safe Nights Essentials</div>
 <div class="pkg-price" id="pkg-price">$1,499</div>
 <div class="pkg-sub" id="pkg-sub">Based on sensor selection</div>
 </div>
+
 <div class="total-box">
-<div class="trow"><span class="tl">Hardware Subtotal</span><span class="tv" id="t-sub">$0</span></div>
+<div class="trow"><span class="tl">Base Install Kit</span><span class="tv">$320</span></div>
+<div class="trow"><span class="tl">Sensors & Bundles</span><span class="tv" id="t-sensors">$0</span></div>
 <div class="trow green" id="t-credit-row" style="display:none"><span class="tl">Device Credits</span><span class="tv" id="t-credit">-$0</span></div>
 <div class="divider"></div>
-<div class="trow big"><span class="tl">Estimated Total</span><span class="tv" id="t-total">$0</span></div>
+<div class="trow big"><span class="tl">Estimated Total</span><span class="tv" id="t-total">$320</span></div>
 <div class="divider"></div>
-<div class="trow deposit"><span class="tl">⚡ 50% Deposit Due</span><span class="tv" id="t-deposit">$0</span></div>
-<div class="trow"><span class="tl">Balance Due at Install</span><span class="tv" id="t-balance">$0</span></div>
+<div class="trow dep"><span class="tl">⚡ 50% Deposit Due</span><span class="tv" id="t-deposit">$160</span></div>
+<div class="trow"><span class="tl">Balance Due at Install</span><span class="tv" id="t-balance">$160</span></div>
 </div>
+
 <div class="deposit-box">
 <div class="d-title">⚠️ 50% Deposit Required to Schedule</div>
-<div class="d-amount" id="d-amount">$0</div>
-<div class="d-sub">Hardware is ordered upon receipt of deposit.<br/>Balance due the day of install.<br/>Deposit is non-refundable once equipment is ordered.</div>
+<div class="d-amount" id="d-amount">$160</div>
+<div class="d-sub">Hardware ordered upon receipt of deposit.<br/>Balance due day of install.<br/>Deposit non-refundable once equipment is ordered.</div>
 </div>
+
 <button class="invoice-btn" onclick="goInvoice()">📄 Create Invoice</button>
 <div class="slabel">Export</div>
 <div class="share-grid">
@@ -109,80 +194,126 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 <div class="toast" id="toast"></div>
 <script>
+const BASE=320;
+const PRESENCE_BUNDLES=[
+{qty:1,price:149,save:0,label:'1 Sensor'},
+{qty:3,price:399,save:48,label:'3-Pack'},
+{qty:5,price:599,save:146,label:'5-Pack'},
+{qty:7,price:849,save:194,label:'7-Pack'}
+];
+const PANIC_BUNDLES=[
+{qty:0,price:0,save:0,label:'None'},
+{qty:1,price:55,save:0,label:'1 Button'},
+{qty:2,price:99,save:11,label:'2-Pack'},
+{qty:4,price:179,save:41,label:'4-Pack'}
+];
 const SENSORS=[
-{id:'fall-sensor',name:'Presence & Fall Sensor',icon:'⭐',price:149,desc:'Bedrooms, bathrooms, living areas — MVP sensor'},
-{id:'panic-button',name:'Panic Button',icon:'🆘',price:55,desc:'One press → entire family notified. Replaces Life Alert'},
-{id:'door-sensor',name:'Door/Window Sensor',icon:'🚪',price:45,desc:'Doors, windows, medicine cabinet'},
-{id:'motion-sensor',name:'Motion Sensor',icon:'👁️',price:45,desc:'Hallways, garage, secondary rooms'},
-{id:'vibration-sensor',name:'Vibration Sensor',icon:'📳',price:55,desc:'Under mattress, fridge, medicine cabinet'},
-{id:'water-sensor',name:'Water Leak Sensor',icon:'💧',price:45,desc:'Under sinks, washer, basement'},
-{id:'smoke-detector',name:'Smoke Detector',icon:'🔥',price:75,desc:'Kitchen & each floor'},
-{id:'temp-sensor',name:'Temp & Humidity Sensor',icon:'🌡️',price:40,desc:'Climate monitoring per floor'},
-{id:'smart-plug',name:'Smart Plug',icon:'🔌',price:35,desc:'Energy control & Zigbee mesh extension'},
-{id:'smart-lock',name:'Smart Lock',icon:'🔒',price:349,desc:'Wandering prevention — timed entry control'}
+{id:'door-sensor',name:'Door/Window Sensor',brand:'Aqara Door Sensor P2',icon:'🚪',price:45,desc:'Front door, back door, garage, medicine cabinet'},
+{id:'motion-sensor',name:'Motion Sensor',brand:'Aqara Motion Sensor P1',icon:'👁️',price:45,desc:'Hallways, garage, secondary rooms'},
+{id:'vibration-sensor',name:'Vibration Sensor',brand:'Aqara Vibration Sensor',icon:'📳',price:55,desc:'Under mattress, fridge door, medicine cabinet'},
+{id:'water-sensor',name:'Water Leak Sensor',brand:'Aqara Water Leak Sensor',icon:'💧',price:45,desc:'Under sinks, washer, basement floor'},
+{id:'smoke-detector',name:'Smoke Detector',brand:'Zigbee Smoke Detector',icon:'🔥',price:75,desc:'Kitchen & per floor coverage'},
+{id:'temp-sensor',name:'Temp & Humidity Sensor',brand:'SONOFF SNZB-02D',icon:'🌡️',price:40,desc:'Climate monitoring per floor'},
+{id:'smart-lock',name:'Smart Lock',brand:'Zigbee Smart Lock',icon:'🔒',price:349,desc:'Wandering prevention — timed entry control'}
 ];
 const EXISTING=[
 {id:'ring',label:'Ring Doorbell',credit:45,type:'credit'},
 {id:'smart-plugs',label:'Smart Plugs',credit:35,type:'credit'},
 {id:'nest',label:'Nest Thermostat',credit:40,type:'credit'},
-{id:'echo',label:'Amazon Echo',credit:0,type:'free',badge:'Works With'},
-{id:'google',label:'Google Home',credit:0,type:'free',badge:'Works With'},
-{id:'smartthings',label:'SmartThings',credit:0,type:'free',badge:'Works With'}
+{id:'echo',label:'Amazon Echo',credit:0,type:'free',badge:'Integrates Free'},
+{id:'google',label:'Google Home',credit:0,type:'free',badge:'Integrates Free'},
+{id:'smartthings',label:'SmartThings',credit:0,type:'free',badge:'Integrates Free'}
 ];
 const PKGS=[{name:'Safe Nights Essentials',price:1499,min:0},{name:'Complete Home Safety',price:2999,min:600},{name:'Total Peace of Mind',price:3999,min:1200}];
+
+let selectedPresence=PRESENCE_BUNDLES[1];
+let selectedPanic=PANIC_BUNDLES[2];
 let counts={};SENSORS.forEach(s=>counts[s.id]=0);
 let existing=new Set();
-let _total=0,_credit=0,_pkg=null;
-document.getElementById('sensor-cards').innerHTML=SENSORS.map(s=>`<div class="sensor-card"><div class="sc-icon">${s.icon}</div><div class="sc-info"><div class="sc-name">${s.name}</div><div class="sc-price">$${s.price} each · ${s.desc}</div></div><div class="sc-qty"><button onclick="adj('${s.id}',-1)">−</button><span id="qty-${s.id}">0</span><button onclick="adj('${s.id}',1)">+</button></div><div class="sc-sub" id="sub-${s.id}"></div></div>`).join('');
+
+document.getElementById('presence-opts').innerHTML=PRESENCE_BUNDLES.map((b,i)=>`<div class="bundle-opt${b===selectedPresence?' on':''}" onclick="selectPresence(${i})"><div class="bo-left"><span class="bo-check">${b===selectedPresence?'✅':'○'}</span><span class="bo-name">${b.label}${b.save>0?`<span class="bo-save">Save $${b.save}</span>`:''}</span></div><span class="bo-price">$${b.price}</span></div>`).join('');
+
+document.getElementById('panic-opts').innerHTML=PANIC_BUNDLES.map((b,i)=>`<div class="bundle-opt${b===selectedPanic?' on':''}" onclick="selectPanic(${i})"><div class="bo-left"><span class="bo-check">${b===selectedPanic?'✅':'○'}</span><span class="bo-name">${b.label}${b.save>0?`<span class="bo-save">Save $${b.save}</span>`:''}</span></div><span class="bo-price">${b.price>0?'$'+b.price:'—'}</span></div>`).join('');
+
+document.getElementById('sensor-cards').innerHTML=SENSORS.map(s=>`<div class="sensor-card"><div class="sc-icon">${s.icon}</div><div class="sc-info"><div class="sc-name">${s.name}</div><div class="sc-brand">${s.brand}</div><div class="sc-desc">${s.desc}</div></div><div class="sc-qty"><button onclick="adj('${s.id}',-1)">−</button><span id="qty-${s.id}">0</span><button onclick="adj('${s.id}',1)">+</button></div><div class="sc-sub" id="sub-${s.id}"></div></div>`).join('');
+
 document.getElementById('ex-chips').innerHTML=EXISTING.map(d=>`<button class="chip" id="chip-${d.id}" onclick="toggleEx('${d.id}')">${d.label}</button>`).join('');
+
+function selectPresence(i){
+selectedPresence=PRESENCE_BUNDLES[i];
+document.querySelectorAll('#presence-opts .bundle-opt').forEach((el,j)=>{el.classList.toggle('on',j===i);el.querySelector('.bo-check').textContent=j===i?'✅':'○';});
+recalc();}
+
+function selectPanic(i){
+selectedPanic=PANIC_BUNDLES[i];
+document.querySelectorAll('#panic-opts .bundle-opt').forEach((el,j)=>{el.classList.toggle('on',j===i);el.querySelector('.bo-check').textContent=j===i?'✅':'○';});
+recalc();}
+
 function adj(id,d){counts[id]=Math.max(0,counts[id]+d);recalc();}
 function toggleEx(id){existing.has(id)?existing.delete(id):existing.add(id);recalc();}
+
 function recalc(){
-let sub=0,qty=0;
-SENSORS.forEach(s=>{const q=counts[s.id];document.getElementById('qty-'+s.id).textContent=q;const st=s.price*q;sub+=st;qty+=q;document.getElementById('sub-'+s.id).textContent=q>0?'$'+st:'';});
+let sensorTotal=selectedPresence.price+selectedPanic.price;
+let qty=selectedPresence.qty+selectedPanic.qty;
+SENSORS.forEach(s=>{const q=counts[s.id];document.getElementById('qty-'+s.id).textContent=q;const st=s.price*q;sensorTotal+=st;qty+=q;document.getElementById('sub-'+s.id).textContent=q>0?'$'+st:'';});
 let credit=0;const cl=[];const fl=[];
 EXISTING.forEach(d=>{const chip=document.getElementById('chip-'+d.id);if(existing.has(d.id)){chip.classList.add(d.type==='credit'?'credit-on':'free-on');if(d.type==='credit'&&d.credit>0){credit+=d.credit;cl.push(d);}else if(d.type==='free')fl.push(d);}else chip.classList.remove('credit-on','free-on');});
 document.getElementById('credit-lines').innerHTML=[...cl.map(c=>`<div class="credit-line"><span>${c.label}</span><span style="color:var(--green);font-weight:700">-$${c.credit}</span></div>`),...fl.map(f=>`<div class="credit-line"><span>${f.label}</span><span class="free-badge">${f.badge}</span></div>`)].join('');
-const total=Math.max(0,sub-credit);
+const total=Math.max(0,BASE+sensorTotal-credit);
 const deposit=Math.round(total*0.5);
-const balance=total-deposit;
-_total=total;_credit=credit;
-let pkg=PKGS[0];PKGS.forEach(p=>{if(sub>=p.min)pkg=p;});_pkg=pkg;
-document.getElementById('t-sub').textContent='$'+sub;
+document.getElementById('t-sensors').textContent='$'+sensorTotal;
 document.getElementById('t-total').textContent='$'+total.toLocaleString();
 document.getElementById('hdr-total').textContent='$'+total.toLocaleString();
 document.getElementById('t-deposit').textContent='$'+deposit.toLocaleString();
-document.getElementById('t-balance').textContent='$'+balance.toLocaleString();
+document.getElementById('t-balance').textContent='$'+(total-deposit).toLocaleString();
 document.getElementById('d-amount').textContent='$'+deposit.toLocaleString();
 if(credit>0){document.getElementById('t-credit').textContent='-$'+credit;document.getElementById('t-credit-row').style.display='flex';}else document.getElementById('t-credit-row').style.display='none';
+let pkg=PKGS[0];PKGS.forEach(p=>{if(total>=p.min)pkg=p;});
 document.getElementById('pkg-name').textContent=pkg.name;
 document.getElementById('pkg-price').textContent='$'+pkg.price.toLocaleString();
-document.getElementById('pkg-sub').textContent=qty+' sensor'+(qty!==1?'s':'')+' selected';}
+document.getElementById('pkg-sub').textContent=qty+' sensors selected';}
+
+function resetAll(){
+selectedPresence=PRESENCE_BUNDLES[1];selectedPanic=PANIC_BUNDLES[2];
+selectPresence(1);selectPanic(2);
+SENSORS.forEach(s=>counts[s.id]=0);existing.clear();recalc();}
+
 function goInvoice(){
-const items=[];
+const items=[
+{name:'Smart Home Hub (Pi 5 + Zigbee + SD)',qty:1,price:175,total:175},
+{name:'Mini UPS Battery Backup',qty:1,price:75,total:75},
+{name:'Smart Plugs 2-Pack (Mesh)',qty:1,price:70,total:70}
+];
+if(selectedPresence.qty>0)items.push({name:'Presence & Fall Sensor '+selectedPresence.label,qty:selectedPresence.qty,price:Math.round(selectedPresence.price/selectedPresence.qty),total:selectedPresence.price});
+if(selectedPanic.qty>0)items.push({name:'Panic Button '+selectedPanic.label,qty:selectedPanic.qty,price:Math.round(selectedPanic.price/selectedPanic.qty),total:selectedPanic.price});
 SENSORS.forEach(s=>{if(counts[s.id]>0)items.push({name:s.name,qty:counts[s.id],price:s.price,total:s.price*counts[s.id]});});
-const data={items,total:_total,credit:_credit,deposit:Math.round(_total*0.5),balance:Math.round(_total*0.5),pkg:_pkg?.name||'',pkgPrice:_pkg?.price||0};
-localStorage.setItem('gn_invoice',JSON.stringify(data));
+let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});
+const sensorTotal=items.reduce((s,i)=>s+i.total,0)-BASE;
+const total=Math.max(0,BASE+sensorTotal-credit);
+localStorage.setItem('gn_invoice',JSON.stringify({items,total,credit,deposit:Math.round(total*0.5),balance:Math.round(total*0.5)}));
 window.location.href='invoice.html';}
-function resetAll(){SENSORS.forEach(s=>counts[s.id]=0);existing.clear();recalc();}
+
 function buildQ(){
 const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-let t='GET NOTIFIED LLC — QUOTE\nDate: '+date+'\n\n';
-let sub=0;
-SENSORS.forEach(s=>{if(counts[s.id]>0){t+=' - '+counts[s.id]+'x '+s.name+' — $'+s.price*counts[s.id]+'\n';sub+=s.price*counts[s.id];}});
-if(!sub)return t+'No sensors selected.';
-t+='\nHardware Subtotal: $'+sub;
-if(_credit>0)t+='\nDevice Credits: -$'+_credit;
-t+='\nEstimated Total: $'+_total.toLocaleString();
-t+='\n\n⚡ 50% Deposit Required: $'+Math.round(_total*0.5).toLocaleString();
-t+='\nBalance Due at Install: $'+Math.round(_total*0.5).toLocaleString();
+let t='GET NOTIFIED LLC — QUOTE\nDate: '+date+'\n\nBASE INSTALL KIT: $320\n - Smart Home Hub (Pi 5 + Zigbee)\n - Mini UPS Battery Backup\n - Smart Plugs 2-Pack\n\nSENSORS:\n';
+if(selectedPresence.qty>0)t+=' - Presence & Fall Sensor '+selectedPresence.label+' — $'+selectedPresence.price+'\n';
+if(selectedPanic.qty>0)t+=' - Panic Button '+selectedPanic.label+' — $'+selectedPanic.price+'\n';
+SENSORS.forEach(s=>{if(counts[s.id]>0)t+=' - '+counts[s.id]+'x '+s.name+' — $'+s.price*counts[s.id]+'\n';});
+let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});
+const sensorTotal=selectedPresence.price+selectedPanic.price+SENSORS.reduce((s,x)=>s+x.price*counts[x.id],0);
+const total=Math.max(0,BASE+sensorTotal-credit);
+if(credit>0)t+='\nDevice Credits: -$'+credit;
+t+='\nEstimated Total: $'+total.toLocaleString();
+t+='\n\n⚡ 50% Deposit Required: $'+Math.round(total*0.5).toLocaleString();
+t+='\nBalance Due at Install: $'+Math.round(total*0.5).toLocaleString();
 t+='\n\n⚠️ Deposit non-refundable once equipment is ordered.';
 t+='\n\nThomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
 return t;}
+
 function copyQ(){navigator.clipboard.writeText(buildQ()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
 function emailQ(){window.location.href='mailto:?subject='+encodeURIComponent('Get Notified LLC — Quote')+'&body='+encodeURIComponent(buildQ());}
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);}
-(function prefill(){try{const d=JSON.parse(localStorage.getItem('gn_prefill')||'{}');if(Object.keys(d).length){Object.entries(d).forEach(([id,qty])=>{if(counts[id]!==undefined)counts[id]=parseInt(qty)||0;});localStorage.removeItem('gn_prefill');recalc();toast('Pre-filled from house scan ✓');}else recalc();}catch(e){recalc();}})();
+recalc();
 </script>
 </body>
 </html>
