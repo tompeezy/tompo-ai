@@ -2,88 +2,187 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#1a2744"/>
 <title>Get Notified – House Scanner</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#1a2744;--gold:#f59e0b;--gold-light:#fef3c7;--white:#fff;--gray:#64748b;--green:#10b981;--red:#ef4444;--bg:#0f1729}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden}
-.app-header{background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,158,11,.15)}
-.app-header h1{font-size:1.05rem;font-weight:800}
-.app-header h1 span{color:var(--gold)}
-.app-header .sub{font-size:.68rem;color:#475569;margin-top:1px}
-.header-right{font-size:.78rem;color:#475569;text-align:right}
-.progress-bar{height:3px;background:rgba(255,255,255,.07)}
-.progress-fill{height:100%;background:var(--gold);transition:width .5s ease}
-.screen{display:none;padding:20px;min-height:calc(100vh - 58px)}
-.screen.active{display:block}
-/* ── SETUP ── */
-.hero{text-align:center;padding:30px 0 24px}
-.hero-icon{font-size:4rem;margin-bottom:12px}
-.hero h2{font-size:1.5rem;font-weight:800;margin-bottom:8px}
-.hero h2 span{color:var(--gold)}
-.hero p{font-size:.85rem;color:#94a3b8;line-height:1.7}
-.api-card{background:var(--navy);border-radius:12px;padding:18px;margin:16px 0;border:1px solid rgba(245,158,11,.15)}
-.api-card label{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.5px;display:block;margin-bottom:8px}
-.api-row{display:flex;gap:8px}
-.api-input{flex:1;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:.82rem;padding:10px 12px;font-family:monospace;outline:none;transition:.2s}
-.api-input:focus{border-color:var(--gold)}
-.api-eye{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--gray);padding:10px;cursor:pointer;font-size:1rem}
-.api-hint{font-size:.68rem;color:#334155;margin-top:8px;line-height:1.5}
-.api-hint a{color:#60a5fa}
-.how-steps{display:flex;flex-direction:column;gap:10px;margin:16px 0}
-.step{display:flex;gap:12px;align-items:flex-start;font-size:.82rem;color:#94a3b8}
-.step-num{color:var(--gold);font-weight:800;width:20px;flex-shrink:0;margin-top:1px}
-/* ── BUTTONS ── */
-.btn{width:100%;padding:15px;border-radius:12px;border:none;font-size:.95rem;font-weight:800;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-gold{background:var(--gold);color:var(--navy)}
-.btn-gold:hover{background:#d97706}
-.btn-gold:disabled{opacity:.35;cursor:not-allowed}
-.btn-outline{background:transparent;color:var(--gold);border:1.5px solid var(--gold)}
-.btn-outline:hover{background:rgba(245,158,11,.08)}
-.btn-ghost{background:transparent;border:none;color:var(--gray);font-size:.8rem;cursor:pointer;text-decoration:underline;padding:6px;width:100%;text-align:center}
-.btn-sm{padding:10px 16px;font-size:.82rem;border-radius:10px}
-.mt{margin-top:12px}
-/* ── ROOMS ── */
-.section-label{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;margin-top:20px}
-.count-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
-.count-row{display:flex;align-items:center;justify-content:space-between;background:var(--navy);border-radius:10px;padding:12px 16px}
-.count-label{font-size:.88rem;font-weight:600}
-.counter{display:flex;align-items:center;gap:12px}
-.counter button{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:var(--white);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
-.counter button:hover{border-color:var(--gold)}
-.counter span{min-width:24px;text-align:center;font-weight:800;font-size:1rem}
+:root{--navy:#1a2744;--gold:#f59e0b;--white:#fff;--gray:#64748b;--green:#10b981;--bg:#0f1729}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;max-width:480px;margin:0 auto}
+.hdr{background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,158,11,.15)}
+.hdr h1{font-size:1.05rem;font-weight:800}.hdr h1 span{color:var(--gold)}
+.hdr .sub{font-size:.68rem;color:#475569;margin-top:1px}
+.prog-bar{height:3px;background:rgba(255,255,255,.07)}
+.prog-fill{height:100%;background:var(--gold);transition:width .4s}
+.screen{display:none;padding:20px}.screen.active{display:block}
+.hero{text-align:center;padding:24px 0 16px}
+.hero-icon{font-size:3.5rem;margin-bottom:10px}
+.hero h2{font-size:1.4rem;font-weight:800;margin-bottom:6px}.hero h2 span{color:var(--gold)}
+.hero p{font-size:.83rem;color:#94a3b8;line-height:1.6}
+.slabel{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.6px;text-transform:uppercase;margin:20px 0 10px}
+.card{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.06)}
+.igroup{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.igroup label{font-size:.75rem;color:#94a3b8;font-weight:600}
+.inp{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:.92rem;padding:10px 14px;width:100%;outline:none}
+.inp:focus{border-color:var(--gold)}
+.sel-row{display:flex;gap:8px;flex-wrap:wrap}
+.sel-btn{padding:8px 14px;border-radius:8px;border:1.5px solid rgba(255,255,255,.1);background:transparent;color:#94a3b8;font-size:.8rem;cursor:pointer;transition:.2s}
+.sel-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(245,158,11,.08)}
+.ctr-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.ctr-row:last-child{border-bottom:none}
+.ctr-label{font-size:.88rem;font-weight:600}
+.ctr{display:flex;align-items:center;gap:14px}
+.ctr button{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:var(--white);font-size:1.1rem;cursor:pointer}
+.ctr span{min-width:24px;text-align:center;font-weight:800}
 .rooms-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.room-chip{border:2px solid rgba(255,255,255,.08);border-radius:10px;padding:14px 12px;cursor:pointer;transition:.2s;text-align:center;background:var(--navy)}
-.room-chip.on{border-color:var(--gold);background:rgba(245,158,11,.08)}
-.room-chip .ri{font-size:1.5rem;margin-bottom:5px}
-.room-chip .rn{font-size:.8rem;font-weight:700}
-.room-chip .rc{font-size:.62rem;color:var(--green);margin-top:2px;display:none}
-.room-chip.on .rc{display:block}
-.rooms-footer{font-size:.78rem;color:#475569;text-align:center;margin:12px 0 16px}
-/* ── SCAN ── */
-.room-hdr{background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
-.room-hdr .ri{font-size:2rem}
-.room-hdr .rname{font-size:1.05rem;font-weight:800}
-.room-hdr .rcnt{font-size:.72rem;color:var(--gold);margin-top:2px}
-.cam-wrap{position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px}
-#cam-video{width:100%;height:100%;object-fit:cover}
-#cam-canvas{display:none}
-.cam-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;font-size:.85rem;color:#94a3b8;gap:8px}
-.cam-overlay.show{display:flex}
-.cam-overlay .oi{font-size:2.5rem}
-.preview-wrap{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;margin-bottom:14px;display:none}
-.preview-wrap img{width:100%;height:100%;object-fit:cover}
-.shutter-row{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:14px}
-.shutter{width:76px;height:76px;border-radius:50%;background:var(--gold);border:5px solid var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.8rem;transition:.15s;box-shadow:0 0 0 4px rgba(245,158,11,.25)}
-.shutter:active{transform:scale(.9)}
-.upload-lbl{padding:12px 18px;background:var(--navy);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;color:var(--white);font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:6px}
-.tip{font-size:.72rem;color:#334155;text-align:center;margin-bottom:14px;line-height:1.5}
-.running-bar{background:var(--navy);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(245,158,11,.12)}
-.rb-label{font-size:.72rem;color:#475569}
+.chip{border:2px solid rgba(255,255,255,.08);border-radius:10px;padding:14px 12px;cursor:pointer;transition:.2s;text-align:center;background:var(--navy)}
+.chip.on{border-color:var(--gold);background:rgba(245,158,11,.08)}
+.chip .ri{font-size:1.4rem;margin-bottom:4px}.chip .rn{font-size:.78rem;font-weight:700}
+.btn{width:100%;padding:15px;border-radius:12px;border:none;font-size:.95rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.sum-hero{text-align:center;padding:16px 0 12px}
+.sum-icon{font-size:2.8rem;margin-bottom:8px}
+.sum-hero h2{font-size:1.2rem;font-weight:800;margin-bottom:4px}
+.sum-hero p{font-size:.78rem;color:#475569}
+.pkg-box{background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2px solid var(--gold);border-radius:14px;padding:18px;text-align:center;margin:14px 0}
+.pkg-label{font-size:.68rem;color:var(--gold);font-weight:700;letter-spacing:.5px;margin-bottom:6px}
+.pkg-name{font-size:1.15rem;font-weight:800;margin-bottom:4px}
+.pkg-price{font-size:1.6rem;font-weight:800;color:var(--gold)}
+.pkg-sub{font-size:.72rem;color:#475569;margin-top:6px}
+.srow{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.srow:last-child{border-bottom:none}
+.sr-l{display:flex;gap:10px;align-items:flex-start}
+.sr-qty{background:var(--gold);color:var(--navy);font-weight:800;font-size:.82rem;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sr-name{font-size:.85rem;font-weight:700}
+.sr-where{font-size:.7rem;color:#475569;margin-top:3px;line-height:1.4}
+.sr-price{font-size:.82rem;color:var(--green);font-weight:700;flex-shrink:0}
+.total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
+.total-row .tl{color:#94a3b8;font-size:.88rem}
+.total-row .tv{font-size:1.1rem;font-weight:800;color:var(--gold)}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
+.share-btn .si{font-size:1.4rem}
+.divider{height:1px;background:rgba(255,255,255,.06);margin:14px 0}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="hdr">
+<div><h1>Get <span>Notified</span> LLC</h1><div class="sub">House Scanner</div></div>
+</div>
+<div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+<div class="screen active" id="s-form">
+<div class="hero"><div class="hero-icon">🏠</div><h2>House <span>Scanner</span></h2><p>Enter the home details — we'll generate the exact sensor plan with placements.</p></div>
+<div class="slabel">House Size</div>
+<div class="card">
+<div class="igroup"><label>SQUARE FOOTAGE</label><input class="inp" id="sqft" type="number" placeholder="e.g. 1800" inputmode="numeric"/></div>
+<div class="slabel" style="margin-top:4px">STORIES</div>
+<div class="sel-row" id="stories-row">
+<button class="sel-btn on" onclick="setSt(1,this)">1 Story</button>
+<button class="sel-btn" onclick="setSt(2,this)">2 Stories</button>
+<button class="sel-btn" onclick="setSt(3,this)">3+ Stories</button>
+</div>
+</div>
+<div class="slabel">Bedrooms & Bathrooms</div>
+<div class="card">
+<div class="ctr-row"><span class="ctr-label">🛏️ Bedrooms</span><div class="ctr"><button onclick="adj('bed',-1)">−</button><span id="ct-bed">2</span><button onclick="adj('bed',1)">+</button></div></div>
+<div class="ctr-row"><span class="ctr-label">🚿 Bathrooms</span><div class="ctr"><button onclick="adj('bath',-1)">−</button><span id="ct-bath">1</span><button onclick="adj('bath',1)">+</button></div></div>
+</div>
+<div class="slabel">Other Rooms</div>
+<div class="rooms-grid" id="rooms-grid"></div>
+<div class="slabel">Existing Smart Devices</div>
+<div class="card"><p style="font-size:.78rem;color:#475569;margin-bottom:12px">Select any already in the home</p><div class="sel-row" id="existing-grid"></div></div>
+<button class="btn btn-gold" onclick="scan()">🔍 Generate Sensor Plan</button>
+<a href="index.html" style="display:block;text-align:center;margin-top:12px;font-size:.78rem;color:#334155;text-decoration:none">Back to Tools</a>
+<div style="height:24px"></div>
+</div>
+<div class="screen" id="s-results">
+<div class="sum-hero"><div class="sum-icon">✅</div><h2>Sensor Plan Ready</h2><p id="res-sub"></p></div>
+<div class="pkg-box"><div class="pkg-label">📦 RECOMMENDED PACKAGE</div><div class="pkg-name" id="pkg-name"></div><div class="pkg-price" id="pkg-price"></div><div class="pkg-sub" id="pkg-sub"></div></div>
+<div class="slabel">Sensors & Placements</div>
+<div id="sensor-list"></div>
+<div class="divider"></div>
+<div class="total-row"><span class="tl">Estimated Hardware</span><span class="tv" id="res-total">$0</span></div>
+<div class="slabel">Export</div>
+<div class="share-grid">
+<button class="share-btn" onclick="copyRpt()"><span class="si">📋</span>Copy Report</button>
+<button class="share-btn" onclick="emailRpt()"><span class="si">✉️</span>Email</button>
+<button class="share-btn" onclick="window.location.href='estimator.html'"><span class="si">💰</span>Estimator</button>
+<button class="share-btn" onclick="show('s-form');prog(0)"><span class="si">🔄</span>New Scan</button>
+</div>
+<div style="height:30px"></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const SENSORS={door:{name:'Door/Window Sensor',price:35,icon:'🚪'},motion:{name:'Motion Sensor',price:35,icon:'👁️'},fall:{name:'Presence & Fall Sensor',price:89,icon:'⭐'},water:{name:'Water Leak Sensor',price:35,icon:'💧'},smoke:{name:'Smoke Detector',price:55,icon:'🔥'},temp:{name:'Temp & Humidity Sensor',price:30,icon:'🌡️'},plug:{name:'Smart Plug (mesh)',price:30,icon:'🔌'},panic:{name:'Panic Button',price:35,icon:'🆘'}};
+const ROOMS=[{id:'living',name:'Living Room',icon:'🛋️'},{id:'kitchen',name:'Kitchen',icon:'🍳'},{id:'dining',name:'Dining Room',icon:'🍽️'},{id:'hallway',name:'Hallway',icon:'🏠'},{id:'garage',name:'Garage',icon:'🚗'},{id:'basement',name:'Basement',icon:'🏚️'},{id:'laundry',name:'Laundry Room',icon:'🧺'},{id:'backdoor',name:'Back Door',icon:'🔙'},{id:'porch',name:'Porch/Sunroom',icon:'🌿'},{id:'office',name:'Office/Den',icon:'💼'}];
+const EXISTING=[{id:'nest',label:'Nest'},{id:'echo',label:'Echo'},{id:'google',label:'Google Home'},{id:'ring',label:'Ring'},{id:'plugs',label:'Smart Plugs'},{id:'bulbs',label:'Smart Bulbs'}];
+const PKGS=[{name:'Safe Nights Essentials',price:499,min:0},{name:'Complete Home Safety',price:899,min:450},{name:'Total Peace of Mind',price:1399,min:900}];
+let S={stories:1,counts:{bed:2,bath:1},rooms:new Set(['living','kitchen']),existing:new Set(),_items:[],_total:0,_sqft:0,_pkg:null};
+document.getElementById('rooms-grid').innerHTML=ROOMS.map(r=>`<div class="chip${S.rooms.has(r.id)?' on':''}" onclick="toggleRoom('${r.id}',this)"><div class="ri">${r.icon}</div><div class="rn">${r.name}</div></div>`).join('');
+document.getElementById('existing-grid').innerHTML=EXISTING.map(e=>`<button class="sel-btn" onclick="toggleEx('${e.id}',this)">${e.label}</button>`).join('');
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function prog(n){document.getElementById('prog').style.width=n+'%';}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);}
+function setSt(n,btn){S.stories=n;document.getElementById('stories-row').querySelectorAll('.sel-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function adj(t,d){S.counts[t]=Math.max(0,Math.min(t==='bed'?6:5,S.counts[t]+d));document.getElementById('ct-'+t).textContent=S.counts[t];}
+function toggleRoom(id,el){S.rooms.has(id)?S.rooms.delete(id):S.rooms.add(id);el.classList.toggle('on');}
+function toggleEx(id,el){S.existing.has(id)?S.existing.delete(id):S.existing.add(id);el.classList.toggle('on');}
+function scan(){
+const sqft=parseInt(document.getElementById('sqft').value)||1500;
+const beds=S.counts.bed,baths=S.counts.bath,stories=S.stories,rooms=S.rooms;
+const raw=[];
+raw.push({type:'door',qty:1,where:'Front door — primary entry monitoring'});
+if(rooms.has('backdoor'))raw.push({type:'door',qty:1,where:'Back door — secondary entry monitoring'});
+if(rooms.has('garage')){raw.push({type:'door',qty:1,where:'Garage door — vehicle entry monitoring'});raw.push({type:'motion',qty:1,where:'Garage — motion & activity detection'});}
+if(beds>0)raw.push({type:'motion',qty:beds,where:`All ${beds} bedroom${beds>1?'s':''} — nighttime activity monitoring`});
+if(beds>0)raw.push({type:'panic',qty:1,where:'Primary bedroom — emergency button beside bed'});
+if(baths>0)raw.push({type:'fall',qty:baths,where:`All ${baths} bathroom${baths>1?'s':''} — fall & presence detection (highest risk zone)`});
+if(rooms.has('kitchen')){raw.push({type:'smoke',qty:1,where:'Kitchen — smoke & fire detection'});raw.push({type:'water',qty:1,where:'Kitchen — under sink leak detection'});raw.push({type:'motion',qty:1,where:'Kitchen — activity & wellness monitoring'});}
+if(rooms.has('living'))raw.push({type:'motion',qty:1,where:'Living room — primary activity zone'});
+if(rooms.has('dining'))raw.push({type:'motion',qty:1,where:'Dining room — mealtime activity tracking'});
+if(rooms.has('hallway'))raw.push({type:'motion',qty:1,where:'Hallway — nighttime navigation monitoring'});
+if(rooms.has('laundry'))raw.push({type:'water',qty:1,where:'Laundry room — washer leak detection'});
+if(rooms.has('basement')){raw.push({type:'water',qty:1,where:'Basement — flood & sump pump failure'});raw.push({type:'motion',qty:1,where:'Basement — activity detection'});}
+if(rooms.has('office'))raw.push({type:'motion',qty:1,where:'Office/Den — occupancy monitoring'});
+raw.push({type:'temp',qty:stories,where:`${stories} floor${stories>1?'s':''} — temperature & humidity`});
+const kitchenHasSmoke=rooms.has('kitchen');
+const extraSmoke=Math.max(0,stories-(kitchenHasSmoke?1:0));
+if(extraSmoke>0)raw.push({type:'smoke',qty:extraSmoke,where:`Upper floor${extraSmoke>1?'s':''} — smoke detection`});
+if(sqft>2000){const plugs=Math.ceil((sqft-2000)/600)+1;raw.push({type:'plug',qty:plugs,where:'Open areas — Zigbee mesh range extension'});}
+const cons={};
+raw.forEach(r=>{if(!cons[r.type]){cons[r.type]={type:r.type,qty:0,wheres:[]};}cons[r.type].qty+=r.qty;cons[r.type].wheres.push(r.where);});
+const items=Object.values(cons);
+let total=0;items.forEach(it=>{const s=SENSORS[it.type];if(s)total+=s.price*it.qty;});
+let pkg=PKGS[0];PKGS.forEach(p=>{if(total>=p.min)pkg=p;});
+const totalSensors=items.reduce((s,it)=>s+it.qty,0);
+document.getElementById('res-sub').textContent=totalSensors+' sensors · '+sqft.toLocaleString()+' sq ft · '+stories+' stor'+(stories===1?'y':'ies');
+document.getElementById('pkg-name').textContent=pkg.name;
+document.getElementById('pkg-price').textContent='$'+pkg.price.toLocaleString();
+document.getElementById('pkg-sub').textContent=totalSensors+' sensors · $'+total+' estimated hardware';
+document.getElementById('sensor-list').innerHTML=items.map(it=>{const s=SENSORS[it.type]||{name:it.type,price:0,icon:'📦'};return '<div class="srow"><div class="sr-l"><div class="sr-qty">'+it.qty+'</div><div><div class="sr-name">'+s.icon+' '+s.name+'</div><div class="sr-where">'+it.wheres.join(' · ')+'</div></div></div><div class="sr-price">$'+s.price*it.qty+'</div></div>';}).join('');
+document.getElementById('res-total').textContent='$'+total.toLocaleString();
+S._items=items;S._total=total;S._sqft=sqft;S._pkg=pkg;
+show('s-results');prog(100);}
+function buildReport(){
+const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+let t='GET NOTIFIED LLC - HOUSE SCAN REPORT\nDate: '+date+'\n';
+t+='Square Footage: '+S._sqft.toLocaleString()+' sq ft  |  Stories: '+S.stories+'\n';
+t+='Bedrooms: '+S.counts.bed+'  |  Bathrooms: '+S.counts.bath+'\n\n';
+t+='RECOMMENDED PACKAGE: '+(S._pkg?.name||'')+' — $'+(S._pkg?.price||'')+'\n\n';
+t+='SENSOR PLAN:\n';
+S._items.forEach(it=>{const s=SENSORS[it.type]||{name:it.type,price:0};t+=' - '+it.qty+'x '+s.name+' — $'+s.price*it.qty+'\n';it.wheres.forEach(w=>t+='     📍 '+w+'\n');});
+t+='\nTotal Hardware Cost: $'+S._total+'\n\n';
+t+='Thomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
+return t;}
+function copyRpt(){navigator.clipboard.writeText(buildReport()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
+function emailRpt(){window.location.href='mailto:?subject='+encodeURIComponent('Get Notified LLC - House Scan Report')+'&body='+encodeURIComponent(buildReport());}
+</script>
+</body>
+</html>.rb-label{font-size:.72rem;color:#475569}
 .rb-count{font-size:.82rem;color:#94a3b8;margin-top:2px}
 .rb-total{font-size:1.1rem;font-weight:800;color:var(--gold)}
 /* ── ANALYZING ── */
