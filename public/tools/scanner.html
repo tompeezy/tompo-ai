@@ -75,7 +75,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
 <div class="screen active" id="s-form">
-<div class="hero"><div class="hero-icon">🏠</div><h2>House <span>Scanner</span></h2><p>Enter the home details — we'll generate the exact sensor plan with placements.</p></div>
+<div class="hero"><div class="hero-icon">🏠</div><h2>House <span>Scanner</span></h2><p>Enter home details — we'll build the exact sensor plan with placements and pricing.</p></div>
 <div class="slabel">House Size</div>
 <div class="card">
 <div class="igroup"><label>SQUARE FOOTAGE</label><input class="inp" id="sqft" type="number" placeholder="e.g. 1800" inputmode="numeric"/></div>
@@ -117,10 +117,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 <div class="toast" id="toast"></div>
 <script>
-const SENSORS={door:{name:'Door/Window Sensor',price:35,icon:'🚪'},motion:{name:'Motion Sensor',price:35,icon:'👁️'},fall:{name:'Presence & Fall Sensor',price:89,icon:'⭐'},water:{name:'Water Leak Sensor',price:35,icon:'💧'},smoke:{name:'Smoke Detector',price:55,icon:'🔥'},temp:{name:'Temp & Humidity Sensor',price:30,icon:'🌡️'},plug:{name:'Smart Plug (mesh)',price:30,icon:'🔌'},panic:{name:'Panic Button',price:35,icon:'🆘'}};
+const SENSORS={door:{name:'Door/Window Sensor',price:45,icon:'🚪'},motion:{name:'Motion Sensor',price:45,icon:'👁️'},fall:{name:'Presence & Fall Sensor',price:149,icon:'⭐'},water:{name:'Water Leak Sensor',price:45,icon:'💧'},smoke:{name:'Smoke Detector',price:75,icon:'🔥'},temp:{name:'Temp & Humidity Sensor',price:40,icon:'🌡️'},vibration:{name:'Vibration Sensor',price:55,icon:'📳'},plug:{name:'Smart Plug',price:35,icon:'🔌'},panic:{name:'Panic Button',price:55,icon:'🆘'},lock:{name:'Smart Lock',price:349,icon:'🔒'}};
 const ROOMS=[{id:'living',name:'Living Room',icon:'🛋️'},{id:'kitchen',name:'Kitchen',icon:'🍳'},{id:'dining',name:'Dining Room',icon:'🍽️'},{id:'hallway',name:'Hallway',icon:'🏠'},{id:'garage',name:'Garage',icon:'🚗'},{id:'basement',name:'Basement',icon:'🏚️'},{id:'laundry',name:'Laundry Room',icon:'🧺'},{id:'backdoor',name:'Back Door',icon:'🔙'},{id:'porch',name:'Porch/Sunroom',icon:'🌿'},{id:'office',name:'Office/Den',icon:'💼'}];
 const EXISTING=[{id:'nest',label:'Nest'},{id:'echo',label:'Echo'},{id:'google',label:'Google Home'},{id:'ring',label:'Ring'},{id:'plugs',label:'Smart Plugs'},{id:'bulbs',label:'Smart Bulbs'}];
-const PKGS=[{name:'Safe Nights Essentials',price:499,min:0},{name:'Complete Home Safety',price:899,min:450},{name:'Total Peace of Mind',price:1399,min:900}];
+const PKGS=[{name:'Safe Nights Essentials',price:1499,min:0},{name:'Complete Home Safety',price:2999,min:600},{name:'Total Peace of Mind',price:3999,min:1200}];
 let S={stories:1,counts:{bed:2,bath:1},rooms:new Set(['living','kitchen']),existing:new Set(),_items:[],_total:0,_sqft:0,_pkg:null};
 document.getElementById('rooms-grid').innerHTML=ROOMS.map(r=>`<div class="chip${S.rooms.has(r.id)?' on':''}" onclick="toggleRoom('${r.id}',this)"><div class="ri">${r.icon}</div><div class="rn">${r.name}</div></div>`).join('');
 document.getElementById('existing-grid').innerHTML=EXISTING.map(e=>`<button class="sel-btn" onclick="toggleEx('${e.id}',this)">${e.label}</button>`).join('');
@@ -137,22 +137,22 @@ const beds=S.counts.bed,baths=S.counts.bath,stories=S.stories,rooms=S.rooms;
 const raw=[];
 raw.push({type:'door',qty:1,where:'Front door — primary entry monitoring'});
 if(rooms.has('backdoor'))raw.push({type:'door',qty:1,where:'Back door — secondary entry monitoring'});
-if(rooms.has('garage')){raw.push({type:'door',qty:1,where:'Garage door — vehicle entry monitoring'});raw.push({type:'motion',qty:1,where:'Garage — motion & activity detection'});}
-if(beds>0)raw.push({type:'motion',qty:beds,where:`All ${beds} bedroom${beds>1?'s':''} — nighttime activity monitoring`});
-if(beds>0)raw.push({type:'panic',qty:1,where:'Primary bedroom — emergency button beside bed'});
-if(baths>0)raw.push({type:'fall',qty:baths,where:`All ${baths} bathroom${baths>1?'s':''} — fall & presence detection (highest risk zone)`});
-if(rooms.has('kitchen')){raw.push({type:'smoke',qty:1,where:'Kitchen — smoke & fire detection'});raw.push({type:'water',qty:1,where:'Kitchen — under sink leak detection'});raw.push({type:'motion',qty:1,where:'Kitchen — activity & wellness monitoring'});}
-if(rooms.has('living'))raw.push({type:'motion',qty:1,where:'Living room — primary activity zone'});
+if(rooms.has('garage')){raw.push({type:'door',qty:1,where:'Garage door — vehicle entry monitoring'});raw.push({type:'motion',qty:1,where:'Garage — motion detection'});}
+if(beds>0){raw.push({type:'fall',qty:beds,where:`All ${beds} bedroom${beds>1?'s':''} — presence & sleep monitoring`});raw.push({type:'vibration',qty:1,where:'Primary bedroom — under mattress, bed exit detection'});}
+raw.push({type:'panic',qty:1,where:'Primary bedroom — one button direct call to family (replaces Life Alert)'});
+if(baths>0)raw.push({type:'fall',qty:baths,where:`All ${baths} bathroom${baths>1?'s':''} — fall detection (highest risk zone)`});
+if(rooms.has('kitchen')){raw.push({type:'smoke',qty:1,where:'Kitchen — smoke & fire detection'});raw.push({type:'water',qty:1,where:'Kitchen — under sink leak detection'});raw.push({type:'fall',qty:1,where:'Kitchen — presence & wellness monitoring (tracks meals)'});}
+if(rooms.has('living'))raw.push({type:'fall',qty:1,where:'Living room — primary activity zone presence monitoring'});
 if(rooms.has('dining'))raw.push({type:'motion',qty:1,where:'Dining room — mealtime activity tracking'});
 if(rooms.has('hallway'))raw.push({type:'motion',qty:1,where:'Hallway — nighttime navigation monitoring'});
-if(rooms.has('laundry'))raw.push({type:'water',qty:1,where:'Laundry room — washer leak detection'});
+if(rooms.has('laundry')){raw.push({type:'water',qty:1,where:'Laundry room — washer leak detection'});raw.push({type:'vibration',qty:1,where:'Laundry room — washer cycle monitoring'});}
 if(rooms.has('basement')){raw.push({type:'water',qty:1,where:'Basement — flood & sump pump failure'});raw.push({type:'motion',qty:1,where:'Basement — activity detection'});}
-if(rooms.has('office'))raw.push({type:'motion',qty:1,where:'Office/Den — occupancy monitoring'});
+if(rooms.has('office'))raw.push({type:'fall',qty:1,where:'Office/Den — occupancy & presence monitoring'});
 raw.push({type:'temp',qty:stories,where:`${stories} floor${stories>1?'s':''} — temperature & humidity`});
-const kitchenHasSmoke=rooms.has('kitchen');
-const extraSmoke=Math.max(0,stories-(kitchenHasSmoke?1:0));
+const kitchenSmoke=rooms.has('kitchen');
+const extraSmoke=Math.max(0,stories-(kitchenSmoke?1:0));
 if(extraSmoke>0)raw.push({type:'smoke',qty:extraSmoke,where:`Upper floor${extraSmoke>1?'s':''} — smoke detection`});
-if(sqft>2000){const plugs=Math.ceil((sqft-2000)/600)+1;raw.push({type:'plug',qty:plugs,where:'Open areas — Zigbee mesh range extension'});}
+if(sqft>2000){const plugs=Math.ceil((sqft-2000)/600)+1;raw.push({type:'plug',qty:plugs,where:'Strategic locations — Zigbee mesh range extension'});}
 const cons={};
 raw.forEach(r=>{if(!cons[r.type]){cons[r.type]={type:r.type,qty:0,wheres:[]};}cons[r.type].qty+=r.qty;cons[r.type].wheres.push(r.where);});
 const items=Object.values(cons);
@@ -168,7 +168,7 @@ document.getElementById('res-total').textContent='$'+total.toLocaleString();
 S._items=items;S._total=total;S._sqft=sqft;S._pkg=pkg;
 show('s-results');prog(100);}
 function goEstimator(){
-const map={door:'door-sensor',motion:'motion-sensor',fall:'fall-sensor',water:'water-sensor',smoke:'smoke-detector',temp:'temp-sensor',plug:'smart-plug',panic:'panic-button'};
+const map={door:'door-sensor',motion:'motion-sensor',fall:'fall-sensor',water:'water-sensor',smoke:'smoke-detector',temp:'temp-sensor',vibration:'vibration-sensor',plug:'smart-plug',panic:'panic-button',lock:'smart-lock'};
 const prefill={};
 S._items.forEach(function(it){const k=map[it.type];if(k)prefill[k]=it.qty;});
 localStorage.setItem('gn_prefill',JSON.stringify(prefill));
@@ -178,10 +178,10 @@ const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',yea
 let t='GET NOTIFIED LLC - HOUSE SCAN REPORT\nDate: '+date+'\n';
 t+='Square Footage: '+S._sqft.toLocaleString()+' sq ft  |  Stories: '+S.stories+'\n';
 t+='Bedrooms: '+S.counts.bed+'  |  Bathrooms: '+S.counts.bath+'\n\n';
-t+='RECOMMENDED PACKAGE: '+(S._pkg?.name||'')+' — $'+(S._pkg?.price||'')+'\n\n';
+t+='RECOMMENDED PACKAGE: '+(S._pkg?.name||'')+' — $'+(S._pkg?.price?.toLocaleString()||'')+'\n\n';
 t+='SENSOR PLAN:\n';
 S._items.forEach(it=>{const s=SENSORS[it.type]||{name:it.type,price:0};t+=' - '+it.qty+'x '+s.name+' — $'+s.price*it.qty+'\n';it.wheres.forEach(w=>t+='     📍 '+w+'\n');});
-t+='\nTotal Hardware Cost: $'+S._total+'\n\n';
+t+='\nTotal Hardware: $'+S._total+'\n\n';
 t+='Thomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
 return t;}
 function copyRpt(){navigator.clipboard.writeText(buildReport()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
