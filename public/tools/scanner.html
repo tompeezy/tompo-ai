@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#1a2744"/>
+<title>Get Notified – House Scanner</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1a2744;--gold:#f59e0b;--gold-light:#fef3c7;--white:#fff;--gray:#64748b;--green:#10b981;--red:#ef4444;--bg:#0f1729}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden}
+.app-header{background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,158,11,.15)}
+.app-header h1{font-size:1.05rem;font-weight:800}
+.app-header h1 span{color:var(--gold)}
+.app-header .sub{font-size:.68rem;color:#475569;margin-top:1px}
+.header-right{font-size:.78rem;color:#475569;text-align:right}
+.progress-bar{height:3px;background:rgba(255,255,255,.07)}
+.progress-fill{height:100%;background:var(--gold);transition:width .5s ease}
+.screen{display:none;padding:20px;min-height:calc(100vh - 58px)}
+.screen.active{display:block}
+/* ── SETUP ── */
+.hero{text-align:center;padding:30px 0 24px}
+.hero-icon{font-size:4rem;margin-bottom:12px}
+.hero h2{font-size:1.5rem;font-weight:800;margin-bottom:8px}
+.hero h2 span{color:var(--gold)}
+.hero p{font-size:.85rem;color:#94a3b8;line-height:1.7}
+.api-card{background:var(--navy);border-radius:12px;padding:18px;margin:16px 0;border:1px solid rgba(245,158,11,.15)}
+.api-card label{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.5px;display:block;margin-bottom:8px}
+.api-row{display:flex;gap:8px}
+.api-input{flex:1;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:.82rem;padding:10px 12px;font-family:monospace;outline:none;transition:.2s}
+.api-input:focus{border-color:var(--gold)}
+.api-eye{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--gray);padding:10px;cursor:pointer;font-size:1rem}
+.api-hint{font-size:.68rem;color:#334155;margin-top:8px;line-height:1.5}
+.api-hint a{color:#60a5fa}
+.how-steps{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.step{display:flex;gap:12px;align-items:flex-start;font-size:.82rem;color:#94a3b8}
+.step-num{color:var(--gold);font-weight:800;width:20px;flex-shrink:0;margin-top:1px}
+/* ── BUTTONS ── */
+.btn{width:100%;padding:15px;border-radius:12px;border:none;font-size:.95rem;font-weight:800;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:#d97706}
+.btn-gold:disabled{opacity:.35;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--gold);border:1.5px solid var(--gold)}
+.btn-outline:hover{background:rgba(245,158,11,.08)}
+.btn-ghost{background:transparent;border:none;color:var(--gray);font-size:.8rem;cursor:pointer;text-decoration:underline;padding:6px;width:100%;text-align:center}
+.btn-sm{padding:10px 16px;font-size:.82rem;border-radius:10px}
+.mt{margin-top:12px}
+/* ── ROOMS ── */
+.section-label{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;margin-top:20px}
+.count-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+.count-row{display:flex;align-items:center;justify-content:space-between;background:var(--navy);border-radius:10px;padding:12px 16px}
+.count-label{font-size:.88rem;font-weight:600}
+.counter{display:flex;align-items:center;gap:12px}
+.counter button{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:var(--white);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.counter button:hover{border-color:var(--gold)}
+.counter span{min-width:24px;text-align:center;font-weight:800;font-size:1rem}
+.rooms-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.room-chip{border:2px solid rgba(255,255,255,.08);border-radius:10px;padding:14px 12px;cursor:pointer;transition:.2s;text-align:center;background:var(--navy)}
+.room-chip.on{border-color:var(--gold);background:rgba(245,158,11,.08)}
+.room-chip .ri{font-size:1.5rem;margin-bottom:5px}
+.room-chip .rn{font-size:.8rem;font-weight:700}
+.room-chip .rc{font-size:.62rem;color:var(--green);margin-top:2px;display:none}
+.room-chip.on .rc{display:block}
+.rooms-footer{font-size:.78rem;color:#475569;text-align:center;margin:12px 0 16px}
+/* ── SCAN ── */
+.room-hdr{background:var(--navy);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.room-hdr .ri{font-size:2rem}
+.room-hdr .rname{font-size:1.05rem;font-weight:800}
+.room-hdr .rcnt{font-size:.72rem;color:var(--gold);margin-top:2px}
+.cam-wrap{position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px}
+#cam-video{width:100%;height:100%;object-fit:cover}
+#cam-canvas{display:none}
+.cam-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;font-size:.85rem;color:#94a3b8;gap:8px}
+.cam-overlay.show{display:flex}
+.cam-overlay .oi{font-size:2.5rem}
+.preview-wrap{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;margin-bottom:14px;display:none}
+.preview-wrap img{width:100%;height:100%;object-fit:cover}
+.shutter-row{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:14px}
+.shutter{width:76px;height:76px;border-radius:50%;background:var(--gold);border:5px solid var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.8rem;transition:.15s;box-shadow:0 0 0 4px rgba(245,158,11,.25)}
+.shutter:active{transform:scale(.9)}
+.upload-lbl{padding:12px 18px;background:var(--navy);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;color:var(--white);font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:6px}
+.tip{font-size:.72rem;color:#334155;text-align:center;margin-bottom:14px;line-height:1.5}
+.running-bar{background:var(--navy);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(245,158,11,.12)}
+.rb-label{font-size:.72rem;color:#475569}
+.rb-count{font-size:.82rem;color:#94a3b8;margin-top:2px}
+.rb-total{font-size:1.1rem;font-weight:800;color:var(--gold)}
+/* ── ANALYZING ── */
+.analyzing{text-align:center;padding:50px 20px}
+.spin{width:56px;height:56px;border:4px solid rgba(245,158,11,.15);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.an-icon{font-size:2.5rem;margin-bottom:8px}
+.an-title{font-size:1.05rem;font-weight:800;margin-bottom:6px}
+.an-sub{font-size:.8rem;color:#475569;margin-bottom:28px}
+.checklist{display:flex;flex-direction:column;gap:10px;text-align:left;max-width:280px;margin:0 auto}
+.check-item{display:flex;align-items:center;gap:10px;font-size:.78rem;color:#334155}
+.check-item .ci{width:18px;text-align:center}
+/* ── RESULT ── */
+.result-photo{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;margin-bottom:14px;display:none}
+.result-photo img{width:100%;height:100%;object-fit:cover}
+.result-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.result-room{display:flex;align-items:center;gap:10px}
+.result-room .ri{font-size:1.4rem}
+.rr-name{font-size:1rem;font-weight:800}
+.rr-sub{font-size:.7rem;color:#475569;margin-top:2px}
+.priority{display:inline-block;padding:4px 10px;border-radius:10px;font-size:.65rem;font-weight:700}
+.p-high{background:rgba(239,68,68,.15);color:#fca5a5}
+.p-medium{background:rgba(245,158,11,.15);color:#fcd34d}
+.p-low{background:rgba(16,185,129,.15);color:#6ee7b7}
+.safety-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:10px 14px;font-size:.8rem;color:#fcd34d;margin-bottom:14px;display:none}
+.sensor-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.sensor-card{background:var(--navy);border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,.06)}
+.sc-qty{background:var(--gold);color:var(--navy);font-weight:800;font-size:.88rem;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-name{font-weight:700;font-size:.85rem;margin-bottom:3px}
+.sc-place{font-size:.72rem;color:#94a3b8;margin-bottom:2px}
+.sc-reason{font-size:.7rem;color:#475569;line-height:1.4}
+.sc-price{font-size:.72rem;color:var(--green);font-weight:700;margin-top:4px}
+.no-sensors{text-align:center;padding:20px;color:#334155;font-size:.85rem}
+.action-row{display:flex;gap:10px;margin-top:4px}
+/* ── SUMMARY ── */
+.sum-hero{text-align:center;padding:20px 0 16px}
+.sum-icon{font-size:3rem;margin-bottom:8px}
+.sum-hero h2{font-size:1.25rem;font-weight:800;margin-bottom:4px}
+.sum-hero p{font-size:.8rem;color:#475569}
+.pkg-box{background:linear-gradient(135deg,var(--navy),#1e3a5f);border:2px solid var(--gold);border-radius:14px;padding:20px;text-align:center;margin:14px 0}
+.pkg-label{font-size:.68rem;color:var(--gold);font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+.pkg-name{font-size:1.2rem;font-weight:800;margin-bottom:4px}
+.pkg-price{font-size:1.7rem;font-weight:800;color:var(--gold)}
+.pkg-sub{font-size:.75rem;color:#475569;margin-top:6px}
+.sensor-summary-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem}
+.sensor-summary-row:last-child{border-bottom:none}
+.ss-name{color:#cbd5e1}
+.ss-qty{font-weight:700}
+.ss-price{color:var(--gold);font-size:.78rem}
+.total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:.9rem}
+.total-row .tl{color:#94a3b8}
+.total-row .tv{font-size:1.1rem;font-weight:800;color:var(--gold)}
+.room-recap{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.room-recap-item{background:var(--navy);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.rri-icon{font-size:1.1rem}
+.rri-name{font-size:.82rem;font-weight:700}
+.rri-sensors{font-size:.7rem;color:#475569;margin-top:2px}
+.rri-cost{margin-left:auto;font-size:.78rem;color:var(--green);font-weight:700;flex-shrink:0}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.2s}
+.share-btn:active{border-color:var(--gold)}
+.share-btn .si{font-size:1.5rem}
+.divider{height:1px;background:rgba(255,255,255,.06);margin:14px 0}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div>
+    <h1>Get <span>Notified</span> LLC</h1>
+    <div class="sub">🏠 AI House Scanner</div>
+  </div>
+  <div class="header-right" id="hdr-right"></div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<!-- ══ SCREEN: SETUP ══ -->
+<div class="screen active" id="s-setup">
+  <div class="hero">
+    <div class="hero-icon">🏠🤖</div>
+    <h2>House <span>Scanner</span></h2>
+    <p>Walk any home room by room. AI tells you exactly which sensors to install — and precisely where.</p>
+  </div>
+
+  <div class="api-card">
+    <label>ANTHROPIC API KEY</label>
+    <div class="api-row">
+      <input class="api-input" id="api-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off"/>
+      <button class="api-eye" onclick="toggleKey()" id="eye-btn">👁️</button>
+    </div>
+    <div class="api-hint">
+      Your key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> · ~$0.02 per house scan
+    </div>
+  </div>
+
+  <div class="how-steps">
+    <div class="step"><span class="step-num">1.</span><span>Tell us which rooms are in the home</span></div>
+    <div class="step"><span class="step-num">2.</span><span>Point your camera at each room and tap the shutter</span></div>
+    <div class="step"><span class="step-num">3.</span><span>Claude AI analyzes the room — exact sensors, exact placements</span></div>
+    <div class="step"><span class="step-num">4.</span><span>Walk out with a full sensor list and professional quote</span></div>
+  </div>
+
+  <button class="btn btn-gold mt" onclick="goRooms()">🚀 Start House Scan</button>
+  <a href="index.html" style="display:block;text-align:center;margin-top:12px;font-size:.78rem;color:#334155;text-decoration:none">← Back to Tools</a>
+</div>
+
+<!-- ══ SCREEN: ROOMS ══ -->
+<div class="screen" id="s-rooms">
+  <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:4px">What rooms does this home have?</h2>
+  <p style="font-size:.78rem;color:#475569;margin-bottom:4px">Select all that apply — we'll scan each one.</p>
+
+  <div class="section-label">Bedrooms & Bathrooms</div>
+  <div class="count-rows">
+    <div class="count-row">
+      <span class="count-label">🛏️ Bedrooms</span>
+      <div class="counter">
+        <button onclick="adj('bed',-1)">−</button>
+        <span id="ct-bed">1</span>
+        <button onclick="adj('bed',1)">+</button>
+      </div>
+    </div>
+    <div class="count-row">
+      <span class="count-label">🚿 Bathrooms</span>
+      <div class="counter">
+        <button onclick="adj('bath',-1)">−</button>
+        <span id="ct-bath">1</span>
+        <button onclick="adj('bath',1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Other Areas</div>
+  <div class="rooms-grid" id="rooms-grid"></div>
+
+  <div class="rooms-footer" id="rooms-footer"></div>
+  <button class="btn btn-gold" onclick="startScan()">📸 Start Scanning →</button>
+  <button class="btn-ghost mt" onclick="show('s-setup')">← Back</button>
+</div>
+
+<!-- ══ SCREEN: SCAN ══ -->
+<div class="screen" id="s-scan">
+  <div class="room-hdr">
+    <span class="ri" id="scan-icon">🏠</span>
+    <div>
+      <div class="rname" id="scan-name">Room</div>
+      <div class="rcnt" id="scan-cnt">Room 1 of 5</div>
+    </div>
+  </div>
+
+  <div class="cam-wrap" id="cam-wrap">
+    <video id="cam-video" autoplay playsinline muted></video>
+    <canvas id="cam-canvas"></canvas>
+    <div class="cam-overlay" id="cam-overlay">
+      <span class="oi">📷</span>
+      <span>Tap 📸 below to capture<br/>or use Upload Photo</span>
+    </div>
+  </div>
+
+  <div class="preview-wrap" id="preview-wrap">
+    <img id="preview-img" src="" alt="Room photo"/>
+  </div>
+
+  <div class="shutter-row">
+    <label class="upload-lbl" for="file-in">
+      📁 Upload
+      <input type="file" id="file-in" accept="image/*" style="display:none" onchange="onFile(event)"/>
+    </label>
+    <button class="shutter" onclick="shoot()">📸</button>
+    <button class="btn-ghost" onclick="skipRoom()" style="width:auto;padding:0 4px">Skip</button>
+  </div>
+
+  <p class="tip">💡 Step back to show the full room — include doors, windows, and any hazard areas</p>
+
+  <div class="running-bar">
+    <div>
+      <div class="rb-label">Sensors found so far</div>
+      <div class="rb-count" id="rt-count">0 sensors · 0 rooms</div>
+    </div>
+    <div class="rb-total" id="rt-total">$0</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: ANALYZING ══ -->
+<div class="screen" id="s-analyzing">
+  <div class="analyzing">
+    <div class="an-icon" id="an-icon">🏠</div>
+    <div class="spin"></div>
+    <div class="an-title">Analyzing <span id="an-room">room</span>...</div>
+    <div class="an-sub">Claude AI is scanning for safety risks and sensor placements</div>
+    <div class="checklist">
+      <div class="check-item"><span class="ci" id="ck1">○</span><span>Identifying layout and hazards</span></div>
+      <div class="check-item"><span class="ci" id="ck2">○</span><span>Matching sensors to safety needs</span></div>
+      <div class="check-item"><span class="ci" id="ck3">○</span><span>Calculating placement recommendations</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: RESULT ══ -->
+<div class="screen" id="s-result">
+  <div class="result-photo" id="result-photo"><img id="result-img" src="" alt=""/></div>
+  <div class="result-hdr">
+    <div class="result-room">
+      <span class="ri" id="res-icon">🏠</span>
+      <div>
+        <div class="rr-name" id="res-name">Room</div>
+        <div class="rr-sub" id="res-sub"></div>
+      </div>
+    </div>
+    <span class="priority" id="res-priority"></span>
+  </div>
+  <div class="safety-box" id="safety-box"></div>
+  <div class="sensor-list" id="sensor-list"></div>
+  <div class="running-bar" style="margin-bottom:14px">
+    <div>
+      <div class="rb-label">Running total</div>
+      <div class="rb-count" id="rt2-count">0 sensors</div>
+    </div>
+    <div class="rb-total" id="rt2-total">$0</div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-outline btn-sm" onclick="rescan()" style="flex:1">🔄 Rescan</button>
+    <button class="btn btn-gold btn-sm" onclick="nextRoom()" id="next-btn" style="flex:2">Next Room →</button>
+  </div>
+  <button class="btn-ghost mt" onclick="goSummary()">Skip to Final Report</button>
+</div>
+
+<!-- ══ SCREEN: SUMMARY ══ -->
+<div class="screen" id="s-summary">
+  <div class="sum-hero">
+    <div class="sum-icon">✅</div>
+    <h2>Scan Complete</h2>
+    <p id="sum-sub">Full sensor report ready</p>
+  </div>
+
+  <div class="pkg-box">
+    <div class="pkg-label">📦 RECOMMENDED PACKAGE</div>
+    <div class="pkg-name" id="pkg-name">Complete Home Safety</div>
+    <div class="pkg-price" id="pkg-price">$899</div>
+    <div class="pkg-sub" id="pkg-sub">Based on your scan results</div>
+  </div>
+
+  <div class="section-label">Sensor Breakdown</div>
+  <div id="sensor-summary"></div>
+  <div class="divider"></div>
+  <div class="total-row">
+    <span class="tl">Estimated Hardware</span>
+    <span class="tv" id="sum-total">$0</span>
+  </div>
+
+  <div class="section-label">Rooms Scanned</div>
+  <div class="room-recap" id="room-recap"></div>
+
+  <div class="section-label">Export & Share</div>
+  <div class="share-grid">
+    <button class="share-btn" onclick="copyReport()"><span class="si">📋</span>Copy Report</button>
+    <button class="share-btn" onclick="emailReport()"><span class="si">✉️</span>Email Report</button>
+    <button class="share-btn" onclick="window.location.href='estimator.html'"><span class="si">💰</span>Open Estimator</button>
+    <button class="share-btn" onclick="newScan()"><span class="si">🔄</span>New Scan</button>
+  </div>
+
+  <div style="height:30px"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const SENSORS = {
+  'door-sensor':     {name:'Door/Window Sensor',      price:35,  icon:'🚪'},
+  'motion-sensor':   {name:'Motion Sensor',            price:35,  icon:'👁️'},
+  'fall-sensor':     {name:'Presence & Fall Sensor',   price:89,  icon:'⭐'},
+  'water-sensor':    {name:'Water Leak Sensor',        price:35,  icon:'💧'},
+  'smoke-detector':  {name:'Smoke Detector',           price:55,  icon:'🔥'},
+  'temp-sensor':     {name:'Temp & Humidity Sensor',   price:30,  icon:'🌡️'},
+  'vibration-sensor':{name:'Vibration Sensor',         price:40,  icon:'📳'},
+  'smart-plug':      {name:'Smart Plug',               price:30,  icon:'🔌'},
+  'panic-button':    {name:'Panic Button',             price:35,  icon:'🆘'},
+  'smart-lock':      {name:'Smart Lock',               price:249, icon:'🔒'},
+};
+
+const COMMON = [
+  {id:'entry',    name:'Entry / Foyer',  icon:'🚪'},
+  {id:'living',   name:'Living Room',    icon:'🛋️'},
+  {id:'kitchen',  name:'Kitchen',        icon:'🍳'},
+  {id:'hallway',  name:'Hallway',        icon:'🏠'},
+  {id:'garage',   name:'Garage',         icon:'🚗'},
+  {id:'laundry',  name:'Laundry Room',   icon:'🧺'},
+  {id:'basement', name:'Basement',       icon:'🏚️'},
+  {id:'backdoor', name:'Back Door',      icon:'🔙'},
+];
+
+const PKGS = [
+  {name:'Safe Nights Essentials', price:499,  min:0},
+  {name:'Complete Home Safety',   price:899,  min:450},
+  {name:'Total Peace of Mind',    price:1399, min:900},
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const S = {
+  key: localStorage.getItem('gn_key') || '',
+  counts: {bed:1, bath:1},
+  selected: new Set(['entry','living','kitchen']),
+  rooms: [],
+  idx: 0,
+  results: {},
+  images: {},
+  stream: null,
+};
+
+// ══════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════
+(function boot(){
+  if(S.key) document.getElementById('api-input').value = S.key;
+  renderCommon();
+  updateFooter();
+})();
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function prog(n){ document.getElementById('progress').style.width = n+'%'; }
+function hdr(t){ document.getElementById('hdr-right').textContent = t; }
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3000); }
+function toggleKey(){ const i=document.getElementById('api-input'); i.type=i.type==='password'?'text':'password'; }
+
+// ══════════════════════════════════════════
+// SETUP → ROOMS
+// ══════════════════════════════════════════
+function goRooms(){
+  const key = document.getElementById('api-input').value.trim();
+  if(!key.startsWith('sk-ant-')){toast('⚠️ Enter your Anthropic API key (starts with sk-ant-)'); return;}
+  S.key = key; localStorage.setItem('gn_key', key);
+  show('s-rooms'); prog(10); hdr('Select Rooms');
+}
+
+// ══════════════════════════════════════════
+// ROOM SELECTION
+// ══════════════════════════════════════════
+function renderCommon(){
+  document.getElementById('rooms-grid').innerHTML = COMMON.map(r=>`
+    <div class="room-chip ${S.selected.has(r.id)?'on':''}" onclick="toggleRoom('${r.id}')">
+      <div class="ri">${r.icon}</div>
+      <div class="rn">${r.name}</div>
+      <div class="rc">✓ Added</div>
+    </div>`).join('');
+  updateFooter();
+}
+
+function toggleRoom(id){ S.selected.has(id)?S.selected.delete(id):S.selected.add(id); renderCommon(); }
+
+function adj(type, d){
+  const max = type==='bed'?5:4;
+  S.counts[type] = Math.max(0, Math.min(max, S.counts[type]+d));
+  document.getElementById('ct-'+type).textContent = S.counts[type];
+  updateFooter();
+}
+
+function totalRooms(){ return S.counts.bed + S.counts.bath + S.selected.size; }
+
+function updateFooter(){
+  const t = totalRooms();
+  document.getElementById('rooms-footer').textContent = t+' room'+(t!==1?'s':'')+' selected — ~'+Math.ceil(t*1.5)+' min scan';
+}
+
+function buildRooms(){
+  const rooms = [];
+  COMMON.filter(r=>S.selected.has(r.id)).forEach(r=>rooms.push({...r}));
+  for(let i=1;i<=S.counts.bed;i++) rooms.push({id:'bed-'+i, name:i===1?'Primary Bedroom':'Bedroom '+i, icon:'🛏️'});
+  for(let i=1;i<=S.counts.bath;i++) rooms.push({id:'bath-'+i, name:i===1?'Main Bathroom':'Bathroom '+i, icon:'🚿'});
+  return rooms;
+}
+
+function startScan(){
+  if(totalRooms()===0){toast('⚠️ Select at least one room'); return;}
+  S.rooms = buildRooms(); S.idx = 0; S.results = {}; S.images = {};
+  showScanScreen();
+}
+
+// ══════════════════════════════════════════
+// SCAN SCREEN
+// ══════════════════════════════════════════
+function showScanScreen(){
+  const room = S.rooms[S.idx];
+  const total = S.rooms.length;
+  document.getElementById('scan-icon').textContent = room.icon;
+  document.getElementById('scan-name').textContent = room.name;
+  document.getElementById('scan-cnt').textContent = 'Room '+(S.idx+1)+' of '+total;
+  document.getElementById('preview-wrap').style.display = 'none';
+  document.getElementById('cam-wrap').style.display = 'block';
+  updateRT();
+  show('s-scan');
+  prog(10 + (S.idx/total)*55);
+  hdr((S.idx+1)+'/'+total);
+  startCam();
+}
+
+async function startCam(){
+  stopCam();
+  const video = document.getElementById('cam-video');
+  const overlay = document.getElementById('cam-overlay');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}}});
+    S.stream = stream; video.srcObject = stream; overlay.classList.remove('show');
+  } catch(e){ overlay.classList.add('show'); }
+}
+
+function stopCam(){ if(S.stream){S.stream.getTracks().forEach(t=>t.stop()); S.stream=null;} }
+
+function shoot(){
+  const video = document.getElementById('cam-video');
+  if(!video.srcObject){ document.getElementById('file-in').click(); return; }
+  const canvas = document.getElementById('cam-canvas');
+  canvas.width = video.videoWidth||640; canvas.height = video.videoHeight||480;
+  canvas.getContext('2d').drawImage(video,0,0);
+  processCapture(canvas);
+}
+
+function onFile(e){
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.getElementById('cam-canvas');
+      const mw=1024; let w=img.width,h=img.height;
+      if(w>mw){h=Math.round(h*mw/w);w=mw;}
+      c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
+      processCapture(c);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function processCapture(canvas){
+  const c2 = document.createElement('canvas');
+  const mw=800; let w=canvas.width,h=canvas.height;
+  if(w>mw){h=Math.round(h*mw/w);w=mw;}
+  c2.width=w; c2.height=h; c2.getContext('2d').drawImage(canvas,0,0,w,h);
+  const dataUrl = c2.toDataURL('image/jpeg',0.78);
+  const b64 = dataUrl.split(',')[1];
+  const room = S.rooms[S.idx];
+  S.images[room.id] = dataUrl;
+  document.getElementById('preview-img').src = dataUrl;
+  document.getElementById('preview-wrap').style.display = 'block';
+  document.getElementById('cam-wrap').style.display = 'none';
+  stopCam();
+  showAnalyzing(room);
+  analyzeRoom(room, b64);
+}
+
+function skipRoom(){
+  S.results[S.rooms[S.idx].id] = {sensors:[],notes:'',priority:'low',skipped:true};
+  stopCam(); advance();
+}
+
+// ══════════════════════════════════════════
+// ANALYZING
+// ══════════════════════════════════════════
+function showAnalyzing(room){
+  document.getElementById('an-icon').textContent = room.icon;
+  document.getElementById('an-room').textContent = room.name;
+  ['ck1','ck2','ck3'].forEach(id=>{const el=document.getElementById(id);el.textContent='○';el.style.color='#334155';});
+  show('s-analyzing');
+  setTimeout(()=>{const e=document.getElementById('ck1');e.textContent='✅';e.style.color='var(--green)';},700);
+  setTimeout(()=>{const e=document.getElementById('ck2');e.textContent='✅';e.style.color='var(--green)';},1600);
+  setTimeout(()=>{const e=document.getElementById('ck3');e.textContent='✅';e.style.color='var(--green)';},2500);
+}
+
+// ══════════════════════════════════════════
+// AI ANALYSIS — CLAUDE OPUS
+// ══════════════════════════════════════════
+async function analyzeRoom(room, b64){
+  const systemPrompt = `You are the AI brain for Get Notified LLC — an elder safety sensor installation company. You analyze room photos and recommend Zigbee sensors managed by Home Assistant. You respond ONLY with valid JSON, no markdown, no explanation.`;
+
+  const userPrompt = `Analyze this photo of a "${room.name}" in an elderly person's home. Recommend sensors for fall detection, wellness monitoring, and family alert systems.
+
+Available sensors (use these exact IDs):
+- door-sensor ($35): Any door or window
+- motion-sensor ($35): Movement detection, auto-lighting
+- fall-sensor ($89): Detects falls, sitting, presence — USE FOR EVERY BATHROOM AND BEDROOM
+- water-sensor ($35): Under sinks, near water heater
+- smoke-detector ($55): Fire and smoke alerts
+- temp-sensor ($30): Room temperature monitoring
+- vibration-sensor ($40): Bed occupancy, medicine cabinet
+- smart-plug ($30): Device control + extends wireless mesh range
+- panic-button ($35): One-press emergency alert to family
+- smart-lock ($249): Timed door locking for wandering prevention
+
+Respond with JSON only:
+{
+  "sensors": [
+    {
+      "id": "fall-sensor",
+      "qty": 1,
+      "placement": "Ceiling corner near shower/tub",
+      "reason": "Highest fall risk in the home — detects falls and unusual time in bathroom"
+    }
+  ],
+  "safety_notes": "One sentence about the main safety risk visible in this room",
+  "priority": "high"
+}
+
+Rules:
+- priority must be "high", "medium", or "low"
+- Bathroom: ALWAYS fall-sensor. Priority high.
+- Bedroom: fall-sensor or vibration-sensor for bed, motion-sensor for nighttime
+- Kitchen: smoke-detector, motion-sensor, water-sensor under sink
+- Entry/back door: door-sensor always, smart-lock if wandering risk
+- Hallway: motion-sensor for nighttime auto-lighting
+- Living room: motion-sensor, panic-button near main seating
+- 2-4 sensors per room max. Be practical.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': S.key,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-opus-20240229',
+        max_tokens: 800,
+        system: systemPrompt,
+        messages: [{
+          role: 'user',
+          content: [
+            {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
+            {type:'text', text:userPrompt}
+          ]
+        }]
+      })
+    });
+
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      throw new Error(err.error?.message || 'API error '+res.status);
+    }
+
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '{}';
+    // Strip any markdown fences just in case
+    const clean = text.replace(/```json?\n?/g,'').replace(/```/g,'').trim();
+    const parsed = JSON.parse(clean);
+
+    S.results[room.id] = {
+      sensors: parsed.sensors || [],
+      notes: parsed.safety_notes || '',
+      priority: parsed.priority || 'medium',
+      skipped: false,
+    };
+
+  } catch(err) {
+    console.error(err);
+    S.results[room.id] = {sensors:[], notes:'Analysis failed: '+err.message, priority:'low', skipped:false, error:true};
+  }
+
+  showResult(room);
+}
+
+// ══════════════════════════════════════════
+// RESULT
+// ══════════════════════════════════════════
+function showResult(room){
+  const r = S.results[room.id];
+  const isLast = S.idx === S.rooms.length - 1;
+  const dataUrl = S.images[room.id];
+
+  // Photo
+  if(dataUrl){
+    document.getElementById('result-img').src = dataUrl;
+    document.getElementById('result-photo').style.display = 'block';
+  } else {
+    document.getElementById('result-photo').style.display = 'none';
+  }
+
+  // Header
+  document.getElementById('res-icon').textContent = room.icon;
+  document.getElementById('res-name').textContent = room.name;
+  const count = r.sensors.reduce((s,x)=>s+x.qty,0);
+  document.getElementById('res-sub').textContent = count>0 ? count+' sensor'+(count!==1?'s':'')+' recommended' : 'No sensors needed';
+
+  // Priority
+  const pb = document.getElementById('res-priority');
+  const pm = {high:'⚠️ High Priority', medium:'📌 Medium', low:'✓ Low'};
+  pb.textContent = pm[r.priority]||'📌 Medium';
+  pb.className = 'priority p-'+r.priority;
+
+  // Safety note
+  const sb = document.getElementById('safety-box');
+  if(r.notes && !r.error){ sb.textContent = '⚠️ '+r.notes; sb.style.display='block'; }
+  else sb.style.display='none';
+
+  // Sensor list
+  const sl = document.getElementById('sensor-list');
+  if(r.sensors.length===0){
+    sl.innerHTML = `<div class="no-sensors">${r.error?'⚠️ Analysis failed. Tap Rescan to try again.':'✅ No specific sensors needed for this room.'}</div>`;
+  } else {
+    sl.innerHTML = r.sensors.map(s=>{
+      const def = SENSORS[s.id]||{name:s.id,price:0,icon:'📦'};
+      return `<div class="sensor-card">
+        <div class="sc-qty">${s.qty}</div>
+        <div style="flex:1">
+          <div class="sc-name">${def.icon} ${def.name}</div>
+          <div class="sc-place">📍 ${s.placement}</div>
+          <div class="sc-reason">${s.reason}</div>
+          <div class="sc-price">$${def.price*s.qty}${s.qty>1?' ($'+def.price+' × '+s.qty+')':''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Running totals
+  updateRT('2');
+
+  // Next button
+  document.getElementById('next-btn').textContent = isLast ? '🎉 View Full Report' : 'Next Room →';
+  show('s-result');
+  prog(10 + ((S.idx+1)/S.rooms.length)*55);
+}
+
+function rescan(){ showScanScreen(); }
+
+function nextRoom(){ advance(); }
+
+function advance(){
+  S.idx++;
+  if(S.idx >= S.rooms.length) goSummary();
+  else showScanScreen();
+}
+
+// ══════════════════════════════════════════
+// RUNNING TOTAL
+// ══════════════════════════════════════════
+function getTotals(){
+  const totals={}, rooms=Object.keys(S.results).filter(id=>!S.results[id].skipped);
+  let cost=0, count=0;
+  rooms.forEach(id=>{
+    S.results[id].sensors.forEach(s=>{
+      totals[s.id]=(totals[s.id]||0)+s.qty;
+      const def=SENSORS[s.id]; if(def){cost+=def.price*s.qty; count+=s.qty;}
+    });
+  });
+  return {totals, cost, count, rooms:rooms.length};
+}
+
+function updateRT(suffix=''){
+  const {cost,count,rooms} = getTotals();
+  const c = document.getElementById('rt'+suffix+'-count');
+  const t = document.getElementById('rt'+suffix+'-total');
+  if(c) c.textContent = count+' sensor'+(count!==1?'s':'')+' · '+rooms+' room'+(rooms!==1?'s':'');
+  if(t) t.textContent = '$'+cost.toLocaleString();
+}
+
+// ══════════════════════════════════════════
+// SUMMARY
+// ══════════════════════════════════════════
+function goSummary(){
+  stopCam();
+  const {totals, cost, count} = getTotals();
+  const scanned = S.rooms.filter(r=>S.results[r.id]&&!S.results[r.id].skipped).length;
+
+  // Package rec
+  let pkg = PKGS[0];
+  PKGS.forEach(p=>{ if(cost>=p.min) pkg=p; });
+  document.getElementById('pkg-name').textContent = pkg.name;
+  document.getElementById('pkg-price').textContent = '$'+pkg.price.toLocaleString();
+  document.getElementById('pkg-sub').textContent = count+' sensors across '+scanned+' rooms';
+  document.getElementById('sum-sub').textContent = count+' sensors · '+scanned+' rooms · $'+cost+' hardware';
+
+  // Sensor breakdown
+  const entries = Object.entries(totals);
+  document.getElementById('sensor-summary').innerHTML = entries.length===0
+    ? '<div style="color:#334155;font-size:.82rem;text-align:center;padding:12px">No sensors yet — try rescanning rooms.</div>'
+    : entries.map(([id,qty])=>{
+        const def=SENSORS[id]||{name:id,price:0,icon:'📦'};
+        return `<div class="sensor-summary-row">
+          <span class="ss-name">${def.icon} ${def.name}</span>
+          <span class="ss-qty">${qty}×</span>
+          <span class="ss-price">$${def.price*qty}</span>
+        </div>`;
+      }).join('');
+
+  document.getElementById('sum-total').textContent = '$'+cost.toLocaleString();
+
+  // Room recap
+  document.getElementById('room-recap').innerHTML = S.rooms.map(room=>{
+    const r = S.results[room.id]; if(!r) return '';
+    const rc = r.sensors.reduce((s,x)=>s+(SENSORS[x.id]?.price||0)*x.qty,0);
+    const names = r.sensors.slice(0,2).map(s=>SENSORS[s.id]?.icon||'📦').join(' ');
+    return `<div class="room-recap-item">
+      <span class="rri-icon">${room.icon}</span>
+      <div>
+        <div class="rri-name">${room.name}${r.skipped?' (skipped)':''}</div>
+        <div class="rri-sensors">${r.skipped?'—':r.sensors.length>0?names+(r.sensors.length>2?' +more':''):'Nothing needed'}</div>
+      </div>
+      ${!r.skipped&&rc>0?`<span class="rri-cost">$${rc}</span>`:''}
+    </div>`;
+  }).join('');
+
+  show('s-summary'); prog(100); hdr('Complete ✓');
+}
+
+// ══════════════════════════════════════════
+// EXPORT
+// ══════════════════════════════════════════
+function buildReport(){
+  const {totals,cost,count} = getTotals();
+  const date = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  let t = 'GET NOTIFIED LLC — HOUSE SCAN REPORT\n';
+  t += 'Safety Without Surveillance\n';
+  t += 'Date: '+date+'\n';
+  t += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  t += 'SENSOR RECOMMENDATIONS\n';
+  Object.entries(totals).forEach(([id,qty])=>{
+    const def=SENSORS[id]||{name:id,price:0};
+    t += ` • ${qty}× ${def.name} — $${def.price*qty}\n`;
+  });
+  t += '\nEstimated Hardware Total: $'+cost+'\n\n';
+  t += 'ROOM BY ROOM\n';
+  S.rooms.forEach(room=>{
+    const r=S.results[room.id]; if(!r||r.skipped) return;
+    t += '\n'+room.icon+' '+room.name+':\n';
+    if(r.notes) t += '  ⚠️ '+r.notes+'\n';
+    r.sensors.forEach(s=>{ const def=SENSORS[s.id]||{name:s.id}; t += '  • '+s.qty+'× '+def.name+' — '+s.placement+'\n'; });
+  });
+  t += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  t += 'Thomas Whitlock — Get Notified LLC\n';
+  t += '📞 704-239-7532 · gettompoai@gmail.com\n';
+  return t;
+}
+
+function copyReport(){
+  navigator.clipboard.writeText(buildReport())
+    .then(()=>toast('📋 Report copied!'))
+    .catch(()=>toast('📋 Try long-pressing to copy'));
+}
+
+function emailReport(){
+  const sub = encodeURIComponent('Get Notified LLC — House Scan Report');
+  const body = encodeURIComponent(buildReport());
+  window.location.href = 'mailto:?subject='+sub+'&body='+body;
+}
+
+function newScan(){
+  S.rooms=[]; S.idx=0; S.results={}; S.images={};
+  S.counts={bed:1,bath:1}; S.selected=new Set(['entry','living','kitchen']);
+  document.getElementById('ct-bed').textContent=1;
+  document.getElementById('ct-bath').textContent=1;
+  renderCommon(); updateFooter();
+  show('s-rooms'); prog(10); hdr('Select Rooms');
+}
+</script>
+</body>
+</html>
