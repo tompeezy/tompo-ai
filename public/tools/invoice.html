@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#1a2744"/>
+<title>Get Notified – Invoice</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1a2744;--gold:#f59e0b;--white:#fff;--green:#10b981;--bg:#0f1729}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh;max-width:480px;margin:0 auto}
+.hdr{background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,158,11,.15)}
+.hdr h1{font-size:1.05rem;font-weight:800}.hdr h1 span{color:var(--gold)}
+.hdr .sub{font-size:.68rem;color:#475569;margin-top:1px}
+.content{padding:20px}
+.slabel{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.6px;text-transform:uppercase;margin:20px 0 10px}
+.inv-hero{background:var(--navy);border-radius:14px;padding:18px;margin-bottom:14px;border:1px solid rgba(245,158,11,.2)}
+.inv-num{font-size:.72rem;color:#475569;margin-bottom:4px}
+.inv-num span{color:var(--gold);font-weight:800;font-size:.9rem}
+.inv-date{font-size:.72rem;color:#475569}
+.field-group{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:.72rem;color:#94a3b8;font-weight:600}
+.inp{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:.88rem;padding:10px 14px;width:100%;outline:none}
+.inp:focus{border-color:var(--gold)}
+.line-items{display:flex;flex-direction:column;gap:0;margin-bottom:4px}
+.li-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem}
+.li-row:last-child{border-bottom:none}
+.li-name{color:#cbd5e1;flex:1}
+.li-qty{color:#94a3b8;width:30px;text-align:center}
+.li-price{color:#94a3b8;width:50px;text-align:right;font-size:.75rem}
+.li-total{color:var(--gold);font-weight:700;width:55px;text-align:right}
+.total-box{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,.06)}
+.trow{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.85rem}
+.trow .tl{color:#94a3b8}.trow .tv{font-weight:700}
+.trow.big .tl{font-size:.95rem;color:var(--white);font-weight:700}
+.trow.big .tv{font-size:1.2rem;color:var(--gold)}
+.trow.green .tv{color:var(--green)}
+.trow.deposit .tl{color:var(--white);font-weight:700}
+.trow.deposit .tv{color:var(--gold);font-weight:800;font-size:1rem}
+.divider{height:1px;background:rgba(255,255,255,.08);margin:8px 0}
+.deposit-box{background:rgba(245,158,11,.08);border:2px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:16px;text-align:center}
+.deposit-box .d-title{font-size:.9rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+.deposit-box .d-amount{font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:6px}
+.deposit-box .d-sub{font-size:.72rem;color:#94a3b8;line-height:1.6}
+.sig-box{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid rgba(255,255,255,.06)}
+.sig-box p{font-size:.75rem;color:#475569;margin-bottom:12px;line-height:1.6}
+.sig-line{border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:6px;height:32px}
+.sig-label{font-size:.68rem;color:#334155}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
+.share-btn .si{font-size:1.4rem}
+.print-btn{width:100%;padding:16px;border-radius:12px;border:none;background:var(--gold);color:var(--navy);font-size:1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+@media print{
+body{background:#fff;color:#000;max-width:100%}
+.hdr{background:#1a2744;color:#fff;padding:20px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.hdr h1{color:#fff}.hdr h1 span{color:#f59e0b}
+.content{padding:20px}
+.slabel{color:#1a2744;border-bottom:2px solid #f59e0b;padding-bottom:4px}
+.inp{background:#f8fafc;border:1px solid #e2e8f0;color:#000}
+.inv-hero{background:#f8fafc;border:1px solid #e2e8f0;color:#000}
+.inv-num{color:#64748b}.inv-num span{color:#1a2744}
+.inv-date{color:#64748b}
+.li-row{border-bottom:1px solid #e2e8f0}
+.li-name{color:#1e293b}.li-qty{color:#64748b}.li-price{color:#64748b}.li-total{color:#1a2744}
+.total-box{background:#f8fafc;border:1px solid #e2e8f0;color:#000}
+.trow .tl{color:#64748b}.trow .tv{color:#000}
+.trow.big .tl{color:#000}.trow.big .tv{color:#1a2744}
+.trow.green .tv{color:#059669}
+.trow.deposit .tl{color:#000}.trow.deposit .tv{color:#1a2744}
+.divider{background:#e2e8f0}
+.deposit-box{background:#fffbeb;border:2px solid #f59e0b;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.deposit-box .d-title{color:#92400e}
+.deposit-box .d-amount{color:#1a2744}
+.deposit-box .d-sub{color:#64748b}
+.sig-box{background:#f8fafc;border:1px solid #e2e8f0}
+.sig-box p{color:#64748b}
+.sig-label{color:#94a3b8}
+.share-grid,.print-btn,.toast{display:none!important}
+.no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="hdr">
+<div><h1>Get <span>Notified</span> LLC</h1><div class="sub">Invoice</div></div>
+</div>
+<div class="content">
+<div class="inv-hero">
+<div class="inv-num">Invoice # <span id="inv-num">GN-000</span></div>
+<div class="inv-date" id="inv-date"></div>
+</div>
+<div class="slabel">Bill To</div>
+<div class="field-group">
+<div class="field"><label>CUSTOMER NAME</label><input class="inp" id="cust-name" placeholder="Full Name" type="text"/></div>
+<div class="field"><label>ADDRESS</label><input class="inp" id="cust-addr" placeholder="Street Address" type="text"/></div>
+<div class="field"><label>CITY, STATE ZIP</label><input class="inp" id="cust-city" placeholder="Salisbury, NC 28144" type="text"/></div>
+<div class="field"><label>PHONE</label><input class="inp" id="cust-phone" placeholder="(704) 000-0000" type="tel"/></div>
+<div class="field"><label>EMAIL</label><input class="inp" id="cust-email" placeholder="email@example.com" type="email"/></div>
+</div>
+<div class="slabel">Line Items</div>
+<div class="line-items" id="line-items"></div>
+<div class="total-box" style="margin-top:14px">
+<div class="trow"><span class="tl">Subtotal</span><span class="tv" id="t-sub">$0</span></div>
+<div class="trow green" id="t-credit-row" style="display:none"><span class="tl">Device Credits</span><span class="tv" id="t-credit">-$0</span></div>
+<div class="divider"></div>
+<div class="trow big"><span class="tl">Total</span><span class="tv" id="t-total">$0</span></div>
+<div class="divider"></div>
+<div class="trow deposit"><span class="tl">⚡ Deposit Due (50%)</span><span class="tv" id="t-deposit">$0</span></div>
+<div class="trow"><span class="tl">Balance Due at Install</span><span class="tv" id="t-balance">$0</span></div>
+</div>
+<div class="deposit-box">
+<div class="d-title">⚠️ 50% Deposit Required to Schedule Install</div>
+<div class="d-amount" id="d-amount">$0</div>
+<div class="d-sub">Hardware is ordered upon receipt of deposit.<br/>Balance due the day of install.<br/>Deposit is non-refundable once equipment is ordered.</div>
+</div>
+<div class="slabel">Authorization</div>
+<div class="sig-box">
+<p>By signing below, customer agrees to the 50% deposit requirement and authorizes Get Notified LLC to order equipment and schedule installation.</p>
+<div class="sig-line"></div>
+<div class="sig-label">Customer Signature &amp; Date</div>
+</div>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+<div class="share-grid">
+<button class="share-btn" onclick="copyInv()"><span class="si">📋</span>Copy</button>
+<button class="share-btn" onclick="emailInv()"><span class="si">✉️</span>Email</button>
+<button class="share-btn" onclick="window.location.href='estimator.html'"><span class="si">💰</span>Estimator</button>
+<button class="share-btn" onclick="window.location.href='scanner.html'"><span class="si">🏠</span>Scanner</button>
+</div>
+<a href="index.html" style="display:block;text-align:center;margin-bottom:24px;font-size:.78rem;color:#334155;text-decoration:none" class="no-print">Back to Tools</a>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let INV={items:[],total:0,credit:0,deposit:0,balance:0,pkg:'',pkgPrice:0};
+function genInvNum(){const d=new Date();const dt=d.getFullYear().toString()+(d.getMonth()+1).toString().padStart(2,'0')+d.getDate().toString().padStart(2,'0');const r=Math.floor(Math.random()*900)+100;return'GN-'+dt+'-'+r;}
+function init(){
+document.getElementById('inv-num').textContent=genInvNum();
+document.getElementById('inv-date').textContent='Date: '+new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+try{const d=JSON.parse(localStorage.getItem('gn_invoice')||'{}');if(d.items){INV=d;localStorage.removeItem('gn_invoice');}}catch(e){}
+render();}
+function render(){
+const items=INV.items||[];
+document.getElementById('line-items').innerHTML=items.length===0?'<div style="color:#334155;font-size:.82rem;padding:12px 0">No items. Go to Estimator first.</div>':items.map(it=>`<div class="li-row"><span class="li-name">${it.name}</span><span class="li-qty">${it.qty}x</span><span class="li-price">$${it.price}</span><span class="li-total">$${it.total}</span></div>`).join('');
+const sub=items.reduce((s,it)=>s+it.total,0);
+const credit=INV.credit||0;
+const total=Math.max(0,sub-credit);
+const deposit=Math.round(total*0.5);
+const balance=total-deposit;
+document.getElementById('t-sub').textContent='$'+sub.toLocaleString();
+document.getElementById('t-total').textContent='$'+total.toLocaleString();
+document.getElementById('t-deposit').textContent='$'+deposit.toLocaleString();
+document.getElementById('t-balance').textContent='$'+balance.toLocaleString();
+document.getElementById('d-amount').textContent='$'+deposit.toLocaleString();
+if(credit>0){document.getElementById('t-credit').textContent='-$'+credit;document.getElementById('t-credit-row').style.display='flex';}else document.getElementById('t-credit-row').style.display='none';}
+function buildText(){
+const name=document.getElementById('cust-name').value||'Customer';
+const addr=document.getElementById('cust-addr').value;
+const city=document.getElementById('cust-city').value;
+const phone=document.getElementById('cust-phone').value;
+const invNum=document.getElementById('inv-num').textContent;
+const date=document.getElementById('inv-date').textContent;
+let t='GET NOTIFIED LLC\n704-239-7532 · gettompoai@gmail.com\n\n';
+t+=invNum+'\n'+date+'\n\n';
+t+='BILL TO:\n'+name+'\n';
+if(addr)t+=addr+'\n';
+if(city)t+=city+'\n';
+if(phone)t+=phone+'\n\n';
+t+='LINE ITEMS:\n';
+(INV.items||[]).forEach(it=>t+=it.qty+'x '+it.name+' — $'+it.total+'\n');
+const sub=(INV.items||[]).reduce((s,it)=>s+it.total,0);
+const credit=INV.credit||0;
+const total=Math.max(0,sub-credit);
+const deposit=Math.round(total*0.5);
+if(credit>0)t+='\nDevice Credits: -$'+credit;
+t+='\nTOTAL: $'+total.toLocaleString();
+t+='\n\n⚡ DEPOSIT DUE NOW (50%): $'+deposit.toLocaleString();
+t+='\nBalance Due at Install: $'+(total-deposit).toLocaleString();
+t+='\n\n⚠️ Deposit non-refundable once equipment is ordered.';
+t+='\n\nThomas Whitlock — Get Notified LLC';
+return t;}
+function copyInv(){navigator.clipboard.writeText(buildText()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
+function emailInv(){
+const name=document.getElementById('cust-name').value||'';
+const email=document.getElementById('cust-email').value||'';
+window.location.href='mailto:'+email+'?subject='+encodeURIComponent('Get Notified LLC — Invoice '+document.getElementById('inv-num').textContent)+'&body='+encodeURIComponent(buildText());}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);}
+init();
+</script>
+</body>
+</html>
