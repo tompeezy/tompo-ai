@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,8 +47,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .trow.big .tl{font-size:.95rem;color:var(--white);font-weight:700}
 .trow.big .tv{font-size:1.2rem;color:var(--gold)}
 .trow.green .tv{color:var(--green)}
+.trow.deposit .tl{color:var(--white);font-weight:700}
+.trow.deposit .tv{color:var(--gold);font-weight:800}
 .divider{height:1px;background:rgba(255,255,255,.08);margin:8px 0}
-.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.deposit-box{background:rgba(245,158,11,.08);border:2px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:16px;text-align:center}
+.deposit-box .d-title{font-size:1rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+.deposit-box .d-amount{font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:6px}
+.deposit-box .d-sub{font-size:.75rem;color:#94a3b8;line-height:1.5}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
 .share-btn .si{font-size:1.4rem}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
@@ -82,6 +87,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="trow green" id="t-credit-row" style="display:none"><span class="tl">Device Credits</span><span class="tv" id="t-credit">-$0</span></div>
 <div class="divider"></div>
 <div class="trow big"><span class="tl">Estimated Total</span><span class="tv" id="t-total">$0</span></div>
+<div class="divider"></div>
+<div class="trow deposit"><span class="tl">⚡ 50% Deposit Due</span><span class="tv" id="t-deposit">$0</span></div>
+<div class="trow"><span class="tl">Balance Due at Install</span><span class="tv" id="t-balance">$0</span></div>
+</div>
+<div class="deposit-box">
+<div class="d-title">⚠️ 50% Deposit Required to Schedule</div>
+<div class="d-amount" id="d-amount">$0</div>
+<div class="d-sub">Hardware is ordered upon receipt of deposit.<br/>Balance due the day of install.<br/>Deposit is non-refundable once equipment is ordered.</div>
 </div>
 <div class="slabel">Export</div>
 <div class="share-grid">
@@ -96,7 +109,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <script>
 const SENSORS=[
 {id:'fall-sensor',name:'Presence & Fall Sensor',icon:'⭐',price:149,desc:'Bedrooms, bathrooms, living areas — MVP sensor'},
-{id:'panic-button',name:'Panic Button',icon:'🆘',price:55,desc:'One button → direct call to family. Replaces Life Alert'},
+{id:'panic-button',name:'Panic Button',icon:'🆘',price:55,desc:'One press → entire family notified. Replaces Life Alert'},
 {id:'door-sensor',name:'Door/Window Sensor',icon:'🚪',price:45,desc:'Doors, windows, medicine cabinet'},
 {id:'motion-sensor',name:'Motion Sensor',icon:'👁️',price:45,desc:'Hallways, garage, secondary rooms'},
 {id:'vibration-sensor',name:'Vibration Sensor',icon:'📳',price:55,desc:'Under mattress, fridge, medicine cabinet'},
@@ -128,9 +141,14 @@ let credit=0;const cl=[];const fl=[];
 EXISTING.forEach(d=>{const chip=document.getElementById('chip-'+d.id);if(existing.has(d.id)){chip.classList.add(d.type==='credit'?'credit-on':'free-on');if(d.type==='credit'&&d.credit>0){credit+=d.credit;cl.push(d);}else if(d.type==='free')fl.push(d);}else chip.classList.remove('credit-on','free-on');});
 document.getElementById('credit-lines').innerHTML=[...cl.map(c=>`<div class="credit-line"><span>${c.label}</span><span style="color:var(--green);font-weight:700">-$${c.credit}</span></div>`),...fl.map(f=>`<div class="credit-line"><span>${f.label}</span><span class="free-badge">${f.badge}</span></div>`)].join('');
 const total=Math.max(0,sub-credit);
+const deposit=Math.round(total*0.5);
+const balance=total-deposit;
 document.getElementById('t-sub').textContent='$'+sub;
 document.getElementById('t-total').textContent='$'+total.toLocaleString();
 document.getElementById('hdr-total').textContent='$'+total.toLocaleString();
+document.getElementById('t-deposit').textContent='$'+deposit.toLocaleString();
+document.getElementById('t-balance').textContent='$'+balance.toLocaleString();
+document.getElementById('d-amount').textContent='$'+deposit.toLocaleString();
 if(credit>0){document.getElementById('t-credit').textContent='-$'+credit;document.getElementById('t-credit-row').style.display='flex';}else document.getElementById('t-credit-row').style.display='none';
 let pkg=PKGS[0];PKGS.forEach(p=>{if(sub>=p.min)pkg=p;});
 document.getElementById('pkg-name').textContent=pkg.name;
@@ -144,9 +162,14 @@ let sub=0;
 SENSORS.forEach(s=>{if(counts[s.id]>0){t+=' - '+counts[s.id]+'x '+s.name+' — $'+s.price*counts[s.id]+'\n';sub+=s.price*counts[s.id];}});
 if(!sub)return t+'No sensors selected.';
 let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});
+const total=Math.max(0,sub-credit);
+const deposit=Math.round(total*0.5);
 t+='\nHardware Subtotal: $'+sub;
 if(credit>0)t+='\nDevice Credits: -$'+credit;
-t+='\nEstimated Total: $'+Math.max(0,sub-credit).toLocaleString();
+t+='\nEstimated Total: $'+total.toLocaleString();
+t+='\n\n⚡ 50% Deposit Required to Schedule: $'+deposit.toLocaleString();
+t+='\nBalance Due at Install: $'+(total-deposit).toLocaleString();
+t+='\n\n⚠️ Deposit is non-refundable once equipment is ordered.';
 t+='\n\nThomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
 return t;}
 function copyQ(){navigator.clipboard.writeText(buildQ()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
