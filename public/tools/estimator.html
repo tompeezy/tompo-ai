@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +26,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .sc-qty{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .sc-qty button{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:var(--white);font-size:1rem;cursor:pointer}
 .sc-qty span{min-width:20px;text-align:center;font-weight:800}
-.sc-sub{font-size:.75rem;color:var(--green);font-weight:700;min-width:34px;text-align:right;flex-shrink:0}
+.sc-sub{font-size:.75rem;color:var(--green);font-weight:700;min-width:40px;text-align:right;flex-shrink:0}
 .ex-card{background:var(--navy);border-radius:12px;padding:16px;margin-bottom:10px;border:1px solid rgba(245,158,11,.15)}
 .ex-card h3{font-size:.88rem;font-weight:700;margin-bottom:3px}
 .ex-card p{font-size:.72rem;color:#475569;margin-bottom:12px}
@@ -66,14 +67,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="slabel">🏠 Existing Smart Home?</div>
 <div class="ex-card">
 <h3>Select devices already in the home</h3>
-<p>Credits applied automatically — free integrations shown</p>
+<p>Credits applied automatically — integrations shown free</p>
 <div class="chips" id="ex-chips"></div>
 <div class="credit-lines" id="credit-lines"></div>
 </div>
 <div class="pkg-box">
 <div class="pkg-label">📦 RECOMMENDED PACKAGE</div>
 <div class="pkg-name" id="pkg-name">Safe Nights Essentials</div>
-<div class="pkg-price" id="pkg-price">$499</div>
+<div class="pkg-price" id="pkg-price">$1,499</div>
 <div class="pkg-sub" id="pkg-sub">Based on sensor selection</div>
 </div>
 <div class="total-box">
@@ -94,27 +95,26 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="toast" id="toast"></div>
 <script>
 const SENSORS=[
-{id:'door-sensor',name:'Door/Window Sensor',icon:'🚪',price:35,desc:'Doors, windows, cabinets'},
-{id:'motion-sensor',name:'Motion Sensor',icon:'👁️',price:35,desc:'Room activity & wellness tracking'},
-{id:'fall-sensor',name:'Presence & Fall Sensor',icon:'⭐',price:89,desc:'Bathrooms & bedrooms — top priority'},
-{id:'water-sensor',name:'Water Leak Sensor',icon:'💧',price:35,desc:'Under sinks, washer, basement'},
-{id:'smoke-detector',name:'Smoke Detector',icon:'🔥',price:55,desc:'Kitchen & each floor'},
-{id:'temp-sensor',name:'Temp & Humidity Sensor',icon:'🌡️',price:30,desc:'Climate monitoring per floor'},
-{id:'vibration-sensor',name:'Vibration Sensor',icon:'📳',price:40,desc:'Bed & cabinet monitoring'},
-{id:'smart-plug',name:'Smart Plug',icon:'🔌',price:30,desc:'Energy control & Zigbee mesh'},
-{id:'panic-button',name:'Panic Button',icon:'🆘',price:35,desc:'Emergency alert by the bed'},
-{id:'smart-lock',name:'Smart Lock',icon:'🔒',price:249,desc:'Wandering prevention'}
+{id:'fall-sensor',name:'Presence & Fall Sensor',icon:'⭐',price:149,desc:'Bedrooms, bathrooms, living areas — MVP sensor'},
+{id:'panic-button',name:'Panic Button',icon:'🆘',price:55,desc:'One button → direct call to family. Replaces Life Alert'},
+{id:'door-sensor',name:'Door/Window Sensor',icon:'🚪',price:45,desc:'Doors, windows, medicine cabinet'},
+{id:'motion-sensor',name:'Motion Sensor',icon:'👁️',price:45,desc:'Hallways, garage, secondary rooms'},
+{id:'vibration-sensor',name:'Vibration Sensor',icon:'📳',price:55,desc:'Under mattress, fridge, medicine cabinet'},
+{id:'water-sensor',name:'Water Leak Sensor',icon:'💧',price:45,desc:'Under sinks, washer, basement'},
+{id:'smoke-detector',name:'Smoke Detector',icon:'🔥',price:75,desc:'Kitchen & each floor'},
+{id:'temp-sensor',name:'Temp & Humidity Sensor',icon:'🌡️',price:40,desc:'Climate monitoring per floor'},
+{id:'smart-plug',name:'Smart Plug',icon:'🔌',price:35,desc:'Energy control & Zigbee mesh extension'},
+{id:'smart-lock',name:'Smart Lock',icon:'🔒',price:349,desc:'Wandering prevention — timed entry control'}
 ];
 const EXISTING=[
-{id:'nest',label:'Nest Thermostat',credit:25,type:'credit'},
-{id:'smart-plugs',label:'Smart Plugs',credit:30,type:'credit'},
-{id:'smart-bulbs',label:'Smart Bulbs',credit:20,type:'credit'},
-{id:'echo',label:'Amazon Echo',credit:0,type:'free',badge:'Free Integration'},
-{id:'google',label:'Google Home',credit:0,type:'free',badge:'Free Integration'},
-{id:'ring',label:'Ring Doorbell',credit:0,type:'free',badge:'Free Integration'},
-{id:'smartthings',label:'SmartThings',credit:0,type:'free',badge:'Free Integration'}
+{id:'ring',label:'Ring Doorbell',credit:45,type:'credit'},
+{id:'smart-plugs',label:'Smart Plugs',credit:35,type:'credit'},
+{id:'nest',label:'Nest Thermostat',credit:40,type:'credit'},
+{id:'echo',label:'Amazon Echo',credit:0,type:'free',badge:'Works With'},
+{id:'google',label:'Google Home',credit:0,type:'free',badge:'Works With'},
+{id:'smartthings',label:'SmartThings',credit:0,type:'free',badge:'Works With'}
 ];
-const PKGS=[{name:'Safe Nights Essentials',price:499,min:0},{name:'Complete Home Safety',price:899,min:450},{name:'Total Peace of Mind',price:1399,min:900}];
+const PKGS=[{name:'Safe Nights Essentials',price:1499,min:0},{name:'Complete Home Safety',price:2999,min:600},{name:'Total Peace of Mind',price:3999,min:1200}];
 let counts={};SENSORS.forEach(s=>counts[s.id]=0);
 let existing=new Set();
 document.getElementById('sensor-cards').innerHTML=SENSORS.map(s=>`<div class="sensor-card"><div class="sc-icon">${s.icon}</div><div class="sc-info"><div class="sc-name">${s.name}</div><div class="sc-price">$${s.price} each · ${s.desc}</div></div><div class="sc-qty"><button onclick="adj('${s.id}',-1)">−</button><span id="qty-${s.id}">0</span><button onclick="adj('${s.id}',1)">+</button></div><div class="sc-sub" id="sub-${s.id}"></div></div>`).join('');
@@ -129,15 +129,26 @@ EXISTING.forEach(d=>{const chip=document.getElementById('chip-'+d.id);if(existin
 document.getElementById('credit-lines').innerHTML=[...cl.map(c=>`<div class="credit-line"><span>${c.label}</span><span style="color:var(--green);font-weight:700">-$${c.credit}</span></div>`),...fl.map(f=>`<div class="credit-line"><span>${f.label}</span><span class="free-badge">${f.badge}</span></div>`)].join('');
 const total=Math.max(0,sub-credit);
 document.getElementById('t-sub').textContent='$'+sub;
-document.getElementById('t-total').textContent='$'+total;
-document.getElementById('hdr-total').textContent='$'+total;
+document.getElementById('t-total').textContent='$'+total.toLocaleString();
+document.getElementById('hdr-total').textContent='$'+total.toLocaleString();
 if(credit>0){document.getElementById('t-credit').textContent='-$'+credit;document.getElementById('t-credit-row').style.display='flex';}else document.getElementById('t-credit-row').style.display='none';
 let pkg=PKGS[0];PKGS.forEach(p=>{if(sub>=p.min)pkg=p;});
 document.getElementById('pkg-name').textContent=pkg.name;
 document.getElementById('pkg-price').textContent='$'+pkg.price.toLocaleString();
 document.getElementById('pkg-sub').textContent=qty+' sensor'+(qty!==1?'s':'')+' selected';}
 function resetAll(){SENSORS.forEach(s=>counts[s.id]=0);existing.clear();recalc();}
-function buildQ(){const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});let t='GET NOTIFIED LLC — QUOTE\nDate: '+date+'\n\n';let sub=0;SENSORS.forEach(s=>{if(counts[s.id]>0){t+=' - '+counts[s.id]+'x '+s.name+' — $'+s.price*counts[s.id]+'\n';sub+=s.price*counts[s.id];}});if(!sub)return t+'No sensors selected.';let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});t+='\nSubtotal: $'+sub;if(credit>0)t+='\nCredits: -$'+credit;t+='\nTotal: $'+Math.max(0,sub-credit)+'\n\nThomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';return t;}
+function buildQ(){
+const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+let t='GET NOTIFIED LLC — QUOTE\nDate: '+date+'\n\n';
+let sub=0;
+SENSORS.forEach(s=>{if(counts[s.id]>0){t+=' - '+counts[s.id]+'x '+s.name+' — $'+s.price*counts[s.id]+'\n';sub+=s.price*counts[s.id];}});
+if(!sub)return t+'No sensors selected.';
+let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});
+t+='\nHardware Subtotal: $'+sub;
+if(credit>0)t+='\nDevice Credits: -$'+credit;
+t+='\nEstimated Total: $'+Math.max(0,sub-credit).toLocaleString();
+t+='\n\nThomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
+return t;}
 function copyQ(){navigator.clipboard.writeText(buildQ()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
 function emailQ(){window.location.href='mailto:?subject='+encodeURIComponent('Get Notified LLC — Quote')+'&body='+encodeURIComponent(buildQ());}
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);}
