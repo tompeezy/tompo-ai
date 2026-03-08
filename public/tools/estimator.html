@@ -57,6 +57,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .share-btn{padding:14px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:var(--navy);color:var(--white);font-size:.78rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
 .share-btn .si{font-size:1.4rem}
+.invoice-btn{width:100%;padding:16px;border-radius:12px;border:none;background:var(--gold);color:var(--navy);font-size:1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:var(--white);padding:10px 22px;border-radius:20px;font-size:.82rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
@@ -96,6 +97,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="d-amount" id="d-amount">$0</div>
 <div class="d-sub">Hardware is ordered upon receipt of deposit.<br/>Balance due the day of install.<br/>Deposit is non-refundable once equipment is ordered.</div>
 </div>
+<button class="invoice-btn" onclick="goInvoice()">📄 Create Invoice</button>
 <div class="slabel">Export</div>
 <div class="share-grid">
 <button class="share-btn" onclick="copyQ()"><span class="si">📋</span>Copy Quote</button>
@@ -130,6 +132,7 @@ const EXISTING=[
 const PKGS=[{name:'Safe Nights Essentials',price:1499,min:0},{name:'Complete Home Safety',price:2999,min:600},{name:'Total Peace of Mind',price:3999,min:1200}];
 let counts={};SENSORS.forEach(s=>counts[s.id]=0);
 let existing=new Set();
+let _total=0,_credit=0,_pkg=null;
 document.getElementById('sensor-cards').innerHTML=SENSORS.map(s=>`<div class="sensor-card"><div class="sc-icon">${s.icon}</div><div class="sc-info"><div class="sc-name">${s.name}</div><div class="sc-price">$${s.price} each · ${s.desc}</div></div><div class="sc-qty"><button onclick="adj('${s.id}',-1)">−</button><span id="qty-${s.id}">0</span><button onclick="adj('${s.id}',1)">+</button></div><div class="sc-sub" id="sub-${s.id}"></div></div>`).join('');
 document.getElementById('ex-chips').innerHTML=EXISTING.map(d=>`<button class="chip" id="chip-${d.id}" onclick="toggleEx('${d.id}')">${d.label}</button>`).join('');
 function adj(id,d){counts[id]=Math.max(0,counts[id]+d);recalc();}
@@ -143,6 +146,8 @@ document.getElementById('credit-lines').innerHTML=[...cl.map(c=>`<div class="cre
 const total=Math.max(0,sub-credit);
 const deposit=Math.round(total*0.5);
 const balance=total-deposit;
+_total=total;_credit=credit;
+let pkg=PKGS[0];PKGS.forEach(p=>{if(sub>=p.min)pkg=p;});_pkg=pkg;
 document.getElementById('t-sub').textContent='$'+sub;
 document.getElementById('t-total').textContent='$'+total.toLocaleString();
 document.getElementById('hdr-total').textContent='$'+total.toLocaleString();
@@ -150,10 +155,15 @@ document.getElementById('t-deposit').textContent='$'+deposit.toLocaleString();
 document.getElementById('t-balance').textContent='$'+balance.toLocaleString();
 document.getElementById('d-amount').textContent='$'+deposit.toLocaleString();
 if(credit>0){document.getElementById('t-credit').textContent='-$'+credit;document.getElementById('t-credit-row').style.display='flex';}else document.getElementById('t-credit-row').style.display='none';
-let pkg=PKGS[0];PKGS.forEach(p=>{if(sub>=p.min)pkg=p;});
 document.getElementById('pkg-name').textContent=pkg.name;
 document.getElementById('pkg-price').textContent='$'+pkg.price.toLocaleString();
 document.getElementById('pkg-sub').textContent=qty+' sensor'+(qty!==1?'s':'')+' selected';}
+function goInvoice(){
+const items=[];
+SENSORS.forEach(s=>{if(counts[s.id]>0)items.push({name:s.name,qty:counts[s.id],price:s.price,total:s.price*counts[s.id]});});
+const data={items,total:_total,credit:_credit,deposit:Math.round(_total*0.5),balance:Math.round(_total*0.5),pkg:_pkg?.name||'',pkgPrice:_pkg?.price||0};
+localStorage.setItem('gn_invoice',JSON.stringify(data));
+window.location.href='invoice.html';}
 function resetAll(){SENSORS.forEach(s=>counts[s.id]=0);existing.clear();recalc();}
 function buildQ(){
 const date=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
@@ -161,15 +171,12 @@ let t='GET NOTIFIED LLC — QUOTE\nDate: '+date+'\n\n';
 let sub=0;
 SENSORS.forEach(s=>{if(counts[s.id]>0){t+=' - '+counts[s.id]+'x '+s.name+' — $'+s.price*counts[s.id]+'\n';sub+=s.price*counts[s.id];}});
 if(!sub)return t+'No sensors selected.';
-let credit=0;EXISTING.forEach(d=>{if(existing.has(d.id)&&d.type==='credit')credit+=d.credit;});
-const total=Math.max(0,sub-credit);
-const deposit=Math.round(total*0.5);
 t+='\nHardware Subtotal: $'+sub;
-if(credit>0)t+='\nDevice Credits: -$'+credit;
-t+='\nEstimated Total: $'+total.toLocaleString();
-t+='\n\n⚡ 50% Deposit Required to Schedule: $'+deposit.toLocaleString();
-t+='\nBalance Due at Install: $'+(total-deposit).toLocaleString();
-t+='\n\n⚠️ Deposit is non-refundable once equipment is ordered.';
+if(_credit>0)t+='\nDevice Credits: -$'+_credit;
+t+='\nEstimated Total: $'+_total.toLocaleString();
+t+='\n\n⚡ 50% Deposit Required: $'+Math.round(_total*0.5).toLocaleString();
+t+='\nBalance Due at Install: $'+Math.round(_total*0.5).toLocaleString();
+t+='\n\n⚠️ Deposit non-refundable once equipment is ordered.';
 t+='\n\nThomas Whitlock — Get Notified LLC\n704-239-7532 · gettompoai@gmail.com';
 return t;}
 function copyQ(){navigator.clipboard.writeText(buildQ()).then(()=>toast('Copied!')).catch(()=>toast('Long press to copy'));}
