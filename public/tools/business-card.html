@@ -1,194 +1,87 @@
-<!DOCTYPE html>
+sudo chown -R tompo:tompo ~/tompo-ai && python3 << 'EOF'
+content = open('/home/tompo/tompo-ai/public/tools/business-card.html').read()
+
+new_html = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Get Notified LLC – Business Cards</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;padding:40px 20px;color:#1a2744}
-h1{text-align:center;font-size:1rem;color:#64748b;margin-bottom:8px;font-weight:600}
-p.hint{text-align:center;font-size:.8rem;color:#94a3b8;margin-bottom:32px}
+.screen-header{text-align:center;margin-bottom:24px}
+.screen-header h1{font-size:1.1rem;color:#1a2744;font-weight:700}
+.screen-header p{font-size:.8rem;color:#94a3b8;margin-top:4px}
 .print-btn{display:block;margin:0 auto 32px;padding:10px 28px;background:#1a2744;color:#f59e0b;border:none;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer}
-.cards-wrap{display:flex;flex-direction:column;align-items:center;gap:40px}
-.card-pair{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start}
+.preview{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;margin-bottom:32px}
 .card-label{font-size:.7rem;font-weight:700;color:#94a3b8;text-align:center;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-
-/* CARD SIZE: 3.5in x 2in at 96dpi = 336px x 192px */
-.card{width:336px;height:192px;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.15);position:relative;flex-shrink:0}
-
-/* FRONT */
+.card{width:336px;height:192px;border-radius:10px;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 4px 20px rgba(0,0,0,.15)}
 .card-front{background:#1a2744;color:white;display:flex;flex-direction:column;justify-content:space-between;padding:20px 22px}
 .card-front .top{display:flex;justify-content:space-between;align-items:flex-start}
-.card-front .brand{flex:1}
 .card-front .brand-name{font-size:1.3rem;font-weight:800;letter-spacing:-.5px;line-height:1}
 .card-front .brand-name span{color:#f59e0b}
 .card-front .tagline{font-size:.6rem;color:#94a3b8;margin-top:4px;letter-spacing:.3px}
-.card-front .qr-wrap{background:white;border-radius:6px;padding:4px;flex-shrink:0}
+.card-front .qr-wrap{background:white;border-radius:6px;padding:4px}
 .card-front .qr-wrap img{width:60px;height:60px;display:block}
+.card-front .scan-label{font-size:.55rem;color:#64748b;text-align:center;margin-top:3px}
 .card-front .middle{font-size:.62rem;color:#64748b;letter-spacing:.5px;text-transform:uppercase}
-.card-front .bottom{display:flex;justify-content:space-between;align-items:flex-end}
 .card-front .name{font-size:.95rem;font-weight:800;color:white}
 .card-front .title{font-size:.62rem;color:#f59e0b;font-weight:600;margin-top:2px;letter-spacing:.3px;text-transform:uppercase}
-.card-front .scan-label{font-size:.55rem;color:#64748b;text-align:center;margin-top:3px}
-
-/* BACK */
 .card-back{background:#f59e0b;color:#1a2744;display:flex;flex-direction:column;justify-content:space-between;padding:18px 22px}
 .card-back .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.card-back .services{flex:1}
 .card-back .services-title{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:6px}
-.card-back .services ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:2px 8px}
-.card-back .services ul li{font-size:.62rem;font-weight:600;color:#1a2744;display:flex;align-items:center;gap:3px}
-.card-back .services ul li:before{content:"✓";color:#92400e;font-weight:800;font-size:.6rem}
+.card-back ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:2px 8px}
+.card-back ul li{font-size:.62rem;font-weight:600;display:flex;align-items:center;gap:3px}
+.card-back ul li:before{content:"\\2713";color:#92400e;font-weight:800;font-size:.6rem}
 .card-back .divider{width:1px;background:#f0a030;flex-shrink:0}
-.card-back .contact{font-size:.62rem;font-weight:700;color:#1a2744;text-align:right;white-space:nowrap}
+.card-back .contact{font-size:.62rem;font-weight:700;text-align:right;white-space:nowrap}
 .card-back .contact div{margin-bottom:4px}
-.card-back .contact .website{color:#92400e;font-weight:800;font-size:.65rem}
+.card-back .website{color:#92400e;font-weight:800;font-size:.65rem}
 .card-back .bottom{display:flex;justify-content:space-between;align-items:center}
-.card-back .vet{font-size:.58rem;color:#92400e;font-weight:700;display:flex;align-items:center;gap:4px}
+.card-back .vet{font-size:.58rem;color:#92400e;font-weight:700}
 .card-back .nc{font-size:.58rem;color:#92400e;font-weight:600}
-
 @media print{
-  body{background:white;padding:20px}
-  .print-btn,.card-label,h1,p.hint{display:none}
-  .cards-wrap{gap:20px}
-  .card-pair{gap:16px}
-  .card{box-shadow:0 0 0 1px #e2e8f0}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:white;padding:0;margin:0}
+  .screen-only{display:none!important}
+  .print-sheet{width:8.5in;height:11in;padding:.5in .75in;display:grid;grid-template-columns:3.5in 3.5in;grid-template-rows:repeat(5,2in);gap:0;page-break-after:always;break-after:page}
+  .print-sheet:last-child{page-break-after:auto;break-after:auto}
+  .card{width:3.5in;height:2in;border-radius:0;box-shadow:none;border:1px dashed #ccc}
+  .preview{display:none}
 }
 </style>
 </head>
 <body>
-
-<h1>Get Notified LLC — Business Cards</h1>
-<p class="hint">Print on cardstock · Cut to 3.5" × 2" · Standard business card size</p>
-<button class="print-btn" onclick="window.print()">🖨️ Print Cards</button>
-
-<div class="cards-wrap">
-
-  <!-- SET 1 -->
-  <div class="card-pair">
-    <div>
-      <div class="card-label">Front</div>
-      <div class="card card-front">
-        <div class="top">
-          <div class="brand">
-            <div class="brand-name">Get <span>Notified</span><br/>LLC</div>
-            <div class="tagline">Safety Without Surveillance</div>
-          </div>
-          <div>
-            <div class="qr-wrap">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getnotifiedllc.com&color=1a2744&bgcolor=ffffff" alt="QR"/>
-            </div>
-            <div class="scan-label">Scan for quote</div>
-          </div>
-        </div>
-        <div class="middle">Smart Home · Elder Safety · Property Protection</div>
-        <div class="bottom">
-          <div>
-            <div class="name">Thomas Whitlock</div>
-            <div class="title">Owner · Installer</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="card-label">Back</div>
-      <div class="card card-back">
-        <div class="top">
-          <div class="services">
-            <div class="services-title">What We Install</div>
-            <div class="services">
-              <ul>
-                <li>Leak Detection</li>
-                <li>Fall Sensors</li>
-                <li>Entry Monitoring</li>
-                <li>Smoke Alerts</li>
-                <li>Panic Buttons</li>
-                <li>Smart Locks</li>
-                <li>Water Shutoff</li>
-                <li>Temp Sensors</li>
-              </ul>
-            </div>
-          </div>
-          <div class="divider"></div>
-          <div class="contact">
-            <div>📞 704-239-7532</div>
-            <div>✉️ gettompoai@gmail.com</div>
-            <div class="website">getnotifiedllc.com</div>
-            <div style="margin-top:6px;font-size:.58rem;color:#92400e">Salisbury, NC</div>
-          </div>
-        </div>
-        <div class="bottom">
-          <div class="vet">🇺🇸 Veteran discounts — just ask</div>
-          <div class="nc">Rowan County & surrounding areas</div>
-        </div>
-      </div>
-    </div>
+<div class="screen-only">
+  <div class="screen-header">
+    <h1>Get Notified LLC — Business Cards</h1>
+    <p>Print on cardstock · 10 per sheet · Page 1 = Fronts · Page 2 = Backs · Cut to 3.5" x 2"</p>
   </div>
-
-  <!-- DUPLICATE SET FOR PRINT EFFICIENCY -->
-  <div class="card-pair">
-    <div>
-      <div class="card-label">Front</div>
-      <div class="card card-front">
-        <div class="top">
-          <div class="brand">
-            <div class="brand-name">Get <span>Notified</span><br/>LLC</div>
-            <div class="tagline">Safety Without Surveillance</div>
-          </div>
-          <div>
-            <div class="qr-wrap">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getnotifiedllc.com&color=1a2744&bgcolor=ffffff" alt="QR"/>
-            </div>
-            <div class="scan-label">Scan for quote</div>
-          </div>
-        </div>
-        <div class="middle">Smart Home · Elder Safety · Property Protection</div>
-        <div class="bottom">
-          <div>
-            <div class="name">Thomas Whitlock</div>
-            <div class="title">Owner · Installer</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="card-label">Back</div>
-      <div class="card card-back">
-        <div class="top">
-          <div class="services">
-            <div class="services-title">What We Install</div>
-            <div class="services">
-              <ul>
-                <li>Leak Detection</li>
-                <li>Fall Sensors</li>
-                <li>Entry Monitoring</li>
-                <li>Smoke Alerts</li>
-                <li>Panic Buttons</li>
-                <li>Smart Locks</li>
-                <li>Water Shutoff</li>
-                <li>Temp Sensors</li>
-              </ul>
-            </div>
-          </div>
-          <div class="divider"></div>
-          <div class="contact">
-            <div>📞 704-239-7532</div>
-            <div>✉️ gettompoai@gmail.com</div>
-            <div class="website">getnotifiedllc.com</div>
-            <div style="margin-top:6px;font-size:.58rem;color:#92400e">Salisbury, NC</div>
-          </div>
-        </div>
-        <div class="bottom">
-          <div class="vet">🇺🇸 Veteran discounts — just ask</div>
-          <div class="nc">Rowan County & surrounding areas</div>
-        </div>
-      </div>
-    </div>
+  <button class="print-btn" onclick="window.print()">Print Cards (10 per sheet)</button>
+  <div class="preview">
+    <div><div class="card-label">Front</div><div class="card card-front" id="fp"></div></div>
+    <div><div class="card-label">Back</div><div class="card card-back" id="bp"></div></div>
   </div>
-
 </div>
+<div class="print-sheet" id="fronts"></div>
+<div class="print-sheet" id="backs"></div>
+<script>
+var f=`<div class="top"><div style="flex:1"><div class="brand-name">Get <span>Notified</span><br>LLC</div><div class="tagline">Safety Without Surveillance</div></div><div><div class="qr-wrap"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getnotifiedllc.com&color=1a2744&bgcolor=ffffff"/></div><div class="scan-label">Scan for quote</div></div></div><div class="middle">Smart Home &middot; Elder Safety &middot; Property Protection</div><div class="bottom"><div><div class="name">Thomas Whitlock</div><div class="title">Owner &middot; Installer</div></div></div>`;
+var b=`<div class="top"><div style="flex:1"><div class="services-title">What We Install</div><ul><li>Leak Detection</li><li>Fall Sensors</li><li>Entry Monitoring</li><li>Smoke Alerts</li><li>Panic Buttons</li><li>Smart Locks</li><li>Water Shutoff</li><li>Temp Sensors</li></ul></div><div class="divider"></div><div class="contact"><div>704-239-7532</div><div>gettompoai@gmail.com</div><div class="website">getnotifiedllc.com</div><div style="margin-top:6px;font-size:.58rem;color:#92400e">Salisbury, NC</div></div></div><div class="bottom"><div class="vet">Veteran discounts - ask us</div><div class="nc">Rowan County & surrounding areas</div></div>`;
+document.getElementById('fp').innerHTML=f;
+document.getElementById('bp').innerHTML=b;
+var fs=document.getElementById('fronts');
+var bs=document.getElementById('backs');
+for(var i=0;i<10;i++){
+  var fc=document.createElement('div');fc.className='card card-front';fc.innerHTML=f;fs.appendChild(fc);
+  var bc=document.createElement('div');bc.className='card card-back';bc.innerHTML=b;bs.appendChild(bc);
+}
+</script>
 </body>
-</html>
+</html>"""
+
+with open('/home/tompo/tompo-ai/public/tools/business-card.html','w') as f:
+    f.write(new_html)
+print('Written.')
+EOF
+cd ~/tompo-ai && git add public/tools/business-card.html && git commit -m "Business cards: 10 per sheet, fronts page 1 backs page 2" && git push && echo "Live in ~1 min."
