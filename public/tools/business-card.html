@@ -1,11 +1,8 @@
-sudo chown -R tompo:tompo ~/tompo-ai && python3 << 'EOF'
-content = open('/home/tompo/tompo-ai/public/tools/business-card.html').read()
-
-new_html = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<title>Get Notified LLC – Business Cards</title>
+<title>Get Notified LLC - Business Cards</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;padding:40px 20px;color:#1a2744}
@@ -32,7 +29,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;padding:40px
 .card-back .services-title{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:6px}
 .card-back ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:2px 8px}
 .card-back ul li{font-size:.62rem;font-weight:600;display:flex;align-items:center;gap:3px}
-.card-back ul li:before{content:"\\2713";color:#92400e;font-weight:800;font-size:.6rem}
+.card-back ul li:before{content:"✓";color:#92400e;font-weight:800;font-size:.6rem}
 .card-back .divider{width:1px;background:#f0a030;flex-shrink:0}
 .card-back .contact{font-size:.62rem;font-weight:700;text-align:right;white-space:nowrap}
 .card-back .contact div{margin-bottom:4px}
@@ -41,40 +38,40 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;padding:40px
 .card-back .vet{font-size:.58rem;color:#92400e;font-weight:700}
 .card-back .nc{font-size:.58rem;color:#92400e;font-weight:600}
 @media print{
-  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  body{background:white;padding:0;margin:0}
-  .screen-only{display:none!important}
-  .print-sheet{width:8.5in;height:11in;padding:.5in .75in;display:grid;grid-template-columns:3.5in 3.5in;grid-template-rows:repeat(5,2in);gap:0;page-break-after:always;break-after:page}
-  .print-sheet:last-child{page-break-after:auto;break-after:auto}
-  .card{width:3.5in;height:2in;border-radius:0;box-shadow:none;border:1px dashed #ccc}
-  .preview{display:none}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:white;padding:0;margin:0}
+.screen-only{display:none!important}
+.print-sheet{width:8.5in;height:11in;padding:.5in .75in;display:grid;grid-template-columns:3.5in 3.5in;grid-template-rows:repeat(5,2in);gap:0;page-break-after:always;break-after:page}
+.print-sheet:last-child{page-break-after:auto;break-after:auto}
+.card{width:3.5in;height:2in;border-radius:0;box-shadow:none;border:1px dashed #ccc}
+.preview{display:none}
 }
 </style>
 </head>
 <body>
 <div class="screen-only">
-  <div class="screen-header">
-    <h1>Get Notified LLC — Business Cards</h1>
-    <p>Print on cardstock · 10 per sheet · Page 1 = Fronts · Page 2 = Backs · Cut to 3.5" x 2"</p>
-  </div>
-  <button class="print-btn" onclick="window.print()">Print Cards (10 per sheet)</button>
-  <div class="preview">
-    <div><div class="card-label">Front</div><div class="card card-front" id="fp"></div></div>
-    <div><div class="card-label">Back</div><div class="card card-back" id="bp"></div></div>
-  </div>
+<div class="screen-header">
+<h1>Get Notified LLC - Business Cards</h1>
+<p>Print on cardstock · 10 per sheet · Page 1 = Fronts · Page 2 = Backs · Cut to 3.5" x 2"</p>
+</div>
+<button class="print-btn" onclick="window.print()">Print Cards (10 per sheet)</button>
+<div class="preview">
+<div><div class="card-label">Front</div><div class="card card-front" id="fp"></div></div>
+<div><div class="card-label">Back</div><div class="card card-back" id="bp"></div></div>
+</div>
 </div>
 <div class="print-sheet" id="fronts"></div>
 <div class="print-sheet" id="backs"></div>
 <script>
-var f=`<div class="top"><div style="flex:1"><div class="brand-name">Get <span>Notified</span><br>LLC</div><div class="tagline">Safety Without Surveillance</div></div><div><div class="qr-wrap"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getnotifiedllc.com&color=1a2744&bgcolor=ffffff"/></div><div class="scan-label">Scan for quote</div></div></div><div class="middle">Smart Home &middot; Elder Safety &middot; Property Protection</div><div class="bottom"><div><div class="name">Thomas Whitlock</div><div class="title">Owner &middot; Installer</div></div></div>`;
-var b=`<div class="top"><div style="flex:1"><div class="services-title">What We Install</div><ul><li>Leak Detection</li><li>Fall Sensors</li><li>Entry Monitoring</li><li>Smoke Alerts</li><li>Panic Buttons</li><li>Smart Locks</li><li>Water Shutoff</li><li>Temp Sensors</li></ul></div><div class="divider"></div><div class="contact"><div>704-239-7532</div><div>gettompoai@gmail.com</div><div class="website">getnotifiedllc.com</div><div style="margin-top:6px;font-size:.58rem;color:#92400e">Salisbury, NC</div></div></div><div class="bottom"><div class="vet">Veteran discounts - ask us</div><div class="nc">Rowan County & surrounding areas</div></div>`;
+var f='<div class="top"><div style="flex:1"><div class="brand-name">Get <span>Notified</span><br>LLC</div><div class="tagline">Safety Without Surveillance</div></div><div><div class="qr-wrap"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://getnotifiedllc.com&color=1a2744&bgcolor=ffffff"/></div><div class="scan-label">Scan for quote</div></div></div><div class="middle">Smart Home · Elder Safety · Property Protection</div><div class="bottom"><div><div class="name">Thomas Whitlock</div><div class="title">Owner · Installer</div></div></div>';
+var b='<div class="top"><div style="flex:1"><div class="services-title">What We Install</div><ul><li>Leak Detection</li><li>Fall Sensors</li><li>Entry Monitoring</li><li>Smoke Alerts</li><li>Panic Buttons</li><li>Smart Locks</li><li>Water Shutoff</li><li>Temp Sensors</li></ul></div><div class="divider"></div><div class="contact"><div>704-239-7532</div><div>gettompoai@gmail.com</div><div class="website">getnotifiedllc.com</div><div style="margin-top:6px;font-size:.58rem;color:#92400e">Salisbury, NC</div></div></div><div class="bottom"><div class="vet">Veteran discounts - ask us</div><div class="nc">Rowan County and surrounding areas</div></div>';
 document.getElementById('fp').innerHTML=f;
 document.getElementById('bp').innerHTML=b;
 var fs=document.getElementById('fronts');
 var bs=document.getElementById('backs');
 for(var i=0;i<10;i++){
-  var fc=document.createElement('div');fc.className='card card-front';fc.innerHTML=f;fs.appendChild(fc);
-  var bc=document.createElement('div');bc.className='card card-back';bc.innerHTML=b;bs.appendChild(bc);
+var fc=document.createElement('div');fc.className='card card-front';fc.innerHTML=f;fs.appendChild(fc);
+var bc=document.createElement('div');bc.className='card card-back';bc.innerHTML=b;bs.appendChild(bc);
 }
 </script>
 </body>
