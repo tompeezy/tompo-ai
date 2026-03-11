@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -166,10 +166,8 @@ body{background:white}
 <button id="btn-owner" onclick="setView('owner')">Owner View 🔒</button>
 </div>
 </header>
-
 <div class="main">
 <div class="left-col">
-
 <div class="card">
 <h2>🧾 Customer Info</h2>
 <div style="margin-bottom:14px">
@@ -193,14 +191,12 @@ body{background:white}
 <div class="info-field"><label>Address</label><input type="text" id="cust-address" placeholder="123 Main St, Salisbury NC" oninput="updateQuote()"/></div>
 </div>
 </div>
-
 <div class="card">
 <h2>🏠 Existing Smart Home? <span style="font-size:.75rem;font-weight:400;color:var(--gray);margin-left:6px">(optional — check what they already have)</span></h2>
 <p class="note" style="margin-bottom:14px">✅ We work <strong>with</strong> what's already in the home — not against it. Check existing devices below and we'll skip redundant hardware &amp; integrate the rest <strong>free</strong>.</p>
 <div class="existing-grid" id="existing-grid"></div>
 <div class="existing-credit-banner" id="existing-credit-banner">💰 Existing device credits applied — see quote panel for savings!</div>
 </div>
-
 <div class="card">
 <h2>📦 Step 1: Choose a Package</h2>
 <div class="packages">
@@ -252,7 +248,6 @@ body{background:white}
 </div>
 </div>
 </div>
-
 <div class="card">
 <h2>📡 Step 2: Sensors &amp; Devices</h2>
 <div class="hub-toggle" onclick="toggleHub()">
@@ -276,17 +271,14 @@ body{background:white}
 <tbody id="sensor-rows"></tbody>
 </table>
 </div>
-
 <div class="card">
 <h2>⚙️ Step 3: Service Add-Ons</h2>
 <div class="addon-grid" id="addon-grid"></div>
 </div>
-
 <div class="card">
 <h2>📲 Step 4: Monthly Monitoring</h2>
 <div class="monitor-options" id="monitor-options"></div>
 </div>
-
 <div class="card">
 <h2>💳 Step 5: Payment Plan</h2>
 <p class="note">⚠️ All quotes expire in <strong>90 days</strong>. Hardware prices fluctuate with tariffs and supply chain.</p>
@@ -298,9 +290,7 @@ body{background:white}
 <div class="info-field"><label>Stripe Payment Link</label><input type="text" id="stripe-link" placeholder="buy.stripe.com/..." oninput="updateQuote()"/></div>
 </div>
 </div>
-
 </div>
-
 <div class="quote-panel">
 <div class="quote-card">
 <h2>📋 QUOTE</h2>
@@ -336,11 +326,10 @@ body{background:white}
 </div>
 </div>
 </div>
-
 <script>
-const PI_PRICE=175,PI_COST=125;
+const PI_PRICE=182,PI_COST=112;
 const SENSORS=[
-{id:'pi',name:'Raspberry Pi 5 – Hub Computer (Kit)',badge:'hub',note:'Complete kit: board, case, SD card, power supply — runs all automations locally',price:175,cost:125},
+{id:'pi',name:'Raspberry Pi 5 – Hub Computer (Kit)',badge:'hub',note:'Complete kit: board, case, SD card, power supply — runs all automations locally',price:182,cost:112,hidden:true},
 {id:'ups',name:'Mini UPS – Backup Power',badge:'power',note:'Keeps system running 4-6 hrs during power outage',price:75,cost:35},
 {id:'plug',name:'SONOFF S31 Lite Zigbee Smart Plug',badge:'repeater',note:'Extends wireless range — 2 always included',price:35,cost:12},
 {id:'aqara-dw',name:'Aqara Door/Window Sensor P2',badge:'',note:'Doors, windows, cabinets',price:45,cost:14},
@@ -403,7 +392,7 @@ else banner.classList.remove('visible');}
 function toggleExisting(id){state.existingDevices[id]=!state.existingDevices[id];renderExistingDevices();updateQuote();}
 function init(){document.getElementById('quote-date').value=new Date().toISOString().slice(0,10);regenInvoice();renderSensors();renderAddons();renderMonitoring();renderPaymentPlans();renderExistingDevices();updateQuote();}
 function renderSensors(){
-document.getElementById('sensor-rows').innerHTML=SENSORS.map(s=>`<tr><td>${s.name}${s.badge==='hub'?'<span class="badge badge-hub">🖥️ Hub</span>':''}${s.badge==='star'?'<span class="badge badge-star">⭐ Fall Detection</span>':''}${s.badge==='repeater'?'<span class="badge badge-repeater">📶 Range</span>':''}${s.badge==='power'?'<span class="badge badge-power">🔋 Backup</span>':''}<br/><small style="color:#94a3b8">${s.note}</small></td><td><div class="qty-ctrl"><button onclick="changeQty('${s.id}',-1)">−</button><span id="qty-${s.id}">${state.quantities[s.id]||0}</span><button onclick="changeQty('${s.id}',1)">+</button></div></td><td id="price-${s.id}">$${s.price}</td><td id="sub-${s.id}">$0</td><td class="cost-col">$${s.cost}</td><td class="profit-col" id="profit-${s.id}">$0</td></tr>`).join('');}
+document.getElementById('sensor-rows').innerHTML=SENSORS.filter(s=>!s.hidden||state.ownerView).map(s=>`<tr><td>${s.name}${s.badge==='hub'?'<span class="badge badge-hub">🖥️ Hub</span>':''}${s.badge==='star'?'<span class="badge badge-star">⭐ Fall Detection</span>':''}${s.badge==='repeater'?'<span class="badge badge-repeater">📶 Range</span>':''}${s.badge==='power'?'<span class="badge badge-power">🔋 Backup</span>':''}<br/><small style="color:#94a3b8">${s.note}</small></td><td><div class="qty-ctrl"><button onclick="changeQty('${s.id}',-1)">−</button><span id="qty-${s.id}">${state.quantities[s.id]||0}</span><button onclick="changeQty('${s.id}',1)">+</button></div></td><td id="price-${s.id}">$${s.price}</td><td id="sub-${s.id}">$0</td><td class="cost-col">$${s.cost}</td><td class="profit-col" id="profit-${s.id}">$0</td></tr>`).join('');}
 function renderAddons(){document.getElementById('addon-grid').innerHTML=ADDONS.map(a=>`<div class="addon-item ${state.addons[a.id]?'selected':''}" onclick="toggleAddon('${a.id}')"><input type="checkbox" ${state.addons[a.id]?'checked':''} onclick="event.stopPropagation();toggleAddon('${a.id}')"/><div><div class="addon-name">${a.name}</div><div class="addon-price">+$${a.price}</div><div class="addon-desc">${a.desc}</div></div></div>`).join('');}
 function renderMonitoring(){document.getElementById('monitor-options').innerHTML=MONITORING.map(m=>`<div class="monitor-opt ${state.monitoring===m.id?'selected':''}" onclick="selectMonitoring('${m.id}')"><input type="radio" name="mon" ${state.monitoring===m.id?'checked':''}/><div class="mon-name">${m.name}</div><div class="mon-price">${m.price?'$'+m.price+'/mo':'Free'}</div><div class="mon-desc">${m.desc}</div></div>`).join('');}
 function renderPaymentPlans(){document.getElementById('payment-opts').innerHTML=PAYMENT_PLANS.map(p=>`<div class="pay-opt ${state.payment===p.id?'selected':''}" onclick="selectPayment('${p.id}')"><div class="po-name">${p.name}</div><div class="po-amount" id="po-amount-${p.id}">—</div><div class="po-desc">${p.desc}${p.fee>0?' (+'+Math.round(p.fee*100)+'% fee)':''}</div></div>`).join('');document.getElementById('pay-links-section').style.display=state.payment!=='full'?'grid':'none';}
@@ -412,7 +401,7 @@ function changeQty(id,delta){if(id==='pi'&&state.hasHub)return;state.quantities[
 function toggleAddon(id){state.addons[id]=!state.addons[id];renderAddons();updateQuote();}
 function selectMonitoring(id){state.monitoring=id;renderMonitoring();updateQuote();}
 function selectPayment(id){state.payment=id;renderPaymentPlans();updateQuote();}
-function setView(v){state.ownerView=v==='owner';document.body.classList.toggle('owner-view',state.ownerView);document.getElementById('btn-customer').classList.toggle('active',!state.ownerView);document.getElementById('btn-owner').classList.toggle('active',state.ownerView);}
+function setView(v){state.ownerView=v==='owner';document.body.classList.toggle('owner-view',state.ownerView);document.getElementById('btn-customer').classList.toggle('active',!state.ownerView);document.getElementById('btn-owner').classList.toggle('active',state.ownerView);renderSensors();}
 function clearAll(){state={package:null,quantities:{pi:1,plug:2},addons:{},monitoring:'none',payment:'full',ownerView:state.ownerView,hasHub:false,existingDevices:{}};document.getElementById('hub-check').checked=false;document.getElementById('hub-savings').textContent='';document.querySelectorAll('.pkg,.pay-opt,.monitor-opt').forEach(el=>el.classList.remove('selected'));SENSORS.forEach(s=>{const el=document.getElementById('qty-'+s.id);if(el)el.textContent=state.quantities[s.id]||0;});renderAddons();renderMonitoring();renderPaymentPlans();renderExistingDevices();updateQuote();}
 function updateQuote(){
 const sensorReductions={};const integrationLines=[];let existingCredit=0;
@@ -459,3 +448,4 @@ init();
 </script>
 </body>
 </html>
+```
