@@ -48,6 +48,7 @@ header p{font-size:.8rem;color:#94a3b8;margin-top:2px}
 .sensor-table td{padding:8px;border-bottom:1px solid #f1f5f9;font-size:.85rem;vertical-align:middle}
 .sensor-table tr:last-child td{border-bottom:none}
 .sensor-table tr:hover td{background:#f8fafc}
+.sensor-section-header td{background:#f8fafc;font-size:.75rem;font-weight:700;color:var(--navy);padding:10px 8px 6px;border-bottom:2px solid #e2e8f0;letter-spacing:.3px}
 .qty-ctrl{display:flex;align-items:center;gap:6px}
 .qty-ctrl button{width:26px;height:26px;border-radius:50%;border:1.5px solid #e2e8f0;background:var(--white);font-size:1rem;cursor:pointer;font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;transition:.15s}
 .qty-ctrl button:hover{border-color:var(--gold);background:var(--gold-light)}
@@ -57,9 +58,11 @@ header p{font-size:.8rem;color:#94a3b8;margin-top:2px}
 .badge-repeater{background:#dcfce7;color:#166534}
 .badge-power{background:#dbeafe;color:#1e40af}
 .badge-hub{background:#f3e8ff;color:#6b21a8}
+.badge-outdoor{background:#dcfce7;color:#14532d}
 .cost-col{color:var(--red);font-size:.75rem;font-weight:600}
 .profit-col{color:var(--green);font-size:.75rem;font-weight:600}
 .addon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.addon-section-header{grid-column:1/-1;font-size:.8rem;font-weight:700;color:var(--navy);margin-top:8px;margin-bottom:2px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
 .addon-item{border:2px solid #e2e8f0;border-radius:8px;padding:12px;cursor:pointer;transition:.2s;display:flex;gap:10px;align-items:flex-start}
 .addon-item:hover{border-color:var(--gold)}
 .addon-item.selected{border-color:var(--gold);background:var(--gold-light)}
@@ -192,10 +195,11 @@ body{background:white}
 </div>
 </div>
 <div class="card">
-<h2>🏠 Existing Smart Home? <span style="font-size:.75rem;font-weight:400;color:var(--gray);margin-left:6px">(optional — check what they already have)</span></h2>
-<p class="note" style="margin-bottom:14px">✅ We work <strong>with</strong> what's already in the home — not against it. Check existing devices below and we'll skip redundant hardware &amp; integrate the rest <strong>free</strong>.</p>
+<h2>🏠 Existing Smart Home? <span style="font-size:.75rem;font-weight:400;color:var(--gray);margin-left:6px">(optional)</span></h2>
+<p class="note" style="margin-bottom:14px">✅ We work <strong>with</strong> what's already in the home. Check existing devices and we'll skip redundant hardware &amp; integrate the rest <strong>free</strong>.</p>
 <div class="existing-grid" id="existing-grid"></div>
-<div class="existing-credit-banner" id="existing-credit-banner">💰 Existing device credits applied — see quote panel for savings!</div>
+<div class="existing-credit-banner" id="existing-credit-banner">💰 Existing device credits applied!</div>
+<p class="note" style="margin-top:12px">🔒 <strong>Already have a Zigbee hub?</strong> We can work with it — but our included hub is preconfigured, private, and requires no cloud. We recommend it for every install.</p>
 </div>
 <div class="card">
 <h2>📦 Step 1: Choose a Package</h2>
@@ -204,47 +208,25 @@ body{background:white}
 <div class="pkg-name">Safe Nights Essentials</div>
 <div class="pkg-price">$1,499</div>
 <div class="pkg-desc">Perfect starter</div>
-<ul class="pkg-includes">
-<li>Hub Computer + Dongle</li>
-<li>2× Smart Plugs</li>
-<li>3× Door Sensors</li>
-<li>1× Motion Sensor</li>
-<li>Installation &amp; Setup</li>
-</ul>
+<ul class="pkg-includes"><li>Hub Computer + Dongle</li><li>2× Smart Plugs</li><li>3× Door Sensors</li><li>1× Motion Sensor</li><li>Installation &amp; Setup</li></ul>
 </div>
 <div class="pkg" id="pkg-complete" onclick="selectPackage('complete')">
 <div class="pkg-name">Complete Home Safety</div>
 <div class="pkg-price">$2,999</div>
 <div class="pkg-desc">Full + fall detection</div>
-<ul class="pkg-includes">
-<li>Everything in Essentials</li>
-<li>1× Fall Sensor</li>
-<li>2× More Door Sensors</li>
-<li>1× Water Sensor</li>
-<li>1× Backup Power</li>
-</ul>
+<ul class="pkg-includes"><li>Everything in Essentials</li><li>1× Fall Sensor</li><li>2× More Door Sensors</li><li>1× Water Sensor</li><li>1× Backup Power</li></ul>
 </div>
 <div class="pkg" id="pkg-total" onclick="selectPackage('total')">
 <div class="pkg-name">Total Peace of Mind</div>
 <div class="pkg-price">$3,999</div>
 <div class="pkg-desc">Maximum protection</div>
-<ul class="pkg-includes">
-<li>Everything in Complete</li>
-<li>2× Fall Sensors</li>
-<li>2× Water Sensors</li>
-<li>2× Temp Sensors</li>
-<li>1× Smoke Detector</li>
-</ul>
+<ul class="pkg-includes"><li>Everything in Complete</li><li>2× Fall Sensors</li><li>2× Water Sensors</li><li>2× Temp Sensors</li><li>1× Smoke Detector</li></ul>
 </div>
 <div class="pkg" id="pkg-custom" onclick="selectPackage('custom')">
 <div class="pkg-name">Custom Build</div>
 <div class="pkg-price">$—</div>
 <div class="pkg-desc">Pick what you need</div>
-<ul class="pkg-includes">
-<li>Choose sensors below</li>
-<li>Priced per item</li>
-<li>Install included</li>
-</ul>
+<ul class="pkg-includes"><li>Choose sensors below</li><li>Priced per item</li><li>Install included</li></ul>
 </div>
 </div>
 </div>
@@ -329,23 +311,36 @@ body{background:white}
 <script>
 const PI_PRICE=182,PI_COST=112;
 const SENSORS=[
-{id:'pi',name:'Raspberry Pi 5 – Hub Computer (Kit)',badge:'hub',note:'Complete kit: board, case, SD card, power supply — runs all automations locally',price:182,cost:112,hidden:true},
-{id:'ups',name:'Mini UPS – Backup Power',badge:'power',note:'Keeps system running 4-6 hrs during power outage',price:75,cost:35},
-{id:'plug',name:'SONOFF S31 Lite Zigbee Smart Plug',badge:'repeater',note:'Extends wireless range — 2 always included',price:35,cost:12},
-{id:'aqara-dw',name:'Aqara Door/Window Sensor P2',badge:'',note:'Doors, windows, cabinets',price:45,cost:14},
-{id:'snzb-dw',name:'SONOFF SNZB-04P Door/Window Sensor',badge:'',note:'Budget-friendly door sensor',price:45,cost:10},
-{id:'aqara-mo',name:'Aqara Motion Sensor P1',badge:'',note:'Room motion, pet-immune',price:45,cost:20},
-{id:'snzb-mo',name:'SONOFF SNZB-03P Motion Sensor',badge:'',note:'Hallways, entry points',price:45,cost:12},
-{id:'fp1e',name:'Aqara FP1E Presence & Fall Sensor',badge:'star',note:'Detects falls, sitting, presence — demo hero',price:149,cost:45},
-{id:'water',name:'Aqara Water Leak Sensor',badge:'',note:'Under sinks, water heater, washer',price:45,cost:16},
-{id:'temp',name:'Aqara Temp & Humidity Sensor',badge:'',note:'Room condition monitoring',price:40,cost:15},
-{id:'snzb-temp',name:'SONOFF SNZB-02D Temp/Humidity',badge:'',note:'Budget temp monitoring',price:40,cost:12},
-{id:'vibration',name:'Aqara Vibration Sensor',badge:'',note:'Bed occupancy, medicine cabinet, drawers',price:55,cost:18},
-{id:'smoke',name:'HEIMAN Zigbee Smoke Detector',badge:'',note:'Fire & smoke phone alerts',price:75,cost:25},
-{id:'panic',name:'Aqara Mini Switch (Panic Button)',badge:'',note:'One press = alert to entire family',price:55,cost:15},
-{id:'lock',name:'Zigbee Smart Lock (Schlage/Yale)',badge:'',note:'Timed lock/unlock, wandering prevention',price:349,cost:150},
-{id:'bulb',name:'Sengled Zigbee Smart Bulb',badge:'repeater',note:'Smart lighting + extends mesh range',price:20,cost:8},
+{id:'pi',name:'Raspberry Pi 5 – Hub Computer (Kit)',badge:'hub',note:'Complete kit: board, case, SD card, power supply — runs all automations locally',price:182,cost:112,hidden:true,cat:'core'},
+{id:'ups',name:'Mini UPS – Backup Power',badge:'power',note:'Keeps system running 4-6 hrs during power outage',price:75,cost:35,cat:'core'},
+{id:'plug',name:'SONOFF S31 Lite Zigbee Smart Plug',badge:'repeater',note:'Extends wireless range — 2 always included',price:35,cost:12,cat:'core'},
+{id:'aqara-dw',name:'Aqara Door/Window Sensor P2',badge:'',note:'Doors, windows, cabinets — premium',price:45,cost:14,cat:'safety'},
+{id:'snzb-dw',name:'SONOFF SNZB-04P Door/Window Sensor',badge:'',note:'Budget-friendly door sensor',price:45,cost:10,cat:'safety'},
+{id:'aqara-mo',name:'Aqara Motion Sensor P1',badge:'',note:'Room motion, pet-immune — premium',price:45,cost:20,cat:'safety'},
+{id:'snzb-mo',name:'SONOFF SNZB-03P Motion Sensor',badge:'',note:'Hallways, entry points — budget',price:45,cost:12,cat:'safety'},
+{id:'fp1e',name:'Aqara FP1E Presence & Fall Sensor',badge:'star',note:'Detects falls, sitting, presence — demo hero',price:149,cost:45,cat:'safety'},
+{id:'camera',name:'Aqara Camera Hub G3 (AI)',badge:'star',note:'Local AI person/pet detection — no cloud, no subscription, full HA integration',price:199,cost:80,cat:'safety'},
+{id:'panic',name:'Aqara Mini Switch (Panic Button)',badge:'',note:'One press = alert to entire family',price:55,cost:15,cat:'safety'},
+{id:'vibration',name:'Aqara Vibration Sensor',badge:'',note:'Bed occupancy, medicine cabinet, drawers',price:55,cost:18,cat:'safety'},
+{id:'smoke',name:'HEIMAN Zigbee Smoke Detector',badge:'',note:'Fire & smoke phone alerts',price:75,cost:25,cat:'safety'},
+{id:'temp',name:'Aqara Temp & Humidity Sensor',badge:'',note:'Room condition monitoring — premium',price:40,cost:15,cat:'environment'},
+{id:'snzb-temp',name:'SONOFF SNZB-02D Temp/Humidity',badge:'',note:'Budget temp monitoring',price:40,cost:12,cat:'environment'},
+{id:'water',name:'Aqara Water Leak Sensor',badge:'',note:'Under sinks, water heater, washer',price:45,cost:16,cat:'environment'},
+{id:'valve',name:'Aqara Water Valve Controller E1',badge:'',note:'Auto water shutoff when leak detected — protects entire home',price:249,cost:90,cat:'environment'},
+{id:'lock',name:'Zigbee Smart Lock (Schlage/Yale)',badge:'',note:'Timed lock/unlock, wandering prevention',price:349,cost:150,cat:'access'},
+{id:'blinds',name:'Aqara Roller Shade Driver E1',badge:'',note:'Automate existing blinds — open at sunrise, close at bedtime',price:149,cost:60,cat:'access'},
+{id:'bulb',name:'Sengled Zigbee Smart Bulb',badge:'repeater',note:'Smart lighting + extends mesh range',price:20,cost:8,cat:'lighting'},
+{id:'outdoor-plug',name:'SONOFF S55 Outdoor Smart Plug',badge:'outdoor',note:'Weatherproof — landscape lights, Christmas lights, fountains',price:45,cost:15,cat:'outdoor'},
+{id:'irrigation',name:'Smart Irrigation Controller (8-Zone)',badge:'outdoor',note:'Waters by schedule, skips when it rains — full HA integration',price:149,cost:60,cat:'outdoor'},
 ];
+const SENSOR_CATS={
+core:'⚙️ Core Hardware',
+safety:'🛡️ Safety & Detection',
+environment:'🌡️ Environment & Water',
+access:'🔐 Access & Comfort',
+lighting:'💡 Lighting',
+outdoor:'🌿 Outdoor & Landscape',
+};
 const EXISTING_DEVICES=[
 {id:'echo',name:'Amazon Echo / Alexa',icon:'🔊',credit:0,reduceSensor:null,reduceQty:0,note:'Voice commands + routines integrated free',integrationLabel:'Alexa Voice Control'},
 {id:'google',name:'Google Home / Nest Hub',icon:'🏠',credit:0,reduceSensor:null,reduceQty:0,note:'Smart display + device sync integration',integrationLabel:'Google Home Integration'},
@@ -356,15 +351,20 @@ const EXISTING_DEVICES=[
 {id:'smartthings',name:'Samsung SmartThings',icon:'📱',credit:0,reduceSensor:null,reduceQty:0,note:'Full device library bridges over seamlessly',integrationLabel:'SmartThings Bridge'},
 ];
 const ADDONS=[
-{id:'wellness',name:'Wellness Monitoring',price:175,cost:10,desc:'Fridge sensor tracks eating patterns — alerts if no activity 12+ hrs'},
-{id:'meds',name:'Medication Management',price:250,cost:20,desc:'Cabinet sensor + timed reminders — alarm stops when opened'},
-{id:'water-pkg',name:'Water Protection Package',price:149,cost:32,desc:'2× water sensors + alerts — sinks, water heater, washer'},
-{id:'energy',name:'Energy Optimization Setup',price:99,cost:5,desc:'Auto-off rules, schedules, nighttime dim — cuts electric bill'},
+{id:'wellness',name:'Wellness Monitoring',price:175,cost:10,cat:'indoor',desc:'Fridge sensor tracks eating patterns — alerts if no activity 12+ hrs'},
+{id:'meds',name:'Medication Management',price:250,cost:20,cat:'indoor',desc:'Cabinet sensor + timed reminders — alarm stops when opened'},
+{id:'water-sensors',name:'Water Sensor Package',price:149,cost:32,cat:'indoor',desc:'2× leak sensors — sinks, water heater, washer. Instant phone alerts.'},
+{id:'water-valve',name:'Auto Water Shutoff Package',price:399,cost:122,cat:'indoor',desc:'Valve + 2 sensors — automatically cuts water when leak detected. Prevents thousands in damage.'},
+{id:'energy',name:'Energy Optimization Setup',price:99,cost:5,cat:'indoor',desc:'Auto-off rules, schedules, nighttime dim — cuts electric bill'},
+{id:'blinds-pkg',name:'Smart Blinds Package (2 rooms)',price:349,cost:125,cat:'indoor',desc:'Motorize existing blinds — open at sunrise, close at bedtime, privacy on schedule'},
+{id:'outdoor-lights',name:'Outdoor Lighting Automation',price:199,cost:30,cat:'outdoor',desc:'Weatherproof smart plugs — landscape lights, Christmas lights, fountains on automatic schedules'},
+{id:'irrigation-pkg',name:'Smart Irrigation Package',price:299,cost:65,cat:'outdoor',desc:'8-zone controller — waters by schedule, skips when it rains, HA integrated'},
+{id:'holiday',name:'Holiday Lighting Package',price:149,cost:25,cat:'outdoor',desc:'2× outdoor smart plugs + scene programming — Christmas, Halloween, any holiday on auto'},
 ];
 const MONITORING=[
 {id:'none',name:'No Monitoring',price:0,desc:'Self-managed via Home Assistant app'},
-{id:'guardian',name:'Guardian Watch',price:35,desc:'Daily reports + urgent alerts to family'},
-{id:'premium',name:'Premium Guardian',price:75,desc:'24/7 monitoring + family portal + priority support'},
+{id:'guardian',name:'Guardian Watch',price:35,desc:'Weekly system check + urgent family alerts'},
+{id:'premium',name:'Premium Guardian',price:75,desc:'Daily monitoring + family portal + priority support'},
 ];
 const PAYMENT_PLANS=[
 {id:'full',name:'Pay in Full',fee:0,months:1,desc:'One-time payment, best value'},
@@ -387,13 +387,31 @@ function renderExistingDevices(){
 document.getElementById('existing-grid').innerHTML=EXISTING_DEVICES.map(d=>`<div class="existing-item ${state.existingDevices[d.id]?'selected':''}" onclick="toggleExisting('${d.id}')"><input type="checkbox" ${state.existingDevices[d.id]?'checked':''} onclick="event.stopPropagation();toggleExisting('${d.id}')"/><div><div class="ex-name">${d.icon} ${d.name}</div><div class="ex-tag ${d.credit>0?'save':'free'}">${d.credit>0?'💰 Saves $'+d.credit+' on hardware':'✅ Integrates Free'}</div><div class="ex-note">${d.note}</div></div></div>`).join('');
 const totalCredit=EXISTING_DEVICES.filter(d=>state.existingDevices[d.id]&&d.credit>0).reduce((s,d)=>s+d.credit,0);
 const banner=document.getElementById('existing-credit-banner');
-if(totalCredit>0){banner.textContent='💰 $'+totalCredit+' in existing device credits applied — see quote panel for savings!';banner.classList.add('visible');}
+if(totalCredit>0){banner.textContent='💰 $'+totalCredit+' in existing device credits applied!';banner.classList.add('visible');}
 else banner.classList.remove('visible');}
 function toggleExisting(id){state.existingDevices[id]=!state.existingDevices[id];renderExistingDevices();updateQuote();}
 function init(){document.getElementById('quote-date').value=new Date().toISOString().slice(0,10);regenInvoice();renderSensors();renderAddons();renderMonitoring();renderPaymentPlans();renderExistingDevices();updateQuote();}
 function renderSensors(){
-document.getElementById('sensor-rows').innerHTML=SENSORS.filter(s=>!s.hidden||state.ownerView).map(s=>`<tr><td>${s.name}${s.badge==='hub'?'<span class="badge badge-hub">🖥️ Hub</span>':''}${s.badge==='star'?'<span class="badge badge-star">⭐ Fall Detection</span>':''}${s.badge==='repeater'?'<span class="badge badge-repeater">📶 Range</span>':''}${s.badge==='power'?'<span class="badge badge-power">🔋 Backup</span>':''}<br/><small style="color:#94a3b8">${s.note}</small></td><td><div class="qty-ctrl"><button onclick="changeQty('${s.id}',-1)">−</button><span id="qty-${s.id}">${state.quantities[s.id]||0}</span><button onclick="changeQty('${s.id}',1)">+</button></div></td><td id="price-${s.id}">$${s.price}</td><td id="sub-${s.id}">$0</td><td class="cost-col">$${s.cost}</td><td class="profit-col" id="profit-${s.id}">$0</td></tr>`).join('');}
-function renderAddons(){document.getElementById('addon-grid').innerHTML=ADDONS.map(a=>`<div class="addon-item ${state.addons[a.id]?'selected':''}" onclick="toggleAddon('${a.id}')"><input type="checkbox" ${state.addons[a.id]?'checked':''} onclick="event.stopPropagation();toggleAddon('${a.id}')"/><div><div class="addon-name">${a.name}</div><div class="addon-price">+$${a.price}</div><div class="addon-desc">${a.desc}</div></div></div>`).join('');}
+const catOrder=['core','safety','environment','access','lighting','outdoor'];
+let html='';
+catOrder.forEach(cat=>{
+const items=SENSORS.filter(s=>s.cat===cat&&(!s.hidden||state.ownerView));
+if(items.length===0)return;
+html+=`<tr class="sensor-section-header"><td colspan="6">${SENSOR_CATS[cat]}</td></tr>`;
+html+=items.map(s=>`<tr><td>${s.name}${s.badge==='hub'?'<span class="badge badge-hub">🖥️ Hub</span>':''}${s.badge==='star'?'<span class="badge badge-star">⭐ Premium</span>':''}${s.badge==='repeater'?'<span class="badge badge-repeater">📶 Range</span>':''}${s.badge==='power'?'<span class="badge badge-power">🔋 Backup</span>':''}${s.badge==='outdoor'?'<span class="badge badge-outdoor">🌿 Outdoor</span>':''}<br/><small style="color:#94a3b8">${s.note}</small></td><td><div class="qty-ctrl"><button onclick="changeQty('${s.id}',-1)">−</button><span id="qty-${s.id}">${state.quantities[s.id]||0}</span><button onclick="changeQty('${s.id}',1)">+</button></div></td><td id="price-${s.id}">$${s.price}</td><td id="sub-${s.id}">$0</td><td class="cost-col">$${s.cost}</td><td class="profit-col" id="profit-${s.id}">$0</td></tr>`).join('');
+});
+document.getElementById('sensor-rows').innerHTML=html;}
+function renderAddons(){
+const catLabels={indoor:'🏠 Indoor Add-Ons',outdoor:'🌿 Outdoor & Landscape Add-Ons'};
+const grouped={};
+ADDONS.forEach(a=>{const c=a.cat||'indoor';if(!grouped[c])grouped[c]=[];grouped[c].push(a);});
+let html='';
+['indoor','outdoor'].forEach(cat=>{
+if(grouped[cat]){
+html+=`<div class="addon-section-header">${catLabels[cat]}</div>`;
+html+=grouped[cat].map(a=>`<div class="addon-item ${state.addons[a.id]?'selected':''}" onclick="toggleAddon('${a.id}')"><input type="checkbox" ${state.addons[a.id]?'checked':''} onclick="event.stopPropagation();toggleAddon('${a.id}')"/><div><div class="addon-name">${a.name}</div><div class="addon-price">+$${a.price}</div><div class="addon-desc">${a.desc}</div></div></div>`).join('');
+}});
+document.getElementById('addon-grid').innerHTML=html;}
 function renderMonitoring(){document.getElementById('monitor-options').innerHTML=MONITORING.map(m=>`<div class="monitor-opt ${state.monitoring===m.id?'selected':''}" onclick="selectMonitoring('${m.id}')"><input type="radio" name="mon" ${state.monitoring===m.id?'checked':''}/><div class="mon-name">${m.name}</div><div class="mon-price">${m.price?'$'+m.price+'/mo':'Free'}</div><div class="mon-desc">${m.desc}</div></div>`).join('');}
 function renderPaymentPlans(){document.getElementById('payment-opts').innerHTML=PAYMENT_PLANS.map(p=>`<div class="pay-opt ${state.payment===p.id?'selected':''}" onclick="selectPayment('${p.id}')"><div class="po-name">${p.name}</div><div class="po-amount" id="po-amount-${p.id}">—</div><div class="po-desc">${p.desc}${p.fee>0?' (+'+Math.round(p.fee*100)+'% fee)':''}</div></div>`).join('');document.getElementById('pay-links-section').style.display=state.payment!=='full'?'grid':'none';}
 function selectPackage(id){state.package=id;state.quantities={...PACKAGES[id].sensors};if(state.hasHub)state.quantities.pi=0;document.querySelectorAll('.pkg').forEach(el=>el.classList.remove('selected'));document.getElementById('pkg-'+id).classList.add('selected');SENSORS.forEach(s=>{const el=document.getElementById('qty-'+s.id);if(el)el.textContent=state.quantities[s.id]||0;});updateQuote();}
@@ -402,7 +420,7 @@ function toggleAddon(id){state.addons[id]=!state.addons[id];renderAddons();updat
 function selectMonitoring(id){state.monitoring=id;renderMonitoring();updateQuote();}
 function selectPayment(id){state.payment=id;renderPaymentPlans();updateQuote();}
 function setView(v){state.ownerView=v==='owner';document.body.classList.toggle('owner-view',state.ownerView);document.getElementById('btn-customer').classList.toggle('active',!state.ownerView);document.getElementById('btn-owner').classList.toggle('active',state.ownerView);renderSensors();}
-function clearAll(){state={package:null,quantities:{pi:1,plug:2},addons:{},monitoring:'none',payment:'full',ownerView:state.ownerView,hasHub:false,existingDevices:{}};document.getElementById('hub-check').checked=false;document.getElementById('hub-savings').textContent='';document.querySelectorAll('.pkg,.pay-opt,.monitor-opt').forEach(el=>el.classList.remove('selected'));SENSORS.forEach(s=>{const el=document.getElementById('qty-'+s.id);if(el)el.textContent=state.quantities[s.id]||0;});renderAddons();renderMonitoring();renderPaymentPlans();renderExistingDevices();updateQuote();}
+function clearAll(){state={package:null,quantities:{pi:1,plug:2},addons:{},monitoring:'none',payment:'full',ownerView:state.ownerView,hasHub:false,existingDevices:{}};document.getElementById('hub-check').checked=false;document.getElementById('hub-savings').textContent='';document.querySelectorAll('.pkg,.pay-opt,.monitor-opt').forEach(el=>el.classList.remove('selected'));renderSensors();renderAddons();renderMonitoring();renderPaymentPlans();renderExistingDevices();updateQuote();}
 function updateQuote(){
 const sensorReductions={};const integrationLines=[];let existingCredit=0;
 EXISTING_DEVICES.forEach(d=>{if(state.existingDevices[d.id]){if(d.reduceSensor)sensorReductions[d.reduceSensor]=(sensorReductions[d.reduceSensor]||0)+d.reduceQty;if(d.credit>0){existingCredit+=d.credit;integrationLines.push({name:'💰 '+d.name+' Credit',price:'-$'+d.credit,credit:true});}else{integrationLines.push({name:'✅ '+d.integrationLabel,price:'FREE',free:true});}}});
@@ -426,7 +444,7 @@ document.getElementById('total-monthly').textContent=monthly?'$'+monthly+'/mo':'
 document.getElementById('total-due').textContent='$'+dueToday.toLocaleString()+(plan&&plan.months>1?' (1st of '+plan.months+')':'');
 document.getElementById('total-deposit').textContent='$'+deposit.toLocaleString();
 const dt=document.getElementById('quote-date').value;document.getElementById('expiry-display').value=calcExpiry(dt);document.getElementById('panel-expiry').textContent='⏳ Expires: '+calcExpiry(dt);
-let savLow=0,savHigh=0;if(state.package&&state.package!=='custom'){savLow=PACKAGES[state.package].savingsLow;savHigh=PACKAGES[state.package].savingsHigh;}else if(state.package==='custom'&&oneTime>100){savLow=180;savHigh=360;}if(state.addons['energy']){savLow+=60;savHigh+=120;}
+let savLow=0,savHigh=0;if(state.package&&state.package!=='custom'){savLow=PACKAGES[state.package].savingsLow;savHigh=PACKAGES[state.package].savingsHigh;}else if(state.package==='custom'&&oneTime>100){savLow=180;savHigh=360;}if(state.addons['energy']){savLow+=60;savHigh+=120;}if(state.addons['irrigation-pkg']){savLow+=40;savHigh+=80;}
 if(savLow>0){document.getElementById('savings-amount').textContent='$'+savLow+' – $'+savHigh+'/yr';const payback=oneTime>0?(oneTime/((savLow+savHigh)/2)).toFixed(1):0;document.getElementById('savings-note').textContent=payback>0?`Pays for itself in ~${payback} yrs through energy savings`:'';}else{document.getElementById('savings-amount').textContent='$0/yr';document.getElementById('savings-note').textContent='Select a package to see payback estimate';}
 const profit=oneTime-hwCost,margin=oneTime>0?Math.round((profit/oneTime)*100):0;document.getElementById('owner-cost').textContent='$'+hwCost.toLocaleString();document.getElementById('owner-revenue').textContent='$'+oneTime.toLocaleString();document.getElementById('owner-profit').textContent='$'+profit.toLocaleString();document.getElementById('owner-margin').textContent=margin+'%';
 const name=document.getElementById('cust-name').value;const addr=document.getElementById('cust-address').value;const phone=document.getElementById('cust-phone').value;const email=document.getElementById('cust-email').value;const custInfo=[name,addr,phone,email].filter(Boolean);const custPanel=document.getElementById('panel-customer');custPanel.innerHTML=custInfo.join('<br/>');custPanel.classList.toggle('visible',custInfo.length>0);
