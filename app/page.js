@@ -11,6 +11,7 @@ export default function Home() {
           <ul className="nav-links">
             <li><a href="#services">Services</a></li>
             <li><a href="/shop">Shop</a></li>
+            <li><a href="/privacy-hub" style={{color:'#fbbf24',fontWeight:700}}>🔒 Privacy Hub</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
             <li><a href="#results">Results</a></li>
             <li><a href="#contact">Contact</a></li>

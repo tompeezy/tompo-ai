@@ -69,6 +69,7 @@ export default function Shop() {
           <ul className="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="/shop" style={{ color: 'var(--accent-light)' }}>Shop</a></li>
+            <li><a href="/privacy-hub" style={{ color: '#fbbf24', fontWeight: 700 }}>🔒 Privacy Hub</a></li>
             <li><a href="/#services">Services</a></li>
             <li><a href="/#contact">Contact</a></li>
           </ul>
