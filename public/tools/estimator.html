@@ -360,6 +360,10 @@ const ADDONS=[
 {id:'outdoor-lights',name:'Outdoor Lighting Automation',price:199,cost:30,cat:'outdoor',desc:'Weatherproof smart plugs — landscape lights, Christmas lights, fountains on automatic schedules'},
 {id:'irrigation-pkg',name:'Smart Irrigation Package',price:299,cost:65,cat:'outdoor',desc:'8-zone controller — waters by schedule, skips when it rains, HA integrated'},
 {id:'holiday',name:'Holiday Lighting Package',price:149,cost:25,cat:'outdoor',desc:'2× outdoor smart plugs + scene programming — Christmas, Halloween, any holiday on auto'},
+{id:'privacy-hub',name:'Privacy Hub — Whole-Home Ad Blocker',price:249,cost:65,cat:'network',desc:'Blocks ads on every device (Smart TVs, phones, tablets). Private DNS. No subscription ever. Installed same visit.'},
+{id:'family-hub',name:'Family Hub — Parental Controls + Ad Blocking',price:279,cost:65,cat:'network',desc:'Everything in Privacy Hub + website filters, bedtime schedules, device pause. Keeps kids safe online.'},
+{id:'secure-hub',name:'Secure Hub — Ad Blocking + Home VPN',price:299,cost:65,cat:'network',desc:'Privacy Hub + encrypted VPN. Securely access your home network from anywhere. Great for remote workers.'},
+{id:'iot-isolation',name:'IoT Device Isolation Setup',price:99,cost:5,cat:'network',desc:'Separates smart TVs, cameras & Alexa onto isolated network. If one device gets hacked, it can\'t reach your phones or laptops.'},
 ];
 const MONITORING=[
 {id:'none',name:'No Monitoring',price:0,desc:'Self-managed via Home Assistant app'},
@@ -402,11 +406,11 @@ html+=items.map(s=>`<tr><td>${s.name}${s.badge==='hub'?'<span class="badge badge
 });
 document.getElementById('sensor-rows').innerHTML=html;}
 function renderAddons(){
-const catLabels={indoor:'🏠 Indoor Add-Ons',outdoor:'🌿 Outdoor & Landscape Add-Ons'};
+const catLabels={indoor:'🏠 Indoor Add-Ons',outdoor:'🌿 Outdoor & Landscape Add-Ons',network:'🔒 Network & Privacy Protection'};
 const grouped={};
 ADDONS.forEach(a=>{const c=a.cat||'indoor';if(!grouped[c])grouped[c]=[];grouped[c].push(a);});
 let html='';
-['indoor','outdoor'].forEach(cat=>{
+['network','indoor','outdoor'].forEach(cat=>{
 if(grouped[cat]){
 html+=`<div class="addon-section-header">${catLabels[cat]}</div>`;
 html+=grouped[cat].map(a=>`<div class="addon-item ${state.addons[a.id]?'selected':''}" onclick="toggleAddon('${a.id}')"><input type="checkbox" ${state.addons[a.id]?'checked':''} onclick="event.stopPropagation();toggleAddon('${a.id}')"/><div><div class="addon-name">${a.name}</div><div class="addon-price">+$${a.price}</div><div class="addon-desc">${a.desc}</div></div></div>`).join('');
